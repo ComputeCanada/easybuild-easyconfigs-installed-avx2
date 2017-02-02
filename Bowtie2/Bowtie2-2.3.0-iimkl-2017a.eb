@@ -1,0 +1,69 @@
+# Built with EasyBuild version 3.0.2-r9eea4acf7df5d64ca8ecc20f67d7ebb2bb61dd54 on 2017-02-02_20-07-44
+# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
+# Author: Pablo Escobar Lopez
+# Swiss Institute of Bioinformatics
+# Biozentrum - University of Basel
+# Modified by: Robert Schmidt <rjeschmi@gmail.com>
+# Ottawa Hospital Research Institute - Bioinformatics Team
+# Modified by: Adam Huffman <adam.huffman@crick.ac.uk>
+# Modified by: Maxime Boissonneault <maxime.boissonneault@calculquebec.ca>
+# The Francis Crick Institute
+
+easyblock = 'MakeCp'
+
+name = 'Bowtie2'
+version = "2.3.0"
+
+homepage = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
+description = """ Bowtie 2 is an ultrafast and memory-efficient tool for aligning sequencing reads 
+ to long reference sequences. It is particularly good at aligning reads of about 50 up to 100s or 1,000s 
+ of characters, and particularly good at aligning to relatively long (e.g. mammalian) genomes. 
+ Bowtie 2 indexes the genome with an FM Index to keep its memory footprint small: for the human genome, 
+ its memory footprint is typically around 3.2 GB. Bowtie 2 supports gapped, local, and paired-end alignment modes."""
+
+toolchain = {'name': 'iimkl', 'version': '2017a'}
+
+dependencies = [ ('tbb','2017.2.132') ]
+sources = ['%(namelower)s-%(version)s-source.zip']
+source_urls = [('http://sourceforge.net/projects/bowtie-bio/files/%(namelower)s/%(version)s', 'download')]
+
+files_to_copy = [
+    (["bowtie2", "bowtie2-align-l", "bowtie2-align-s", "bowtie2-build", "bowtie2-build-l", "bowtie2-build-s",
+      "bowtie2-inspect", "bowtie2-inspect-l", "bowtie2-inspect-s"], 'bin'),
+    "doc", "example", "scripts", "MANUAL", "MANUAL.markdown", "NEWS"]
+
+sanity_check_paths = {
+    'files': ["bin/bowtie2-align-l", "bin/bowtie2-build", "bin/bowtie2-inspect"],
+    'dirs': [],
+}
+
+# to add script folder to path just uncomment this line
+#modextrapaths = {'PATH': 'scripts'}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 71.09,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore,Szip,libxml2'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='xCORE-AVX2'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017/avx2'", "--subdir-software='software/2017/avx2'", "--suffix-modules-path=''", 'Bowtie2-2.3.0-iccifort-2017.1.132.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.0.2-rafdccc8d89e602ea55f1f1b4a34055d05f59fbe3",
+    "easybuild-framework_version": "3.0.2-r9eea4acf7df5d64ca8ecc20f67d7ebb2bb61dd54",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 72234115,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/98p8mbwsgrq6m204myrfjjhcpliqkmfm-Lmod-7.3.4/lmod/lmod/libexec/lmod', '7.3.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1486066064,
+    "total_memory": 241658,
+}]
