@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.0.2-r9ba78aca9e72becf722932052ae8dadd886ca206 on 2017-01-19_13-50-20
+# Built with EasyBuild version 3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251 on 2017-02-15_14-13-16
 easyblock = "Toolchain"
 
 name = 'gompi'
@@ -24,19 +24,19 @@ moduleclass = 'toolchain'
 
 # Build statistics
 buildstats = [{
-    "build_time": 0.67,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='march=haswell'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017/avx2'", "--subdir-software='software/2017/avx2'", "--suffix-modules-path=''", 'gompi-2017a.eb'],
+    "build_time": 0.79,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore,Szip,libxml2,sparsehash,SQLite'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", 'gompi-2017a.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.0.2-r692d897145956e8c2c302fcab14e2f00c0f41620",
-    "easybuild-framework_version": "3.0.2-r9ba78aca9e72becf722932052ae8dadd886ca206",
+    "easybuild-easyblocks_version": "3.1.0-r10cba6595bf9643a55ff14e0f53044188878f562",
+    "easybuild-framework_version": "3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 1307,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/98p8mbwsgrq6m204myrfjjhcpliqkmfm-Lmod-7.3.4/lmod/lmod/libexec/lmod', '7.3.4'),
+    "install_size": 1102,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/fhdr6nggnjkmvidlbwz4xzf7ppvibn7v-Lmod-7.3.16/lmod/lmod/libexec/lmod', '7.3.16'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.2.1511",
@@ -44,6 +44,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1484833820,
+    "timestamp": 1487167996,
     "total_memory": 241658,
 }]
