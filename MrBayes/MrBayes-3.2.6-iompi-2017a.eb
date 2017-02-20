@@ -1,0 +1,49 @@
+# Built with EasyBuild version 3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251 on 2017-02-20_19-12-07
+name = 'MrBayes'
+version = '3.2.6'
+
+homepage = 'http://mrbayes.csit.fsu.edu'
+description = "MrBayes is a program for the Bayesian estimation of phylogeny."
+
+toolchain = {'name': 'iompi', 'version': '2017a'}
+toolchainopts = {'usempi': True}
+
+source_urls = [SOURCEFORGE_SOURCE]
+sources = [SOURCELOWER_TAR_GZ]
+
+dependencies = [
+    ('beagle-lib', '2.1.2'),
+    ('libreadline', '6.3'),
+]
+
+builddependencies = [
+    ('Autotools', '20150215'),
+]
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 53.37,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore,Szip,libxml2,sparsehash,SQLite'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", "--try-toolchain='iompi,2017a'", 'MrBayes-3.2.6-iompi-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.0-r2813b4ffabd86841a2af8b31e98aea392f34df1a",
+    "easybuild-framework_version": "3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 2815901,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/fhdr6nggnjkmvidlbwz4xzf7ppvibn7v-Lmod-7.3.16/lmod/lmod/libexec/lmod', '7.3.16'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1487617927,
+    "total_memory": 241658,
+}]
