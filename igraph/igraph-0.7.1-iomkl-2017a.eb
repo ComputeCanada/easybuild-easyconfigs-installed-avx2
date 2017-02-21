@@ -1,0 +1,58 @@
+# Built with EasyBuild version 3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251 on 2017-02-21_15-28-07
+easyblock = 'ConfigureMake'
+
+name = 'igraph'
+version = '0.7.1'
+
+homepage = 'http://igraph.org'
+description = """igraph is a collection of network analysis tools with the emphasis on 
+efficiency, portability and ease of use. igraph is open source and free. igraph can be 
+programmed in R, Python and C/C++."""
+
+toolchain = {'name': 'iomkl', 'version': '2017a'}
+toolchainopts = {'pic': True}
+
+sources = ['igraph-%(version)s.tar.gz']
+source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
+
+# Fix llapack and llblas when compiling with MKL
+# Fix aclocal which is hard-coded to version 1.14
+patches = ['igraph-0.7.1-no-lapack-no-blas.patch', 'igraph-0.7.1-fix-aclocal-version.patch']
+
+# link against MKL rather than blas/lapack
+preconfigopts = "env LDFLAGS='-lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm'"
+configopts = "--with-external-blas=yes --with-external-lapack=yes"
+
+sanity_check_paths = {
+    'files': ['lib/libigraph.so', 'lib/libigraph.la', 'lib/pkgconfig/igraph.pc'] +
+             ['include/igraph/%s' % x for x in ['igraph_version.h', 'igraph_types.h', 'igraph_constants.h']],
+    'dirs': [],
+}
+
+moduleclass = 'lib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 301.14,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", "--try-toolchain='iomkl,2017a'", 'igraph-0.7.1-intel-2016a.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.0-r2813b4ffabd86841a2af8b31e98aea392f34df1a",
+    "easybuild-framework_version": "3.1.0-r99d156938a30c425aafe0d1ea7f2b2115fe45251",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 25532381,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/fhdr6nggnjkmvidlbwz4xzf7ppvibn7v-Lmod-7.3.16/lmod/lmod/libexec/lmod', '7.3.16'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1487690887,
+    "total_memory": 241658,
+}]
