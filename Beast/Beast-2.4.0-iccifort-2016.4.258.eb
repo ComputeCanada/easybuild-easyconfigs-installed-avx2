@@ -1,0 +1,63 @@
+# Built with EasyBuild version 3.1.0-r7aea18090ed93b1adceed5f6c0be722323124758 on 2017-02-23_19-13-44
+# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
+# Author: Pablo Escobar Lopez
+# Swiss Institute of Bioinformatics
+# Biozentrum - University of Basel
+
+easyblock = "Tarball"
+
+name = 'Beast'
+version = '2.4.0'
+
+homepage = 'http://beast2.org/'
+description = """ BEAST is a cross-platform program for Bayesian MCMC analysis of molecular 
+ sequences. It is entirely orientated towards rooted, time-measured phylogenies inferred using 
+ strict or relaxed molecular clock models. It can be used as a method of reconstructing phylogenies 
+ but is also a framework for testing evolutionary hypotheses without conditioning on a single 
+ tree topology. BEAST uses MCMC to average over tree space, so that each tree is weighted 
+ proportional to its posterior probability. """
+
+toolchain = {'name': 'iccifort', 'version': '2016.4.258'}
+
+source_urls = ['https://github.com/CompEvol/beast2/releases/download/v%(version)s/']
+sources = ['BEAST.v%(version)s.Linux.tgz']
+
+dependencies = [
+    # this is not mandatory but beagle-lib is recommended by developers
+    # beagle-lib will also load the required java dependency
+    # if you remove this you should add the java dependency
+    ('beagle-lib', '2.1.2'),
+]
+
+sanity_check_paths = {
+    'files': ["bin/beast"],
+    'dirs': []
+}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 5.52,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,GCCcore,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='iompi,iomkl'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", 'Beast-2.4.0-iccifort-2016.4.258.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.0-r3beb69dacda7a0ae8d86264507f5bc9dafdf7fe5",
+    "easybuild-framework_version": "3.1.0-r7aea18090ed93b1adceed5f6c0be722323124758",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/grsjd5bj2rvf09lxrmjqyapca60r4b6q-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 10425003,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/fhdr6nggnjkmvidlbwz4xzf7ppvibn7v-Lmod-7.3.16/lmod/lmod/libexec/lmod', '7.3.16'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1487877224,
+    "total_memory": 241658,
+}]
