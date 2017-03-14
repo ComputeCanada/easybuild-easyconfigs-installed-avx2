@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.1.1-rca288e3b276282dc7cf314414ec2e55b300430f4 on 2017-03-14_13-29-23
+# Built with EasyBuild version 3.1.1-rca288e3b276282dc7cf314414ec2e55b300430f4 on 2017-03-14_18-58-28
 easyblock = 'Nix'
 
 name = 'Perl'
@@ -12,7 +12,7 @@ description = "Perl 5 is a highly capable, feature-rich programming language wit
 toolchain = {'name': 'dummy', 'version': 'dummy'}
 
 nix_profile = '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/perl-%(version)s'
-nix_attribute = 'perl522 perlPackages.DBDSQLite perlPackages.DBI perlPackages.ExporterTiny perlPackages.HTMLParser perlPackages.HTMLTagset perlPackages.ListMoreUtils perlPackages.LocaleGettext perlPackages.WWWCurl perlPackages.XMLParser perlPackages.URI perlPackages.ModuleBuild'
+nix_attribute = 'perl522 perlPackages.DBDSQLite perlPackages.DBI perlPackages.ExporterTiny perlPackages.HTMLParser perlPackages.HTMLTagset perlPackages.ListMoreUtils perlPackages.LocaleGettext perlPackages.WWWCurl perlPackages.XMLParser perlPackages.URI perlPackages.ModuleBuild perlPackages.TestMost'
 
 modextrapaths = {'PERL5LIB': ['lib/perl%s' % perlshortver, 'lib/perl%s/site_perl' % perlshortver ]}
 
@@ -21,13 +21,13 @@ moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 53.82,
+    "build_time": 31.17,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", 'Perl-5.22.2-nix.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.1.1-r7e45f5bfb7cce8bde3c561b0a84c688693394a37",
+    "easybuild-easyblocks_version": "3.1.1-r0c1b94995e070af820cd68a6a688f0a2087b37da",
     "easybuild-framework_version": "3.1.1-rca288e3b276282dc7cf314414ec2e55b300430f4",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
@@ -41,6 +41,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1489498163,
+    "timestamp": 1489517908,
     "total_memory": 241658,
 }]
