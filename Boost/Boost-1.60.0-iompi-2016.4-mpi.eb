@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.1.2-r3b21d0cc6751fefa469807230360ad75ed4fb8b9 on 2017-03-22_14-49-09
+# Built with EasyBuild version 3.1.2-r0d989a8adeae37530628bc766fcc2bbe79eb78c2 on 2017-03-22_18-43-27
 name = 'Boost'
 version = '1.60.0'
 versionsuffix = '-mpi'
@@ -23,23 +23,25 @@ dependencies = [
 
 # also build boost_mpi
 boost_mpi = True
+# also build boost multi-thread
+boost_multi_thread = True
 
 moduleclass = 'devel'
 
 # Build statistics
 buildstats = [{
-    "build_time": 447.95,
+    "build_time": 903.04,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", "--try-toolchain='iompi,2016.4'", 'Boost-1.60.0-iompi-2016.4-mpi.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.1.2-rc0b19ab460088fb7094da32fdd893e366509216e",
-    "easybuild-framework_version": "3.1.2-r3b21d0cc6751fefa469807230360ad75ed4fb8b9",
+    "easybuild-easyblocks_version": "3.1.2-r96e5d604c8793cceef3cbe74e0d568da75fe17a0",
+    "easybuild-framework_version": "3.1.2-r0d989a8adeae37530628bc766fcc2bbe79eb78c2",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 203706516,
+    "install_size": 303258500,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/xzkr5bkjcy4xn8ha573h6v0rf50z0slx-Lmod-7.3.24/lmod/lmod/libexec/lmod', '7.3.24'),
     "os_name": "centos linux",
     "os_type": "Linux",
@@ -48,6 +50,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-2.7.13/bin/python",
-    "timestamp": 1490194149,
+    "timestamp": 1490208207,
     "total_memory": 241658,
 }]
