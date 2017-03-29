@@ -1,0 +1,70 @@
+# Built with EasyBuild version 3.1.2-r0d989a8adeae37530628bc766fcc2bbe79eb78c2 on 2017-03-29_19-41-50
+easyblock = "ConfigureMake"
+
+name = "Julia"
+version = "0.5.1"
+
+homepage = "http://julialang.org"
+description = """A high-level, high-performance dynamic language for technical computing."""
+
+toolchain = {'name': 'iimkl', 'version': '2016.4'}
+
+source_urls = ['https://github.com/JuliaLang/julia/releases/download/v%(version)s']
+sources = [SOURCELOWER_TAR_GZ]
+
+skipsteps = ['configure']
+
+builddependencies = [
+     ('SuiteSparse', '4.5.4'),
+     ('arpack-ng', '3.4.0'),
+]
+
+library_paths = "$MKLROOT/lib/intel64:$EBROOTSUITESPARSE/lib:$EBROOTARPACKMINNG/lib"
+prebuildopts = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%s"%library_paths
+
+# Specifying JULIA_CPU_TARGET allows use on non-identical CPUs.  Doesn't affect JIT or linked toolchain components.
+buildopts = " prefix=%(installdir)s"
+buildopts += " USE_SYSTEM_CURL=1 USE_SYSTEM_GMP=1 USE_SYSTEM_LIBGIT2=1 USE_SYSTEM_LIBSSH2=1 USE_SYSTEM_LIBUNWIND=1 USE_SYSTEM_LLVM=1"
+buildopts += " USE_SYSTEM_MPFR=1 USE_SYSTEM_PATCHELF=1 USE_SYSTEM_PCRE=1 USE_SYSTEM_SUITESPARSE=1 USE_SYSTEM_ZLIB=1 USE_SYSTEM_ARPACK=1"
+buildopts += " USE_SYSTEM_MBEDTLS=1 USEICC=1 USEIFC=1 USE_INTEL_MKL=1 USE_INTEL_MKL_FFT=1 USE_INTEL_LIBM=1 JULIA_CPU_TARGET=haswell"
+
+preinstallopts = prebuildopts
+installopts = buildopts
+# set rpath in Julia libraries so they can find MKL, SuiteSparse and arpack.
+installopts += " && patchelf --set-rpath '$ORIGIN':'$ORIGIN/julia':$NIXUSER_PROFILE/lib:$EBROOTICC/lib/intel64:%s"%library_paths
+installopts +=      " %(installdir)s/lib/libjulia-debug.so.%(version)s"
+installopts += " && patchelf --set-rpath '$ORIGIN':'$ORIGIN/julia':$NIXUSER_PROFILE/lib:$EBROOTICC/lib/intel64:%s"%library_paths
+installopts +=      " %(installdir)s/lib/libjulia.so.%(version)s"
+
+sanity_check_paths = {
+    'files': ["bin/julia"],
+    'dirs': ["lib"]
+}
+
+moduleclass = 'lang'
+
+# Build statistics
+buildstats = [{
+    "build_time": 745.19,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-software-version='0.5.1'", "--use-ccache='/cvmfs/local/ccache'", 'Julia-0.5.0-iimkl-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.2-rd2241ce232c6e8c8c2538a678c92350141e8ef4d",
+    "easybuild-framework_version": "3.1.2-r0d989a8adeae37530628bc766fcc2bbe79eb78c2",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 206779514,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/xzkr5bkjcy4xn8ha573h6v0rf50z0slx-Lmod-7.3.24/lmod/lmod/libexec/lmod', '7.3.24'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1490816509,
+    "total_memory": 241658,
+}]
