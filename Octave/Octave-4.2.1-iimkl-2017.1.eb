@@ -1,0 +1,91 @@
+# Built with EasyBuild version 3.1.2-rd5bd3ea7189cf01de20734f8f13ef0b62438aae3 on 2017-04-05_13-15-37
+easyblock = 'ConfigureMake'
+
+name = 'Octave'
+version = '4.2.1'
+
+homepage = 'http://www.gnu.org/software/octave/'
+description = """GNU Octave is a high-level interpreted language, primarily intended for numerical computations."""
+
+toolchain = {'name': 'iimkl', 'version': '2017.1'}
+
+source_urls = [GNU_SOURCE]
+sources = [SOURCELOWER_TAR_GZ]
+
+patches = ['%(name)s-4.2.1_intel.patch']
+
+builddependencies = [
+    ('Bison', '3.0.4'),
+    ('flex', '2.6.0'),
+    ('Autotools', '20150215'),
+    ('libtool', '2.4.6'),
+    ('gperf', '3.0.4'),
+    ('X11', '20160819'),
+    ('PCRE', '8.39'),
+    ('ncurses', '6.0'),
+    ('libreadline', '6.3'),
+    ('arpack-ng', '3.4.0'),
+    ('cURL', '7.49.1'),
+    ('FLTK', '1.3.3'),
+    ('fontconfig', '2.12.1'),
+    ('freetype', '2.6.5'),
+    ('GLPK', '4.61'),
+    ('GL2PS', '1.3.9'),
+    ('zlib', '1.2.8'),
+    ('Mesa', '12.0.2'),
+    ('libGLU', '9.0.0'),
+    ('Qhull', '2015.2'),
+    ('Qt5', '5.6.1'),
+    ('HDF5', '1.8.18'),
+    ('qrupdate', '1.1.2'),
+    ('SuiteSparse', '4.5.4'),
+    ('GraphicsMagick', '1.3.25'),
+    ('FFTW', '3.3.6'),
+]
+
+dependencies = [
+    ('gnuplot', '5.0.5'),
+    ('Java', '1.8.0_121', '', True),
+]
+
+configopts = 'MOC=$EBROOTQT5/bin/moc '
+configopts += 'UIC=$EBROOTQT5/bin/uic '
+configopts += 'RCC=$EBROOTQT5/bin/rcc '
+configopts += 'LRELEASE=$EBROOTQT5/bin/lrelease '
+configopts += '--with-blas="$LIBBLAS" --with-lapack="$LIBLAPACK" --disable-docs '
+configopts += '--enable-fortran-calling-convention=gfortran '
+
+sanity_check_paths = {
+    'files': ['bin/octave'],
+    'dirs': []
+}
+
+sanity_check_commands = [('octave', '--eval "1+2"')]
+
+moduleclass = 'math'
+
+# Build statistics
+buildstats = [{
+    "build_time": 2661.69,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iimkl,2017.1'", "--use-ccache='/cvmfs/local/ccache'", 'Octave-4.2.1-iimkl-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.2-rb6578208396477717d7d4f0e7d6d55751410c434",
+    "easybuild-framework_version": "3.1.2-rd5bd3ea7189cf01de20734f8f13ef0b62438aae3",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 242066339,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1491398137,
+    "total_memory": 241658,
+}]
