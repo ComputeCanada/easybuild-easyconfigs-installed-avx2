@@ -1,0 +1,101 @@
+# Built with EasyBuild version 3.1.2-r1ee75d947053934640b629cc90dd4f630d886878 on 2017-04-26_18-55-04
+#    With <3 for EasyBuild
+#
+#    EasyConfig for Ruby 2.1:
+#    ----------------------------------------------------------------------------
+#    Copyright: 2014 - Gregor Mendel Institute of Molecular Plant Biology GmBH
+#    License: MIT
+#    Authors: Aaron <aaron.zauner@gmi.oeaw.ac.at> Zauner
+#    ----------------------------------------------------------------------------
+
+easyblock = 'Bundle'
+name = 'RubyGems'
+version = '2.3.1'
+
+homepage = 'https://www.ruby-lang.org'
+description = """Ruby is a dynamic, open source programming language with 
+ a focus on simplicity and productivity. It has an elegant syntax that is 
+ natural to read and easy to write."""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+
+dependencies = [ ('Ruby', '%(version)s') ] 
+
+exts_defaultclass = 'RubyGem'
+exts_filter =  ("gem list '^%(ext_name)s$' -i", "")
+
+ext_options = {
+    'source_urls': ['http://rubygems.org/downloads/'],
+    'source_tmpl': '%(name)s-%(version)s.gem',
+}
+
+exts_list = [
+    ('ffi', '1.9.14', ext_options),
+    ('childprocess', '0.5.9', ext_options),
+    ('json', '2.0.2', ext_options),
+    ('cabin', '0.9.0', ext_options),
+    ('backports', '3.6.8', ext_options),
+    ('arr-pm', '0.0.10', ext_options),
+    ('clamp', '1.1.1', ext_options),
+    ('multipart-post', '2.0.0', ext_options),
+    ('faraday', '0.10.0', ext_options),
+    ('faraday_middleware', '0.10.1', ext_options),
+    ('highline', '1.7.8', ext_options),
+    ('net-http-pipeline', '1.0.1', ext_options),
+    ('net-http-persistent', '2.9.4', ext_options),
+    ('multi_json', '1.12.1', ext_options),
+    ('public_suffix', '2.0.4', ext_options),
+    ('addressable', '2.4.0', ext_options),
+    ('gh', '0.15.0', ext_options),
+    ('launchy', '2.4.3', ext_options),
+    ('ethon', '0.10.1', ext_options),
+    ('typhoeus', '0.6.9', ext_options),
+    ('websocket', '1.2.3', ext_options),
+    ('pusher-client', '0.6.2', ext_options),
+    ('diff-lcs', '1.2.5', ext_options),
+    ('rspec-support', '3.5.0', ext_options),
+    ('rspec-mocks', '3.5.0', ext_options),
+    ('rspec-expectations', '3.5.0', ext_options),
+    ('rspec-core', '3.5.4', ext_options),
+    ('rspec', '3.5.0', ext_options),
+    ('rack', '1.6.5', ext_options),
+    ('rack-protection', '1.5.3', ext_options),
+    ('tilt', '2.0.5', ext_options),
+    ('sinatra', '1.4.7', ext_options),
+    ('rack-test', '0.6.3', ext_options),
+]
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['bin', 'cache', 'doc', 'extensions', 'gems', 'specifications'],
+}
+
+modextrapaths = {'GEM_PATH': ''}
+
+moduleclass = 'lang'
+
+# Build statistics
+buildstats = [{
+    "build_time": 287.49,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'RubyGems-2.3.1.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.1.2-ra498cf9f0c11acd8aea642bdbddf0f3c68c6f09f",
+    "easybuild-framework_version": "3.1.2-r1ee75d947053934640b629cc90dd4f630d886878",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 33616425,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.2.1511",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-6hCaae/tmpZhT8zH/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1493232904,
+    "total_memory": 241658,
+}]
