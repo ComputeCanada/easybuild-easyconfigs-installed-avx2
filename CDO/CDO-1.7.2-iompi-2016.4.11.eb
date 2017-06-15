@@ -1,0 +1,56 @@
+# Built with EasyBuild version 3.2.1-r4b5816c3de9f10d3e8d15ae966461ae56a78c4e1 on 2017-06-15_00-56-51
+easyblock = 'ConfigureMake'
+
+name = 'CDO'
+version = '1.7.2'
+
+homepage = 'https://code.zmaw.de/projects/cdo'
+description = """CDO is a collection of command line Operators to manipulate and analyse Climate and NWP model Data."""
+
+toolchain = {'name': 'iompi', 'version': '2016.4.11'}
+toolchainopts = {'opt': True, 'pic': True, 'usempi': True}
+
+sources = [SOURCELOWER_TAR_GZ]
+source_urls = ['https://code.zmaw.de/attachments/download/12760/']
+checksums = [('md5', 'f08e4ce8739a4f2b63fc81a24db3ee31')]
+
+dependencies = [
+    ('HDF5', '1.8.18'),
+    ('netCDF', '4.4.1.1'),
+    ('YAXT', '0.5.1'),
+]
+
+configopts = "--with-hdf5=$EBROOTHDF5 --with-netcdf=$EBROOTNETCDF"
+
+sanity_check_paths = {
+    'files': ["bin/cdo"],
+    'dirs': [],
+}
+
+moduleclass = 'data'
+
+# Build statistics
+buildstats = [{
+    "build_time": 498.89,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tk,CFITSIO,libX11,libXft,libXpm,libXext'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--tmpdir='/cvmfs/local/tmp'", "--try-toolchain-version='2016.4.11'", "--use-ccache=''", '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/abinit/8.2.2/easybuild/ABINIT-8.2.2-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/boost-mpi/1.60.0/easybuild/Boost-1.60.0-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/cdo/1.7.2/easybuild/CDO-1.7.2-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/fftw-mpi/3.3.6/easybuild/FFTW-3.3.6-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/hdf5-mpi/1.8.18/easybuild/HDF5-1.8.18-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/mrbayes/3.2.6/easybuild/MrBayes-3.2.6-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/ncview/2.1.7/easybuild/ncview-2.1.7-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/netcdf-c++4-mpi/4.3.0/easybuild/netCDF-C++4-4.3.0-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/netcdf-c++-mpi/4.2/easybuild/netCDF-C++-4.2-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/netcdf-fortran-mpi/4.4.4/easybuild/netCDF-Fortran-4.4.4-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/netcdf-mpi/4.4.1.1/easybuild/netCDF-4.4.1.1-iompi-2016.4-mpi.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/openfoam/4.1/easybuild/OpenFOAM-4.1-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/paraview/5.3.0/easybuild/ParaView-5.3.0-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/paraview-offscreen/5.3.0/easybuild/ParaView-offscreen-5.3.0-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/pnetcdf/1.8.1/easybuild/PnetCDF-1.8.1-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/ray/2.3.1/easybuild/Ray-2.3.1-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/repasthpc/2.2.0/easybuild/RepastHPC-2.2.0-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/rosetta/3.8/easybuild/Rosetta-3.8-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/scotch/6.0.4/easybuild/SCOTCH-6.0.4-iompi-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/yaxt/0.5.1/easybuild/YAXT-0.5.1-iompi-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.2.1-r3db2e57b314e8b3eec402101882d745f397222bf",
+    "easybuild-framework_version": "3.2.1-r4b5816c3de9f10d3e8d15ae966461ae56a78c4e1",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 6413250,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.3.1611",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1497488211,
+    "total_memory": 241657,
+}]
