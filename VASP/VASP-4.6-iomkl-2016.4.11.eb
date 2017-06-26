@@ -1,0 +1,92 @@
+# Built with EasyBuild version 3.2.1-r4b5816c3de9f10d3e8d15ae966461ae56a78c4e1 on 2017-06-26_22-27-31
+easyblock = 'MakeCp'
+
+name = 'VASP'
+version = '4.6'
+
+homepage = 'http://www.vasp.at'
+description = """The Vienna Ab initio Simulation Package (VASP) is a computer program for atomic scale
+materials modelling, e.g. electronic structure calculations and quantum-mechanical molecular dynamics,
+based on Density Futional Theory (DFT). In this version Transition State Tools for VASP (http://theory.cm.utexas.edu/vtsttools/)
+as well as VASPsol (https://github.com/henniggroup/VASPsol) has been implemented to the original vasp ."""
+
+toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
+toolchainopts = {'usempi': True}
+
+# Vasp is proprietary software, see http://www.vasp.at/index.php/faqs on how to get access to the code
+sources = ['vasp.4.6.tar.gz']
+
+# uncommment after downloading patches from http://cms.mpi.univie.ac.at/wiki/index.php/Installing_VASP
+patches = [
+    'vasp-4.6.patch',
+    'vasp-4.6-fft3dlib.patch',
+    'vasp-4.6-mkbdr.patch'
+ ]
+
+checksums = [
+    'b2931fe01eb6ea073d921887def811af', #vasp.4.6.tar.gz
+    'acfcfe8b889b466a5c8e00e3581d3704', #vasp-4.6.patch
+    'bd2982b4614c1dd81f44c789ce68a263',  #vasp-4.6-fft3dlib.patch
+    'd3cb14c358ba7f0bcf58827cfa742780'  #vasp-4.6-mkbdr.patch
+]
+
+prebuildopts = 'cd vasp.4.lib &&'
+prebuildopts += 'unset LIBS && '
+prebuildopts += 'make -f makefile.linux_ifc_P4 &&'
+prebuildopts += 'cd .. &&'
+prebuildopts += 'wget http://theory.cm.utexas.edu/code/vtstcode_old/vtstcode_v2.03d.tar.gz &&'
+prebuildopts += 'tar xzf vtstcode_v2.03d.tar.gz && '
+prebuildopts += 'mv vtstcode vtstcode_v2.03d &&'
+prebuildopts += 'wget http://theory.cm.utexas.edu/code/vtstcode_old/vtstcode_v2.04a.tar.gz &&'
+prebuildopts += 'tar xzf vtstcode_v2.04a.tar.gz && '
+prebuildopts += 'mv vtstcode vtstcode_v2.04a &&'
+prebuildopts += 'mv vtstcode_v2.04a/mkbdrpro.pl vtstcode_v2.04a/bdr_changes src &&' 
+prebuildopts += 'rm -f vtstcode_v2.03d/dynamic.F vtstcode_v2.03d/dimer_save.F &&'
+prebuildopts += 'mv vtstcode_v2.03d/*.F src &&'
+prebuildopts += 'cd src && '
+prebuildopts += 'chmod u+x mkbdrpro.pl && '
+prebuildopts += './mkbdrpro.pl bdr_changes && '
+prebuildopts += "sed -i.orig 's|     #if defined(MPI_CHAIN)|#if defined(MPI_CHAIN)|'  dimer.F &&"
+prebuildopts += "sed -i.orig 's|     #endif|#endif|'  dimer.F &&"
+prebuildopts += 'cp makefile.linux_ifc_P4 makefile; make &&'
+prebuildopts += 'cp vasp vasp-gamma &&'
+#For gamma point
+prebuildopts += "sed -i.back 's|-DwNGZhalf -DNGZhalf -DCACHE_SIZE=4000 -DPGF90 -Davoidalloc |-DNGZhalf -DCACHE_SIZE=4000 -DPGF90 -Davoidalloc |' makefile &&"
+prebuildopts += 'make clean; make makeparam &&'
+
+parallel = 1
+
+files_to_copy = [(['src/vasp-gamma', 'src/makeparam', 'src/vasp'], 'bin')]
+
+sanity_check_paths = {
+    'files': ['bin/vasp-gamma', 'bin/makeparam', 'bin/vasp'],
+    'dirs': []
+}
+group = "soft_vasp4"
+moduleclass = 'phys'
+
+# Build statistics
+buildstats = [{
+    "build_time": 430.66,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tk,CFITSIO,libX11,libXft,libXpm,libXext'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/home/aroudgar/easybuild-easyconfigs/easybuild/easyconfigs/v/VASP/VASP-4.6-imkl-intel-2016b.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.2.1-r3db2e57b314e8b3eec402101882d745f397222bf",
+    "easybuild-framework_version": "3.2.1-r4b5816c3de9f10d3e8d15ae966461ae56a78c4e1",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 17654802,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.3.1611",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1498516051,
+    "total_memory": 241657,
+}]
