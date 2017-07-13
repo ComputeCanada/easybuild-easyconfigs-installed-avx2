@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6 on 2017-07-10_19-56-43
+# Built with EasyBuild version 3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6 on 2017-07-13_20-04-21
 ##
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 #
@@ -7,7 +7,7 @@
 # License::   MIT/GPL
 # $Id$
 ##
-# Needs to be built with '--use-ccache='  (i.e. no argument)
+# Needs to be built with '-use-ccache='  (i.e. no argument)
 name = 'Chapel'
 version = '1.15.0'
 
@@ -32,13 +32,13 @@ unpack_options = '--strip-components=1'
 # parallel build fails
 parallel = 1
 
-prebuildopts = [' export  CHPL_COMM=gasnet CHPL_LAUNCHER=none CHPL_COMM_SUBSTRATE=ibv   && ']
+prebuildopts = [' export  CHPL_TASKS=fifo CHPL_COMM=gasnet CHPL_LAUNCHER=gasnetrun_ibv CHPL_COMM_SUBSTRATE=ibv CHPL_HWLOC=none  CHPL_GASNET_SEGMENT=large  && ']
 
 
 
-libpath = 'lib/linux64/gnu/arch-unknown/loc-flat/comm-gasnet/ibv/large/tasks-qthreads/'
+libpath = 'lib/linux64/gnu/arch-unknown/loc-flat/comm-gasnet/ibv/large/tasks-fifo/'
 libpath += 'tmr-generic/unwind-none/mem-jemalloc/atomics-intrinsics/'
-libpath += 'gmp/hwloc/re2/wide-struct/fs-none/'
+libpath += 'gmp/hwloc-none/re2/wide-struct/fs-none/'
 
 sanity_check_paths = {
     'files': ['bin/linux64/chpl', 'bin/linux64/chpl-ipe', '%s/libchpl.a' % libpath, '%s/main.o' % libpath ],
@@ -54,26 +54,29 @@ modextravars = {
     'CHPL_HOST_PLATFORM': 'linux64',
     'CHPL_COMM': 'gasnet',
     'CHPL_COMM_SUBSTRATE': 'ibv',
-    'CHPL_LAUNCHER': 'none',
+    'CHPL_LAUNCHER': 'gasnetrun_ibv',
+    'CHPL_HWLOC': 'none',
+    'CHPL_TASKS': 'fifo',
+    'CHPL_GASNET_SEGMENT': 'large',
 }
 
 moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 509.42,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache=''", 'Chapel-1.15.0-GCC-5.4.0-gasnet-nolauncher.eb'],
+    "build_time": 455.09,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache=''", 'Chapel-1.15.0-GCC-5.4.0-gasnet-ssh.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.3.0-r662f0ec5db9dca5618f9a1337d0b55a860dfdab6",
+    "easybuild-easyblocks_version": "3.3.0-r4a9b54e68a9c1c250af8fb3161431025e8d6e98f",
     "easybuild-framework_version": "3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 283483873,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "install_size": 264515191,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.3.1611",
@@ -81,6 +84,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1499716603,
+    "timestamp": 1499976260,
     "total_memory": 241657,
 }]
