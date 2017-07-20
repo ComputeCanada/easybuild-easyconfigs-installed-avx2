@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6 on 2017-07-19_16-24-36
+# Built with EasyBuild version 3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6 on 2017-07-20_01-13-32
 ##
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 #
@@ -15,6 +15,7 @@ easyblock = 'CMakeMake'
 
 name = 'VTK'
 version = '8.0.0'
+#versionsuffix = '-Python-%(pyver)s'
 
 homepage = 'http://www.vtk.org'
 description = """The Visualization Toolkit (VTK) is an open-source, freely available software system for
@@ -23,48 +24,59 @@ description = """The Visualization Toolkit (VTK) is an open-source, freely avail
  algorithms including: scalar, vector, tensor, texture, and volumetric methods; and advanced modeling techniques
  such as: implicit modeling, polygon reduction, mesh smoothing, cutting, contouring, and Delaunay triangulation."""
 
-# Download eg. http://www.vtk.org/files/release/8.0/VTK-8.0.0.tar.gz
-
-vermajor = '.'.join(version.split('.')[:2])
-
-sources = [
-    '%s-%s.tar.gz' % (name, version),
-]
-source_urls = ['http://www.vtk.org/files/release/%s/' % vermajor]
-
 toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
 
-builddependencies = [('CMake', '3.7.2')]
+source_urls = ['http://www.vtk.org/files/release/%(version_major_minor)s']
+sources = [
+    SOURCE_TAR_GZ,
+    '%(name)sData-%(version)s.tar.gz',
+]
 
-sanity_check_paths = { 
-    'files': ['bin/vtkEncodeString-8.0'],
-    'dirs': ['include/vtk-%s' % vermajor]
+builddependencies = [('CMake', '3.8.0')]
+
+dependencies = [
+    ('HDF5', '1.8.18'),
+    ('Python', '2.7.13'),
+    ('libGLU', '9.0.0'),
+    ('X11', '20170314'),
+]
+
+configopts = ""
+#configopts = "-DOPENGL_glu_LIBRARY=$EBROOTLIBGLU/lib/libGLU.%s " % SHLIB_EXT
+#configopts += "-DOPENGL_gl_LIBRARY=$EBROOTMESA/lib/libGL.%s " % SHLIB_EXT
+#configopts += "-DOPENGL_INCLUDE_DIR=$EBROOTMESA/include -DVTK_WRAP_PYTHON=ON "
+configopts += "-DPYTHON_LIBRARY=$EBROOTPYTHON/lib/libpython%%(pyshortver)s.%s " % SHLIB_EXT
+configopts += " -DPYTHON_INCLUDE_DIR=$EBROOTPYTHON/include/python%(pyshortver)s "
+configopts += " -DVTK_WRAP_PYTHON:BOOL=ON "
+preinstallopts = "mkdir -p %(installdir)s/lib/python%(pyshortver)s/site-packages/ && "
+preinstallopts += "export PYTHONPATH=%(installdir)s/lib/python%(pyshortver)s/site-packages:$PYTHONPATH && "
+postinstallcmds = [ "/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s/lib/python%(pyshortver)s/site-packages --add_path %(installdir)s/lib" ]
+
+modextrapaths = {'PYTHONPATH': ['lib/python%(pyshortver)s/site-packages']}
+
+sanity_check_paths = {
+    'files': ['bin/vtk%s-%%(version_major_minor)s' % x for x in ['EncodeString', 'HashSource']],
+    'dirs': ['lib/python%(pyshortver)s/site-packages/', 'include/vtk-%(version_major_minor)s'],
 }
 
-modextrapaths = { 'CPATH': 'include/vtk-%s' % vermajor }
-
-files_to_copy = [
-    (['bin/vtkEncodeString-8.0'], "bin/vtkEncodeString"),
-]
+sanity_check_commands = [('python', "-c 'import %(namelower)s'")]
 
 moduleclass = 'vis'
 
-# End of EasyBuild file.
-
 # Build statistics
 buildstats = [{
-    "build_time": 1896.65,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'VTK-8.0.0-iomkl-2016.4.11.eb'],
+    "build_time": 2929.5,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'VTK-8.0.0-iomkl-2016.4.11-Python-2.7.13.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.3.0-r0e131e6b80febc174f87d1689380540b84bde06b",
+    "easybuild-easyblocks_version": "3.3.0-rfc90ad4a68a0e7885d48a6d6c347497c3fa5e854",
     "easybuild-framework_version": "3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 744521952,
+    "install_size": 1230126869,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
     "os_name": "centos linux",
     "os_type": "Linux",
@@ -72,7 +84,7 @@ buildstats = [{
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
-    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1500481476,
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-2.7.13/bin/python",
+    "timestamp": 1500513211,
     "total_memory": 241657,
 }]
