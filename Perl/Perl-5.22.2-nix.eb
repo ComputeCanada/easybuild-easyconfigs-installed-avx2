@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.1.1-rca288e3b276282dc7cf314414ec2e55b300430f4 on 2017-03-14_20-05-38
+# Built with EasyBuild version 3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6 on 2017-07-31_08-26-42
 easyblock = 'Nix'
 
 name = 'Perl'
@@ -12,7 +12,7 @@ description = "Perl 5 is a highly capable, feature-rich programming language wit
 toolchain = {'name': 'dummy', 'version': 'dummy'}
 
 nix_profile = '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/perl-%(version)s'
-nix_attribute = 'perl522 perlPackages.AlgorithmDiff perlPackages.ArrayCompare perlPackages.BitVector perlPackages.CaptureTiny perlPackages.CarpClan perlPackages.ClassDataInheritable perlPackages.ClassInspector perlPackages.ClassMethodModifiers perlPackages.Clone perlPackages.CryptRC4 perlPackages.DateTimeSet perlPackages.DBDSQLite perlPackages.DBFile perlPackages.DBI perlPackages.DevelGlobalDestruction perlPackages.DevelStackTrace perlPackages.DevelSymdump perlPackages.Error perlPackages.ExceptionClass perlPackages.ExporterTiny perlPackages.FileListing perlPackages.FileSlurpTiny perlPackages.FileWhich perlPackages.GD perlPackages.Graph perlPackages.GraphViz perlPackages.HTMLParser perlPackages.HTMLTableExtract perlPackages.HTMLTagset perlPackages.HTMLTemplate perlPackages.HTTPCookies perlPackages.HTTPDaemon perlPackages.HTTPDate perlPackages.HTTPMessage perlPackages.HTTPNegotiate perlPackages.Inline perlPackages.IOAll perlPackages.IOHTML perlPackages.IOString perlPackages.IOStringy perlPackages.IPCRun perlPackages.IPCRun3 perlPackages.JSON perlPackages.ListAllUtils perlPackages.ListMoreUtils perlPackages.LocaleGettext perlPackages.LWP perlPackages.LWPMediaTypes perlPackages.ModuleBuild perlPackages.ModuleRuntime perlPackages.Moo perlPackages.MozillaCA perlPackages.NetHTTP perlPackages.OLEStorageLight perlPackages.ParseRecDescent perlPackages.PathClass perlPackages.ProcProcessTable perlPackages.RoleTiny perlPackages.SetObject perlPackages.SetScalar perlPackages.SortNaturally perlPackages.SpreadsheetParseExcel perlPackages.StatisticsDescriptive perlPackages.SubExporterProgressive perlPackages.SubUplevel perlPackages.SysSigAction perlPackages.TaskWeaken perlPackages.TermReadKey perlPackages.TestDeep perlPackages.TestDifferences perlPackages.TestException perlPackages.TestFatal perlPackages.TestMost perlPackages.TestNoWarnings perlPackages.TestRequires perlPackages.TestScript perlPackages.TestWarn perlPackages.TextDiff perlPackages.TreeDAGNode perlPackages.TryTiny perlPackages.TypeTiny perlPackages.URI perlPackages.Want perlPackages.WWWCurl perlPackages.WWWRobotRules perlPackages.XMLDOM perlPackages.XMLFilterBufferText perlPackages.XMLLibXML perlPackages.XMLNamespaceSupport perlPackages.XMLParser perlPackages.XMLSAX perlPackages.XMLSAXWriter perlPackages.XMLSimple perlPackages.XMLTwig perlPackages.XMLWriter perlPackages.XMLXPath'
+nix_attribute = 'perl522 perlPackages.AlgorithmDiff perlPackages.ArrayCompare perlPackages.BitVector perlPackages.CaptureTiny perlPackages.CarpClan perlPackages.ClassDataInheritable perlPackages.ClassInspector perlPackages.ClassMethodModifiers perlPackages.Clone perlPackages.CryptRC4 perlPackages.DateTimeSet perlPackages.DBDSQLite perlPackages.DBFile perlPackages.DBI perlPackages.DevelGlobalDestruction perlPackages.DevelStackTrace perlPackages.DevelSymdump perlPackages.Error perlPackages.ExceptionClass perlPackages.ExporterTiny perlPackages.FileListing perlPackages.FileSlurpTiny perlPackages.FileWhich perlPackages.GD perlPackages.Graph perlPackages.GraphViz perlPackages.HTMLParser perlPackages.HTMLTableExtract perlPackages.HTMLTagset perlPackages.HTMLTemplate perlPackages.HTTPCookies perlPackages.HTTPDaemon perlPackages.HTTPDate perlPackages.HTTPMessage perlPackages.HTTPNegotiate perlPackages.Inline perlPackages.IOAll perlPackages.IOHTML perlPackages.IOString perlPackages.IOStringy perlPackages.IPCRun perlPackages.IPCRun3 perlPackages.JSON perlPackages.ListAllUtils perlPackages.ListMoreUtils perlPackages.LocaleGettext perlPackages.LWP perlPackages.LWPMediaTypes perlPackages.ModuleBuild perlPackages.ModuleRuntime perlPackages.Moo perlPackages.MozillaCA perlPackages.NetHTTP perlPackages.OLEStorageLight perlPackages.ParseRecDescent perlPackages.PathClass perlPackages.Perl4-CoreLibs perlPackages.ProcProcessTable perlPackages.RoleTiny perlPackages.SetObject perlPackages.SetScalar perlPackages.SortNaturally perlPackages.SpreadsheetParseExcel perlPackages.StatisticsDescriptive perlPackages.SubExporterProgressive perlPackages.SubUplevel perlPackages.SysSigAction perlPackages.TaskWeaken perlPackages.TermReadKey perlPackages.TestDeep perlPackages.TestDifferences perlPackages.TestException perlPackages.TestFatal perlPackages.TestMost perlPackages.TestNoWarnings perlPackages.TestRequires perlPackages.TestScript perlPackages.TestWarn perlPackages.TextDiff perlPackages.TreeDAGNode perlPackages.TryTiny perlPackages.TypeTiny perlPackages.URI perlPackages.Want perlPackages.WWWCurl perlPackages.WWWRobotRules perlPackages.XMLDOM perlPackages.XMLFilterBufferText perlPackages.XMLLibXML perlPackages.XMLNamespaceSupport perlPackages.XMLParser perlPackages.XMLSAX perlPackages.XMLSAXWriter perlPackages.XMLSimple perlPackages.XMLTwig perlPackages.XMLWriter perlPackages.XMLXPath'
 
 modextrapaths = {'PERL5LIB': ['lib/perl%s' % perlshortver, 'lib/perl%s/site_perl' % perlshortver ]}
 
@@ -21,26 +21,26 @@ moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 6.48,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", 'Perl-5.22.2-nix.eb'],
+    "build_time": 441.59,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Perl-5.22.2-nix.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.1.1-r0c1b94995e070af820cd68a6a688f0a2087b37da",
-    "easybuild-framework_version": "3.1.1-rca288e3b276282dc7cf314414ec2e55b300430f4",
-    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "easybuild-easyblocks_version": "3.3.0-rfc90ad4a68a0e7885d48a6d6c347497c3fa5e854",
+    "easybuild-framework_version": "3.3.0-re50b70af25207aec9b965a5c4aaa47ba992c9aa6",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
-    "hostname": "build-node.computecanada.ca",
-    "install_size": 1043,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/xzkr5bkjcy4xn8ha573h6v0rf50z0slx-Lmod-7.3.24/lmod/lmod/libexec/lmod', '7.3.24'),
+    "hostname": "build-node",
+    "install_size": 1266,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
     "os_name": "centos linux",
     "os_type": "Linux",
-    "os_version": "7.2.1511",
+    "os_version": "7.3.1611",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc",
+    "system_gcc_path": "/tmp/eb-IrSvFo/tmpt5Hrho/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1489521938,
-    "total_memory": 241658,
+    "timestamp": 1501489602,
+    "total_memory": 241657,
 }]
