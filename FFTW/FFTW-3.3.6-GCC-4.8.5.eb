@@ -1,0 +1,53 @@
+# Built with EasyBuild version 3.3.1-r0e3611e5103c0040b4116324f8286d687d5edb7a on 2017-09-01_17-14-15
+name = 'FFTW'
+version = '3.3.6'
+
+homepage = 'http://www.fftw.org'
+description = """FFTW is a C subroutine library for computing the discrete Fourier transform (DFT)
+ in one or more dimensions, of arbitrary input size, and of both real and complex data."""
+
+toolchain = {'name': 'GCC', 'version': '4.8.5'}
+toolchainopts = {'pic': True}
+
+source_urls = [homepage]
+sources = ['fftw-%(version)s-pl1.tar.gz']
+checksums = ['682a0e78d6966ca37c7446d4ab4cc2a1']
+
+patches = [
+    'FFTW-3.3.6-F03_interface_pl2.patch',
+]
+
+with_mpi = False
+
+# --enable-avx-128-fma is AMD Bulldozer+ specific which we don't have in Compute Canada
+use_fma = False
+
+runtest = 'check'
+
+moduleclass = 'numlib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 2415.65,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCC,4.8.5'", "--use-ccache='/cvmfs/local/ccache'", 'FFTW-3.3.6-GCC-5.4.0.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.3.1-r9908aa4bac92965476c034850d4c48c77c4bd037",
+    "easybuild-framework_version": "3.3.1-r0e3611e5103c0040b4116324f8286d687d5edb7a",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-4.8.5/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/ihj62iqbakapr4r4ckmy33ky86k9570z-gfortran-4.8.5/libexec/gcc/x86_64-unknown-linux-gnu/4.8.5/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 4.8.5 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 50988141,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.3.1611",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-wPdlHa/tmpmEQQXA/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1504286054,
+    "total_memory": 241657,
+}]
