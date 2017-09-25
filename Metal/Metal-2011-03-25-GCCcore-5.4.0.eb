@@ -1,0 +1,77 @@
+# Built with EasyBuild version 3.4.0-rf4ed6f08edeb741996d249ccc5e1adcbf03d948c on 2017-09-25_22-00-45
+##
+# Contributors: 
+# @Author: Ali Kerrache, Compute Canada.
+# @Date: Sep 2017.
+##
+
+easyblock = 'MakeCp'
+
+name = 'Metal'
+version = '2011-03-25'
+
+# see: 
+
+homepage = 'http://www.sph.umich.edu/csg/abecasis/metal/'
+
+description = """
+ METAL provides a computationally efficient tool for meta-analysis of genome-wide 
+ association scans, which is a commonly used approach for improving power complex 
+ traits gene mapping studies. 
+ METAL provides a rich scripting interface and implements efficient memory management to 
+ allow analyses of very large data sets and to support a variety of input file formats.
+ Availability and implementation: METAL, including source code, documentation, examples, 
+ and executables, is available at: http://www.sph.umich.edu/csg/abecasis/metal/
+ If you use Metal please fill out the registration form on the page:
+ http://csg.sph.umich.edu/abecasis/metal/download/
+ Contact: goncalo@umich.edu
+"""
+
+toolchain = {'name': 'GCCcore', 'version': '5.4.0'}
+toolchainopts = {'pic': True}
+
+source_urls = [ 'http://csg.sph.umich.edu/abecasis/metal/download/' ]
+sources = [ 'generic-metal-%(version)s.tar.gz' ]
+
+buildopts = ' all '
+
+files_to_copy = [
+        (['executables/metal'], "bin"),
+        (['ChangeLog', 'LICENSE.twister', 'README'], ""),
+        (['examples', 'version'], ""),
+] 
+
+sanity_check_paths = {
+     'files': [ 'bin/metal', 'ChangeLog', 'LICENSE.twister', 'README' ], 
+     'dirs': ['examples', 'version' ],
+}
+
+moduleclass = 'bio'
+
+# End of EasyBuild file.
+
+# Build statistics
+buildstats = [{
+    "build_time": 9.04,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Metal-2011-03-25-GCCcore-5.4.0.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.4.0-r2b78ea0c1a63c7f304a2100ee34b8dbdfe715466",
+    "easybuild-framework_version": "3.4.0-rf4ed6f08edeb741996d249ccc5e1adcbf03d948c",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 2224507,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.3.1611",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-1hr361/tmpMF8Wpm/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1506376844,
+    "total_memory": 241657,
+}]
