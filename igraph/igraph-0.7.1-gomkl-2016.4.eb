@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.1.1-r0d799fee0c566dd833bd858e1f302c3b65220b7e on 2017-03-18_00-27-22
+# Built with EasyBuild version 3.4.0-rf4ed6f08edeb741996d249ccc5e1adcbf03d948c on 2017-09-26_03-57-32
 easyblock = 'ConfigureMake'
 
 name = 'igraph'
@@ -15,21 +15,24 @@ toolchainopts = {'pic': True}
 sources = ['igraph-%(version)s.tar.gz']
 source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
 
-builddependencies = [('Autotools', '20150215')]
+builddependencies = [('Autotools', '20150215'),
+	             ('Python', '3.5.2', '-nix', ('dummy','dummy')),
+                    ]
+
+py2shortver = '2.7'
+py3shortver = '3.5'
 
 patches = [
-	# Author: Maxime Boissonneault <maxime.boissonneault@calculquebec.ca>
-	# Remove explicit linking on -llapack and -llblas, which are not found when linking against MKL
-	'igraph-%(version)s-no-lapack-no-blas.patch', 
-	
-	# Author: Maxime Boissonneault <maxime.boissonneault@calculquebec.ca>
-	# Fix explicit version of aclocal (specified 1.14). Replaced with version 1.15 which corresponds to the 20150215 Autotools
-	'igraph-%(version)s-fix-aclocal-version.patch'
-	]
+    'igraph-%(version)s-no-lapack-no-blas.patch',
+    'igraph-%(version)s-fix-aclocal-version.patch'
+]
 
 # link against MKL rather than blas/lapack
 preconfigopts = "env LDFLAGS='-lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm'"
 configopts = "--with-external-blas=yes --with-external-lapack=yes"
+
+installopts  = ' && pip2 install python-igraph --prefix=%(installdir)s'
+installopts += ' && pip3 install python-igraph --prefix=%(installdir)s'
 
 sanity_check_paths = {
     'files': ['lib/libigraph.so', 'lib/libigraph.la', 'lib/pkgconfig/igraph.pc'] +
@@ -37,30 +40,35 @@ sanity_check_paths = {
     'dirs': [],
 }
 
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''], 
+}
+
 moduleclass = 'lib'
 
 # Build statistics
 buildstats = [{
-    "build_time": 42.93,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--suffix-modules-path=''", "--try-toolchain='gomkl,2016.4'", 'igraph-0.7.1-intel-2016a.eb'],
+    "build_time": 36.47,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='gomkl,2016.4'", "--use-ccache='/cvmfs/local/ccache'", 'igraph-0.7.1-iomkl-2016.4.11.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.1.1-r0c1b94995e070af820cd68a6a688f0a2087b37da",
-    "easybuild-framework_version": "3.1.1-r0d799fee0c566dd833bd858e1f302c3b65220b7e",
-    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "easybuild-easyblocks_version": "3.4.0-r2b78ea0c1a63c7f304a2100ee34b8dbdfe715466",
+    "easybuild-framework_version": "3.4.0-rf4ed6f08edeb741996d249ccc5e1adcbf03d948c",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
-    "hostname": "build-node.computecanada.ca",
-    "install_size": 19280166,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/store/xzkr5bkjcy4xn8ha573h6v0rf50z0slx-Lmod-7.3.24/lmod/lmod/libexec/lmod', '7.3.24'),
+    "hostname": "build-node",
+    "install_size": 36024929,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
     "os_name": "centos linux",
     "os_type": "Linux",
-    "os_version": "7.2.1511",
+    "os_version": "7.3.1611",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
-    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1489796842,
-    "total_memory": 241658,
+    "system_gcc_path": "/tmp/eb-JHDyqv/tmpdxzt1j/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-3.5.2/bin/python",
+    "timestamp": 1506398252,
+    "total_memory": 241657,
 }]
