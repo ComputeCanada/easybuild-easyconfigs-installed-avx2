@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0 on 2017-10-27_17-43-52
+# Built with EasyBuild version 3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0 on 2017-10-28_02-46-15
 # This is an easyconfig file for EasyBuild, see http://easybuilders.github.io/easybuild
 
 name = 'impi'
@@ -24,31 +24,44 @@ postinstallcmds = [
   '''/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s
      installdir=%(installdir)s
      publicdir=${installdir/restricted.computecanada.ca/soft.computecanada.ca}
-     for i in $(grep installdir $installdir/compilers_and_libraries_2017.5.239/licensing/mpi/en/redist.txt | cut -c 13-); do
+     for i in $(grep installdir.*linux $installdir/compilers_and_libraries_2017.5.239/licensing/mpi/en/redist.txt | cut -c 59-); do
        if [ -f $installdir/$i ]; then
          mkdir -p $(dirname $publicdir/$i)
-         cp -p $installdir/$i $publicdir/$i
+         cp -a $installdir/$i $publicdir/$i
        fi
-     done''',
-    'ln -s %(installdir)s/lib64/libmpi.so  %(installdir)s/lib64/libmpich.so',
-    'ln -s %(installdir)s/lib64/libmpigc4.so  %(installdir)s/lib64/libmpichcxx.so',
-    'ln -s %(installdir)s/lib64/libmpigf.so %(installdir)s/lib64/libfmpich.so',
-    'ln -s %(installdir)s/lib64/libmpigf.so %(installdir)s/lib64/libmpichf90.so',
-    'ln -s %(installdir)s/lib64/libmpi.so %(installdir)s/lib64/libmpl.so',
-    'ln -s %(installdir)s/lib64/libmpi.so %(installdir)s/lib64/libopa.so'
+     done
+     if [ ! -L $publicdir/lib64 ]; then
+       ln -s intel64/lib $publicdir/lib64
+     fi
+     ln -s libmpi.so  %(installdir)s/lib64/libmpich.so
+     ln -s libmpigc4.so  %(installdir)s/lib64/libmpichcxx.so
+     ln -s libmpigf.so %(installdir)s/lib64/libfmpich.so
+     ln -s libmpigf.so %(installdir)s/lib64/libmpichf90.so
+     ln -s libmpi.so %(installdir)s/lib64/libmpl.so
+     ln -s libmpi.so %(installdir)s/lib64/libopa.so
+     ln -s libmpi.so $publicdir/lib64/libmpich.so
+     ln -s libmpigc4.so $publicdir/lib64/libmpichcxx.so
+     ln -s libmpigf.so $publicdir/lib64/libfmpich.so
+     ln -s libmpigf.so $publicdir/lib64/libmpichf90.so
+     ln -s libmpi.so $publicdir/lib64/libmpl.so
+     ln -s libmpi.so $publicdir/lib64/libopa.so
+  '''
 ]
 
 moduleclass = 'mpi'
 
 modluafooter = """
+prepend_path("LIBRARY_PATH", pathJoin(root:gsub("/restricted.computecanada.ca/","/soft.computecanada.ca/"), "lib64"))
+prepend_path("PATH", pathJoin(root:gsub("/restricted.computecanada.ca/","/soft.computecanada.ca/"), "bin64"))
+
 add_property("type_","mpi")
 family("mpi")
 """
 
 # Build statistics
 buildstats = [{
-    "build_time": 58.13,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'impi-2017.4.239-iccifort-2017.5.eb'],
+    "build_time": 56.98,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'impi-2017.4.239-iccifort-2017.5.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.996,
@@ -67,6 +80,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-6.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1509126232,
+    "timestamp": 1509158775,
     "total_memory": 241657,
 }]
