@@ -1,0 +1,79 @@
+# Built with EasyBuild version 3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0 on 2017-11-01_18-11-51
+# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
+# Author: Doug Roberts
+# Email: doug@sharcnet.ca
+
+easyblock = "Tarball"
+
+name = 'LS-DYNA'
+version = '7.1.3'
+
+homepage = 'http://www.lstc.com/products/ls-dyna'
+description = """LS-DYNA is a general-purpose finite element program capable of simulating complex real world problems. 
+It is used by the automobile, aerospace, construction, military, manufacturing, and bioengineering industries. 
+LS-DYNA is optimized for shared and distributed memory Unix, Linux, and Windows based, platforms, and it is fully 
+QA'd by LSTC. The code's origins lie in highly nonlinear, transient dynamic finite element analysis using explicit 
+time integration.
+"""
+
+toolchain = {'name': 'iccifort', 'version': '2016.4'}
+
+# You need to get the software manually from ftp.lstc.com
+sources = [
+	'ls-dyna_smp_d_r713_x64_redhat56_ifort131.gz',  #ls-dyna_smp_d_r910_x64_redhat56_ifort131.gz',
+	'ls-dyna_smp_s_r713_x64_redhat56_ifort131.gz'   #ls-dyna_smp_s_r910_x64_redhat56_ifort131.gz'
+]
+
+postinstallcmds = [
+	'chmod +x %(installdir)s/{ls-dyna_smp_d_r713_x64_redhat56_ifort131,ls-dyna_smp_s_r713_x64_redhat56_ifort131}',
+	'ln -s ls-dyna_smp_d_r713_x64_redhat56_ifort131  %(installdir)s/ls-dyna_d',
+	'ln -s ls-dyna_smp_s_r713_x64_redhat56_ifort131 %(installdir)s/ls-dyna_s',
+	'/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s'
+]
+modextrapaths = {'PATH': ''}
+
+sanity_check_paths = {
+    'files': ["ls-dyna_d", "ls-dyna_s", "ls-dyna_smp_d_r713_x64_redhat56_ifort131", "ls-dyna_smp_s_r713_x64_redhat56_ifort131" ],
+    'dirs': []
+}
+
+modluafooter = """
+require("SitePackage")
+local found = find_and_define_license_file("LSTC_FILE","ls-dyna")
+if (not found) then
+        local error_message = [[
+	We did not find a suitable license for LS-DYNA. If you have access to one, you can create the file $HOME/.licenses/ls-dyna.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@computecanada.ca so that we can configure it.
+
+	Nous n'avons pas trouve de licence utilisable pour LS-DYNA. Si vous avez acces a une licence de LS-DYNA, vous pouvez creer le fichier $HOME/.licenses/ls-dyna.lic avec l'information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer.
+	]]
+	LmodError(error_message)
+end
+"""
+
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 18.13,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'LS-DYNA-7.1.3-iccifort-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.4.1-r87fa33318c0943299ac08a062a2113f59a9449be",
+    "easybuild-framework_version": "3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 592013183,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1509559910,
+    "total_memory": 241657,
+}]
