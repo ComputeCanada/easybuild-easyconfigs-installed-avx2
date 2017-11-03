@@ -1,0 +1,61 @@
+# Built with EasyBuild version 3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0 on 2017-11-03_15-50-30
+# Note:
+# This is an easyconfig file for EasyBuild, see https://github.com/easybuilders/easybuild
+# It was auto-generated based on a template easyconfig, so it should be used with care.
+easyblock = 'ConfigureMake'
+
+name = 'MPFI'
+version = '1.5.1'
+
+homepage = 'http://perso.ens-lyon.fr/nathalie.revol/software.html'
+description = """MPFI, a multiple precision interval arithmetic library based on MPFR
+MPFI stands for Multiple Precision Floating-point Interval library."""
+
+# toolchain name should be 'TEMPLATE' if this is a template, so EasyBuild knows and is willing to use it as a template
+toolchain = {'name': 'iccifort', 'version': '2016.4'}
+toolchainopts = {}  # toolchain options, e.g. opt, pic, usempi, optarch, ...
+
+# For sources line to work correctly with --try-software-version, you MUST employ %s OR use a construct like SOURCE_TAR_GZ
+sources = ['%(name)s-%(version)s.tar.gz']
+source_urls = ['https://gforge.inria.fr/frs/download.php/file/30130/']
+
+patches = []
+
+dependencies = []
+
+runtest = 'check'
+
+# The sanity test MUST be tuned before going production and submitting your contribution to upstream git repositories
+sanity_check_paths = {
+    'files': ['lib/libmpfi.a','include/mpfi.h'],
+    'dirs': ['include', 'lib', 'share']
+}
+
+# You SHOULD change the following line; Kindly consult other easyconfigs for possible options
+moduleclass = 'math'
+
+# Build statistics
+buildstats = [{
+    "build_time": 463.1,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iccifort,2016.4'", "--use-ccache='/cvmfs/local/ccache'", 'MPFI-1.5.1-GCC-5.4.0.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.4.1-r87fa33318c0943299ac08a062a2113f59a9449be",
+    "easybuild-framework_version": "3.4.1-r38a470ffe848026df8cde7ba904f7d911aac11c0",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 733116,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.5.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1509724229,
+    "total_memory": 241657,
+}]
