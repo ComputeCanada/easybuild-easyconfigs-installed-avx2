@@ -1,0 +1,94 @@
+# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-05_15-45-31
+easyblock = 'Binary'
+
+name = 'XMM-SAS'
+version = '16.1.0'
+
+homepage = 'https://www.cosmos.esa.int/web/xmm-newton/sas'
+description = """The Science Analysis System (SAS) is a collection of tasks, scripts and libraries, specifically designed to reduce and analyze data collected by the XMM-Newton observatory."""
+
+toolchain = {'name': 'GCC', 'version': '5.4.0'}
+
+sources = ['sas_16.1.0-RHEL6.8-64.tgz']
+#Needs to be downloaded separately
+source_urls = ['https://www.cosmos.esa.int/web/xmm-newton/sas-download']
+
+#preinstallopts = 'cd %(installdir)s && tar -xf %(builddir)s/sas_16.1.0-RHEL6.8-64.tgz &&'
+#install_cmd = './install.sh '
+
+sanity_check_paths = {
+    'files': ['xmmsas_20170719_1539/sas-setup.sh', 'xmmsas_20170719_1539/setsas.sh'],
+    'dirs': ['xmmsas_20170719_1539/bin', 'xmmsas_20170719_1539/lib'],
+}
+
+perl = 'Perl'
+perlver = '5.22.2'
+versionsuffix = '-%s-%s' % (perl, perlver)
+
+dependencies = [
+    ('HEASoft','6.22.1'),
+    (perl, perlver,'-nix')
+]
+
+# these are the perl libraries dependencies
+exts_defaultclass = 'PerlModule'
+#exts_filter = ("perldoc -lm %(ext_name)s ", "")
+exts_filter = ("PERL5LIB=/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/Compiler/gcc5.4/xmm-sas/16.1.0/lib/perl5/site_perl/5.22.2:$PERL5LIB && perldoc -lm %(ext_name)s ", "")
+
+
+exts_list = [
+    ('Switch', '2.17', {
+        'source_tmpl': 'Switch-2.17.tar.gz',
+        'source_urls': ['http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/'],
+    }),
+    ('XML::LibXML', '2.0132', {
+        'source_tmpl': 'XML-LibXML-2.0132.tar.gz',
+        'source_urls': ['http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/'],
+    }),
+]
+
+
+postinstallcmds = [ "cd %(installdir)s && tar -xf %(builddir)s/sas_16.1.0-RHEL6.8-64.tgz && ./install.sh && /cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s --add_path %(installdir)s/xmmsas_20170719_1539/lib:%(installdir)s/xmmsas_20170719_1539/libextra;cd %(installdir)s/xmmsas_20170719_1539/bin;for f in *;do file $f|grep Perl>/dev/null;if [ $? -eq 0 ];then sed -i 's/perl -w/env perl/' $f; fi; done" ]
+modextrapaths = {
+    'PATH': ['xmmsas_20170719_1539/bin'],
+    'PERL5LIB': ['lib/perl5/site_perl/%(perlver)s/', 'xmmsas_20170719_1539/lib/perl5'],
+}
+
+modextravars = {
+           	'SAS_DIR': '%(installdir)s/xmmsas_20170719_1539',
+                'SAS_PATH': '%(installdir)s/xmmsas_20170719_1539/config/ftools:%(installdir)s/xmmsas_20170719_1539',
+}
+
+modloadmsg = """To initialize XSS-SAS,
+  do (sh, ash, ksh, and bash)
+              . $EBROOTXMMMINSAS/xmmsas_20170719_1539/setsas.sh
+  or (csh, tcsh)
+              source $EBROOTXMMMINSAS/xmmsas_20170719_1539/setsas.csh 
+"""
+moduleclass = 'geo'
+
+# Build statistics
+buildstats = [{
+    "build_time": 159.94,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'XMM-SAS-16.1.0-GCC-5.4.0-Perl-5.22.2.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.0-r29f0539fc57a6af72642ee6a15d75dff4f95521b",
+    "easybuild-framework_version": "3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 3133935990,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-GBC6bI/tmplat7Li/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1515167131,
+    "total_memory": 241657,
+}]
