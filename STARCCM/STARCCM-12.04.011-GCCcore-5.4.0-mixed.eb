@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-09_13-55-56
+# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-09_18-07-49
 name = 'STARCCM'
 version = '12.04.011'
 versionsuffix = "-mixed"
@@ -19,7 +19,7 @@ moduleclass = 'tools'
 modluafooter = """
 require("SitePackage")
 local found = find_and_define_license_file("CDLMD_LICENSE_FILE","starccm")
-if (not found) then
+if (mode() == "load" and not found) then
         local warning_message = [[
 	We did not find a suitable license file for StarCCM+. If you have access to one, you can create the file $HOME/.licenses/starccm.lic with the license information. You may also define the CDLMD_LICENSE_FILE environment variable yourself. This is only a warning. For more details, see https://docs.computecanada.ca/wiki/Star-CCM%2B
 	
@@ -42,15 +42,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 3296,
+    "install_size": 62516,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-8xMZUf/tmpOYq3Bb/gcc",
+    "system_gcc_path": "/tmp/eb-al9f9j/tmpGZ7cEa/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1515506061,
+    "timestamp": 1515521268,
     "total_memory": 241657,
 }]
