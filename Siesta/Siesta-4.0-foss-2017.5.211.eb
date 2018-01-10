@@ -1,0 +1,51 @@
+# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-10_20-59-59
+name = 'Siesta'
+version = '4.0'
+
+homepage = 'http://departments.icmab.es/leem/siesta'
+description = """SIESTA is both a method and its computer program implementation, to perform efficient electronic
+ structure calculations and ab initio molecular dynamics simulations of molecules and solids."""
+
+toolchain = {'name': 'foss', 'version': '2017.5.211'}
+toolchainopts = {'usempi': True}
+
+sources = [SOURCELOWER_TGZ]
+source_urls = ['https://launchpad.net/%(namelower)s/%(version_major_minor)s/%(version)s/+download/']
+configopts = " CC=gcc  --with-blacs=''--with-scalapack=-lscalapack  --with-netcdf=-lnetcdff --with-blas=-lopenblas --with-lapack=-lopenblas "
+dependencies = [
+	('netCDF-Fortran', '4.4.4','-mpi'),
+	('ScaLAPACK', '2.0.2'),
+	('OpenBLAS', '0.2.20'),
+        ('FFTW', '3.3.6','-mpi'),
+]
+patches = [
+        'siesta-4.0-configure.patch',
+]
+
+moduleclass = 'phys'
+
+# Build statistics
+buildstats = [{
+    "build_time": 352.39,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Siesta-4.0-foss-2017.5.211.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.996,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.0-r29f0539fc57a6af72642ee6a15d75dff4f95521b",
+    "easybuild-framework_version": "3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-6.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/cf40xkqhsg1m4b8anl7l7x113apll6yb-gfortran-6.4.0/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 6.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 21653430,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-ehbjko/tmpsne76D/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1515617999,
+    "total_memory": 241657,
+}]
