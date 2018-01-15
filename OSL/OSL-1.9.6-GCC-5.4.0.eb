@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-15_16-39-31
+# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-15_19-37-09
 easyblock = 'CMakeMake'
 
 name = 'OSL'
@@ -16,7 +16,7 @@ dependencies = [
     ('OpenImageIO', '1.8.7'),
     ('Boost', '1.60.0'),
     ('OpenEXR', '2.2.1'),
-    ('Clang', '3.8.1'),
+    ('Clang', '3.9.0'),
 ]
 builddependencies = [('CMake', '3.9.1')]
 toolchainopts = {'cstd':'c++11 -Wno-error=sign-compare'}
@@ -25,7 +25,7 @@ separate_build_dir = True
 configopts = '-DOPENIMAGEIO_BIN=$EBROOTOPENIMAGEIO/bin -DOPENIMAGEIO_INCLUDE_DIR=$EBROOTOPENIMAGEIO/include '
 configopts += '-DOPENIMAGEIO_LIBRARY_DIR=$EBROOTOPENIMAGEIO/lib64 -DOPENIMAGEIO_LIBRARY=$EBROOTOPENIMAGEIO/lib64/libOpenImageIO.so '
 configopts += '-DOPENEXR_INCLUDE_PATH=$EBROOTOPENEXR/include '
-configopts += '-DLLVM_CONFIG=$EBROOTCLANG/bin/llvm-config -DLLVM_LIBRARY=$EBROOTCLANG/lib/libLLVM-3.8.1.so -DLLVM_MCJIT_LIBRARY=$EBROOTCLANG/lib/libLLVMMCJIT.a '
+configopts += '-DLLVM_CONFIG=$EBROOTCLANG/bin/llvm-config -DLLVM_LIBRARY=$EBROOTCLANG/lib/libLLVM-3.9.0.so -DLLVM_MCJIT_LIBRARY=$EBROOTCLANG/lib/libLLVMMCJIT.a '
 configopts += '-DENABLERTTI=ON '
 
 sanity_check_paths = {
@@ -37,7 +37,7 @@ moduleclass = 'lib'
 
 # Build statistics
 buildstats = [{
-    "build_time": 76.36,
+    "build_time": 53.25,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'OSL-1.9.6-GCC-5.4.0.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
@@ -48,15 +48,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 7891014,
+    "install_size": 7879990,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-y1ILB1/tmpJt0I38/gcc",
+    "system_gcc_path": "/tmp/eb-XCvXOc/tmp8f5NHw/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-2.7.13/bin/python",
-    "timestamp": 1516034371,
+    "timestamp": 1516045029,
     "total_memory": 241657,
 }]
