@@ -1,0 +1,60 @@
+# Built with EasyBuild version 3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38 on 2018-01-23_19-32-25
+easyblock = 'MakeCp'
+
+name = 'LevelDB'
+version = '1.18'
+
+homepage = 'https://github.com/google/leveldb'
+description = """LevelDB is a fast key-value storage library written at Google that provides an
+ ordered mapping from string keys to string values."""
+
+toolchain = {'name': 'GCC', 'version': '5.4.0'}
+
+source_urls = ['https://github.com/google/leveldb/archive/']
+sources = ['v%(version)s.tar.gz']
+checksums = ['4aa1a7479bc567b95a59ac6fb79eba49f61884d6fd400f20b7af147d54c5cee5']
+
+files_to_copy = [
+    (['libleveldb.%s.%%(version)s' % SHLIB_EXT, 'libleveldb.a'], 'lib'),
+    (['include/leveldb/*.h'], 'include/leveldb')
+]
+
+cd_cmd = "cd %(installdir)s/lib && "
+postinstallcmds = [
+    cd_cmd + "ln -s libleveldb.%s.%%(version)s libleveldb.%s.%%(version_major)s" % (SHLIB_EXT, SHLIB_EXT),
+    cd_cmd + "ln -s libleveldb.%s.%%(version)s libleveldb.%s" % (SHLIB_EXT, SHLIB_EXT),
+]
+
+sanity_check_paths = {
+    'files': ['include/leveldb/cache.h', 'include/leveldb/table.h',
+              'lib/libleveldb.a', 'lib/libleveldb.%s' % SHLIB_EXT],
+    'dirs': [],
+}
+
+moduleclass = 'devel'
+
+# Build statistics
+buildstats = [{
+    "build_time": 28.25,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'LevelDB-1.18-GCC-5.4.0.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.0-r58f7259fbcc794784dcc00a8e6bddd09ce87e1f5",
+    "easybuild-framework_version": "3.5.0-r9c88db64dba51c4ffd22799c06090d57aaf17e38",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 2231395,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-jl0EZo/tmpPncdNV/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1516735945,
+    "total_memory": 241657,
+}]
