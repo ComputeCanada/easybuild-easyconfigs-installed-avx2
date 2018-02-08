@@ -1,0 +1,93 @@
+# Built with EasyBuild version 3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899 on 2018-02-08_20-34-55
+easyblock = 'ConfigureMake'
+
+name = 'Octopus'
+version = '7.2'
+versionsuffix = '-mpi'
+
+homepage = 'http://www.tddft.org/programs/octopus/wiki/index.php/Main_Page'
+description = """Octopus is a scientific program aimed at the ab initio virtual experimentation 
+ on a hopefully ever-increasing range of system types. Electrons are described quantum-mechanically 
+ within density-functional theory (DFT), in its time-dependent form (TDDFT) when doing simulations 
+ in time. Nuclei are described classically as point particles. 
+ Electron-nucleus interaction is described within the pseudopotential approximation."""
+
+toolchain = {'name': 'iomkl', 'version': '2016.4'}
+toolchainopts = {'usempi': True, 'pic': True}
+
+sources = [SOURCELOWER_TAR_GZ]
+source_urls = ['http://www.tddft.org/programs/octopus/down.php?file=%(version)s/']
+
+builddependencies = [
+    ('Bison', '3.0.4'),
+    ('Perl', '5.22.2', '-nix'),
+]
+
+dependencies = [
+    ('libxc', '3.0.0'),
+    ('METIS', '4.0.3'),
+    ('netCDF', '4.4.1.1', '-mpi'),
+    ('netCDF-Fortran', '4.4.4'),
+    ('FFTW', '3.3.6', '-mpi'),
+    ('BerkeleyGW', '1.2.0'),
+    ('arpack-ng', '3.5.0'),       # The feature is experimental.
+    ('PFFT', '1.0.8-alpha'),
+    ('ETSF_IO', '1.0.4'),
+    ('GSL', '2.3'),
+    ('ParMETIS', '4.0.3'),
+]
+
+preconfigopts = 'BLAS_LIBS="$LIBBLAS" LAPACK_LIBS="$LIBLAPACK"'
+
+configopts  = 'CC=mpicc CXX=mpicxx FC=mpif90 FF=mpif77 ' 
+configopts += '--disable-python --disable-gdlib --disable-openmp --disable-metis '
+configopts += '--enable-mpi --enable-newuoa '
+configopts += '--with-blas="-L$BLAS_LIB_DIR $LIBBLAS" '
+configopts += '--with-libxc-prefix=$EBROOTLIBXC --with-gsl-prefix=$EBROOTGSL '
+configopts += '--with-netcdf-prefix=$EBROOTNETCDFMINFORTRAN '
+configopts += '--with-etsf-io-prefix=$EBROOTETSF_IO '
+configopts += '--with-blacs="$MKLROOT/lib/intel64/libmkl_blacs_intelmpi_lp64.a" '
+configopts += '--with-scalapack="$MKLROOT/lib/intel64/libmkl_scalapack_lp64.a" '
+configopts += '--with-mpifftw-prefix=$EBROOTFFTW '
+configopts += '--with-pfft-prefix=$EBROOTPFFT '
+configopts += '--with-arpack=$EBROOTARPACKMINNG/lib '
+configopts += '--with-berkeleygw-prefix=$EBROOTBERKELEYGW '
+configopts += '--with-parmetis-prefix=$EBROOTPARMETIS '
+
+#runtest = True
+#runtest = 'check'
+
+modextrapaths = {'PATH': 'share/octopus/pseudopotentials'}
+
+sanity_check_paths = {
+    'files': ["bin/octopus_mpi"],
+    'dirs': []
+}
+
+moduleclass = 'chem'
+
+# Build statistics
+buildstats = [{
+    "build_time": 537.85,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Octopus-7.2-iomkl-2016.4-mpi.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.1-rb5fa1f6f29ddc248004a5e148ac84bef4215a383",
+    "easybuild-framework_version": "3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 993880455,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1518122094,
+    "total_memory": 241657,
+}]
