@@ -1,0 +1,58 @@
+# Built with EasyBuild version 3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899 on 2018-02-12_15-13-31
+easyblock = 'Tarball'
+
+name = 'SuperNova'
+version = '2.0.0'
+
+homepage = 'https://support.10xgenomics.com/de-novo-assembly/software/overview/latest/welcome'
+description = """Supernova is delivered as a single, self-contained tar file that can be unpacked anywhere on your system. 
+It bundles all of its own required software dependencies, which are pre-compiled to run on a range of Linux distributions."""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+
+# Require to download manually:
+# wget -O supernova-2.0.0.tar.gz "http://cf.10xgenomics.com/releases/assembly/supernova-2.0.0.tar.gz?Expires=1517895411&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cDovL2NmLjEweGdlbm9taWNzLmNvbS9yZWxlYXNlcy9hc3NlbWJseS9zdXBlcm5vdmEtMi4wLjAudGFyLmd6IiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNTE3ODk1NDExfX19XX0_&Signature=ooEcvPypmpHsgo1kredkgJqPLp7n8-Cb~N4ExyX6Y4fbJ1xUNmMiCk23Uzy88yIxXbV~hVO3Jw~xbBhGKcyf4u9L~HNwlmZKOZbVuMhvHWYfd0oZKiZrvgEugLPODcZwRFQpTjqKDzXCDSOlJfO6NCzdydedu9uLLos4Ynpbf5DCU7Ud6I51SQyiV7NGWm8E4r~hdTXomhLzm2JK3iR1T9AI4p59PutLyQC0VY7DeomgKsj8x8JwSp361Wqg~hASDB4hSwKF60X3bmkqE64bWOsz9XyeAyS7svyyh0URK28ThnqbVSeOPGb4DpI76jyJUlD96HS5idJez3BAjvGI3w__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+ 
+source_urls = ['http://cf.10xgenomics.com/releases/assembly/']
+sources = ['%(namelower)s-%(version)s.tar.gz']
+
+keepsymlinks = True
+
+sanity_check_paths = {
+    'files': ['supernova-cs/2.0.0/bin/supernova'],
+    'dirs': ['anaconda-cs', 'assembly-tiny-fastq', 'martian-cs', 'jemalloc-supernova', 'supernova-cs'],
+}
+
+postinstallcmds = [
+    "setrpaths.sh --path=%(installdir)s "
+]
+
+modextrapaths = {'PATH': ['']}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 173.03,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'SuperNova-2.0.0-dummy-dummy.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.1-rb5fa1f6f29ddc248004a5e148ac84bef4215a383",
+    "easybuild-framework_version": "3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/5vq8a8bc68lwl8mswd34494rfg8vq8mi-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 3210835288,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-KXlTPY/tmp1fIcwn/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1518448410,
+    "total_memory": 241657,
+}]
