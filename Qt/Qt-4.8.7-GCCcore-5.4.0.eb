@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899 on 2018-02-28_14-38-49
+# Built with EasyBuild version 3.5.2.dev0-ra63b1f3e3793c6231e1de971335f86f749a3450b on 2018-03-02_21-43-04
 name = 'Qt'
 version = '4.8.7'
 
@@ -17,15 +17,18 @@ source_urls = [
 sources = ['%(namelower)s-everywhere-opensource-src-%(version)s.tar.gz', 'sip-4.19.7.tar.gz', 'PyQt4_gpl_x11-4.12.1.tar.gz']
 
 patches = ['Qt-%(version)s_phonon-export.patch']
-#configopts = "-dbus"
+
+#template_sip = "module load python/{python_v} && cd %(builddir)s/ && cp -r sip-4.19.7 sip-4.19.7-{python_v} && cd sip-4.19.7-{python_v} && python configure.py --sysroot=%(installdir)s --sipdir=%(installdir)s/share/python{python_v}/sip INCDIR=$EBROOTPYTHON/include/python{python_vm} && make && make install"
+#template_pyqt = "module load python/{python_v} && cd %(builddir)s/ && cp -r PyQt4_gpl_x11-4.12.1 PyQt4_gpl_x11-4.12.1-{python_v} && cd PyQt4_gpl_x11-4.12.1-{python_v} && export EBPYTHONPREFIXES=%(installdir)s && python configure.py --confirm --qmake=%(installdir)s/bin/qmake && CPATH=$EBROOTPYTHON/include/python{python_vm}:$CPATH make && make install"
+#.format({'python_v': '2.7', 'python_vm':'2.7'})
 
 postinstallcmds = [
-	"module load python/3.5 && cd %(builddir)s/sip-4.19.7 && python3.5 configure.py --sysroot=%(installdir)s INCDIR=$EBROOTPYTHON/include/python3.5m && make && make install",
-	"module load python/3.5 && cd %(builddir)s/PyQt4_gpl_x11-4.12.1 && export EBPYTHONPREFIXES=%(installdir)s && export CPATH=$EBROOTPYTHON/include/python3.5m:$CPATH && python3.5 configure.py --confirm --qmake=%(installdir)s/bin/qmake && make && make install",
-	"module load python/3.6 && cd %(builddir)s/sip-4.19.7 && python3.6 configure.py --sysroot=%(installdir)s INCDIR=$EBROOTPYTHON/include/python3.6m && make && make install",
-	"module load python/3.6 && cd %(builddir)s/PyQt4_gpl_x11-4.12.1 && export EBPYTHONPREFIXES=%(installdir)s && export CPATH=$EBROOTPYTHON/include/python3.6m:$CPATH && python3.6 configure.py --confirm --qmake=%(installdir)s/bin/qmake && make && make install",
-	"module load python/2.7 && cd %(builddir)s/sip-4.19.7 && python configure.py --sysroot=%(installdir)s INCDIR=$EBROOTPYTHON/include/python2.7 && make && make install",
-	"module load python/2.7 && cd %(builddir)s/PyQt4_gpl_x11-4.12.1 && export EBPYTHONPREFIXES=%(installdir)s && export CPATH=$EBROOTPYTHON/include/python2.7:$CPATH && python configure.py --confirm --qmake=%(installdir)s/bin/qmake && make && make install",
+	"module load python/2.7 && cd %(builddir)s/ && cp -r sip-4.19.7 sip-4.19.7-2.7 && cd sip-4.19.7-2.7 && python configure.py --sysroot=%(installdir)s --sipdir=%(installdir)s/share/python2.7/sip INCDIR=$EBROOTPYTHON/include/python2.7 && make && make install",
+	"module load python/2.7 && cd %(builddir)s/ && cp -r PyQt4_gpl_x11-4.12.1 PyQt4_gpl_x11-4.12.1-2.7 && cd PyQt4_gpl_x11-4.12.1-2.7 && export EBPYTHONPREFIXES=%(installdir)s && python configure.py --confirm --qmake=%(installdir)s/bin/qmake && CPATH=$EBROOTPYTHON/include/python2.7:$CPATH make && make install",
+	"module load python/3.5 && cd %(builddir)s/ && cp -r sip-4.19.7 sip-4.19.7-3.5 && cd sip-4.19.7-3.5 && python3.5 configure.py --sysroot=%(installdir)s --sipdir=%(installdir)s/share/python3.5/sip INCDIR=$EBROOTPYTHON/include/python3.5m && make && make install",
+	"module load python/3.5 && cd %(builddir)s/ && cp -r PyQt4_gpl_x11-4.12.1 PyQt4_gpl_x11-4.12.1-3.5 && cd PyQt4_gpl_x11-4.12.1-3.5 && export EBPYTHONPREFIXES=%(installdir)s && python3.5 configure.py --confirm --qmake=%(installdir)s/bin/qmake && CPATH=$EBROOTPYTHON/include/python3.5m:$CPATH make && make install",
+	"module load python/3.6 && cd %(builddir)s/ && cp -r sip-4.19.7 sip-4.19.7-3.6 && cd sip-4.19.7-3.6 && python3.6 configure.py --sysroot=%(installdir)s --sipdir=%(installdir)s/share/python3.6/sip INCDIR=$EBROOTPYTHON/include/python3.6m && make && make install",
+	"module load python/3.6 && cd %(builddir)s/ && cp -r PyQt4_gpl_x11-4.12.1 PyQt4_gpl_x11-4.12.1-3.6 && cd PyQt4_gpl_x11-4.12.1-3.6 && export EBPYTHONPREFIXES=%(installdir)s && python3.6 configure.py --confirm --qmake=%(installdir)s/bin/qmake && CPATH=$EBROOTPYTHON/include/python3.6m:$CPATH make && make install",
 ]
 
 modextrapaths = {
@@ -47,26 +50,26 @@ moduleclass = 'devel'
 
 # Build statistics
 buildstats = [{
-    "build_time": 925.89,
+    "build_time": 2980.1,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Qt-4.8.7-GCCcore-5.4.0.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.994,
     "cpu_vendor": "Intel",
     "easybuild-easyblocks_version": "3.5.1-r6a59adb72574ddce7b7595033c45c6d99e8ce058",
-    "easybuild-framework_version": "3.5.2.dev0-rb302d581048bd85d87bb0ab6cfa8bac7b1ffb899",
+    "easybuild-framework_version": "3.5.2.dev0-ra63b1f3e3793c6231e1de971335f86f749a3450b",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 732661471,
+    "install_size": 737397052,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-gZ8a5n/tmpv4Rsuo/gcc",
+    "system_gcc_path": "/tmp/eb-DwmF3r/tmp56D_qx/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1519828728,
+    "timestamp": 1520026983,
     "total_memory": 241657,
 }]
