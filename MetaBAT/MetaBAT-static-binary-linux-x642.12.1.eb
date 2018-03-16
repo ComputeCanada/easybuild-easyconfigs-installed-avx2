@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-03-16_13-58-43
+# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-03-16_14-12-14
 easyblock = 'Tarball'
 
 name = 'MetaBAT'
@@ -15,18 +15,7 @@ source_urls = ['https://bitbucket.org/berkeleylab/metabat/downloads']
 sources = ['metabat-%(versionprefix)s_v%(version)s.tar.gz']
 
 keepsymlinks = True
-postinstallcmds = [
-     'chmod a+rx %(installdir)s/aggregateBinDepths.pl',
-     'chmod a+rx %(installdir)s/aggregateContigOverlapsByBin.pl',
-     'chmod a+rx %(installdir)s/contigOverlaps',
-     'chmod a+rx %(installdir)s/jgi_summarize_bam_contig_depths',
-     'chmod a+r %(installdir)s/Legal.txt',
-     'chmod a+r %(installdir)s/license.txt',
-     'chmod a+rx %(installdir)s/metabat1',
-     'chmod a+rx %(installdir)s/metabat2',
-     'chmod a+r %(installdir)s/README.md',
-     'chmod a+rx %(installdir)s/runMetaBat.sh'
-]
+postinstallcmds = ['chmod a+rX -R %(installdir)s']
 
 sanity_check_paths = {
     'files': [
@@ -49,7 +38,7 @@ moduleclass = 'bio'
 
 # Build statistics
 buildstats = [{
-    "build_time": 6.09,
+    "build_time": 5.79,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'MetaBAT-2.12.1-linux-x86_64-static.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
@@ -67,8 +56,8 @@ buildstats = [{
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-QEwA_5/tmpm_q63a/gcc",
+    "system_gcc_path": "/tmp/eb-Rxvp0K/tmpQkwDc5/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1521208722,
+    "timestamp": 1521209533,
     "total_memory": 241657,
 }]
