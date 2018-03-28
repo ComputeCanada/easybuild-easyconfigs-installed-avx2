@@ -1,0 +1,69 @@
+# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-03-28_17-03-31
+name = 'MATLAB'
+version = '2018a'
+
+homepage = 'http://www.mathworks.com/products/matlab'
+description = """MATLAB is a high-level language and interactive environment
+ that enables you to perform computationally intensive tasks faster than with
+ traditional programming languages such as C, C++, and Fortran."""
+
+toolchain = {'name': 'dummy', 'version': ''}
+
+# be sure to copy both DVD content to the SAME directory, 
+# including the hidden files, especially .dvd1 and .dvd2 
+sources = [SOURCELOWER_TAR_GZ]
+no_mcc = True
+
+skipsteps = ['fetch', 'ready', 'source', 'patch', 'prepare', 'configure', 'build', 'test', 'install']
+postinstallcmds = [
+	'chmod -R u+w %(installdir)s ',
+	# install the python engines with both python 2.7 and python 3.5
+	'module load python/2.7 && pushd %(installdir)s/extern/engines/python && python setup.py install --prefix=%(installdir)s/extern/engines/python && popd ', 
+	'module load python/3.5 && pushd %(installdir)s/extern/engines/python && python setup.py install --prefix=%(installdir)s/extern/engines/python && popd ', 
+	'module load python/3.6 && pushd %(installdir)s/extern/engines/python && python setup.py install --prefix=%(installdir)s/extern/engines/python && popd ', 
+	'/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s '
+]
+
+dependencies = [('Java', '1.8.0_121')]
+modextrapaths = {'EBPYTHONPREFIXES': ['extern/engines/python']}
+moduleclass = 'math'
+
+modluafooter = """
+require("SitePackage")
+local found = find_and_define_license_file("MLM_LICENSE_FILE","matlab")
+if (not found) then
+        local error_message = [[
+	We did not find a suitable license for Matlab. If you have access to one, you can create the file $HOME/.licenses/matlab.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@computecanada.ca so that we can configure it.
+
+	Nous n'avons pas trouve de licence utilisable pour Matlab. Si vous avez acces a une licence de Matlab, vous pouvez creer le fichier $HOME/.licenses/matlab.lic avec l'information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer.
+	]]
+	LmodError(error_message)
+end
+"""
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 7064.45,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'MATLAB-2018a.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.3-r57ef58d7ad1c20998330f88cb6fe2ac1a5adc307",
+    "easybuild-framework_version": "3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/5vq8a8bc68lwl8mswd34494rfg8vq8mi-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 19890346558,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-wdMp_B/tmpxfRAeo/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1522256601,
+    "total_memory": 241657,
+}]
