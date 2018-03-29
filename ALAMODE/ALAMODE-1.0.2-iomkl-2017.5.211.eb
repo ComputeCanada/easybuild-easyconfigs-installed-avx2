@@ -1,0 +1,74 @@
+# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-03-29_16-49-48
+easyblock = 'MakeCp'
+
+name = 'ALAMODE'
+version = '1.0.2'
+
+homepage = 'http://alamode.readthedocs.io/en/latest/index.html'
+description = """ALAMODE is an open source software designed for analyzing lattice anharmonicity and lattice thermal conductivity of solids. By using an external DFT package such as VASP and Quantum ESPRESSO, you can extract harmonic and anharmonic force constants straightforwardly with ALAMODE. 
+ Using the calculated anharmonic force constants, you can also estimate lattice thermal conductivity, phonon linewidth, and other anharmonic phonon properties from first principles.
+ The binary alm is multi-threaded (OpenMP), add this command to your SLURM script:
+ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK"""
+
+toolchain = {'name': 'iomkl', 'version': '2017.5.211'}
+toolchainopts = {'usempi': True, 'pic': True}
+
+source_urls = ['https://github.com/ttadano/alamode/archive/']
+sources = ['v.%(version)s.tar.gz']
+
+patches = [
+    '%(namelower)s-v.%(version)s_configure_intel.patch',
+]
+
+dependencies = [
+    ('Boost', '1.65.1'),
+    ('Eigen', '3.3.2'),
+]
+
+parallel = 1
+
+binary_files = [
+    "alm/alm", "anphon/anphon", "tools/analyze_phonons", "tools/dfc2", "tools/qe2alm",
+    "tools/analyze_phonons.py", "tools/extract.py", "tools/plotdos.py", "tools/displace.py", 
+    "tools/plotband.py",
+]
+
+files_to_copy = [([x for x in binary_files], 'bin'), (['analyzer', 'docs', 'example'],'')]
+
+sanity_check_paths = {
+    'files': ['bin/alm'],
+    'dirs': ['analyzer', "docs", "example"]
+}
+
+modextrapaths = {'PATH': 'analyzer'}
+
+moduleclass = 'chem'
+modluafooter = """
+depends_on("python")
+"""
+
+# Build statistics
+buildstats = [{
+    "build_time": 207.18,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'ALAMODE-1.0.2-iomkl-2017.5.211.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.3-r57ef58d7ad1c20998330f88cb6fe2ac1a5adc307",
+    "easybuild-framework_version": "3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/cf40xkqhsg1m4b8anl7l7x113apll6yb-gfortran-6.4.0/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 6.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 11703455,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-6.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-2.7.13/bin/python",
+    "timestamp": 1522342188,
+    "total_memory": 241657,
+}]
