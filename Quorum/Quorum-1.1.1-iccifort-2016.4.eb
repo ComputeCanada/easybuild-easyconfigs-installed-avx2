@@ -1,0 +1,55 @@
+# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-04-18_17-01-55
+easyblock = 'ConfigureMake'
+
+name = 'Quorum'
+version = '1.1.1'
+
+homepage = 'http://www.genome.umd.edu/quorum.html'
+description = """QuorUM is an error corrector for Illumina reads"""
+
+toolchain = {'name': 'iccifort', 'version': '2016.4'}
+
+source_urls = ['https://github.com/gmarcais/Quorum/releases/download/v%(version)s']
+sources = [SOURCELOWER_TAR_GZ]
+checksums = ['45d099835eaad43cf915e118e9cb6423411d68c7f35a8145bc725dca366c82b5']
+
+dependencies = [('Jellyfish', '2.2.6')]
+
+binary_files = [ 
+     "merge_mate_pairs", "quorum", "quorum_create_database", 
+     "quorum_error_correct_reads", "split_mate_pairs",
+]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in binary_files],
+    'dirs': []
+}
+
+moduleclass = 'bio'
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 67.95,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Quorum-1.1.1-iccifort-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.3-re2075d490ddeafd907dd9797fbecf1f53ce79c90",
+    "easybuild-framework_version": "3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 3591490,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1524070915,
+    "total_memory": 241657,
+}]
