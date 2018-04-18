@@ -1,0 +1,76 @@
+# Built with EasyBuild version 3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845 on 2018-04-18_16-46-39
+easyblock = "ConfigureMake"
+name = 'Ferret'
+version = '7.3'
+
+homepage = 'http://ferret.pmel.noaa.gov/'
+description = """Ferret is an interactive computer visualization and analysis environment
+designed to meet the needs of oceanographers and meteorologists analyzing large and complex gridded data sets."""
+
+toolchain = {'name': 'gompi', 'version': '2016.4.11'}
+toolchainopts = {'usempi': True}
+
+sources = ['v%(version)s.tar.gz']
+source_urls = ['https://github.com/NOAA-PMEL/Ferret/archive/']
+
+dependencies = [
+    ('netCDF', '4.4.1.1'),
+    ('netCDF-Fortran', '4.4.4'),
+    ('NCO', '4.6.6'),
+#    ('zlib', '1.2.7'),
+#    ('Szip', '2.1'),
+#    ('cURL', '7.27.0'),
+#    ('ncurses', '5.9'),
+#    ('libreadline', '6.2'),
+    ('Java', '1.8.0_121', '', True),
+]
+
+parallel = 1
+skipsteps = ['configure']
+
+patches = ['Ferret-7.3-platform_specific.mk.x86_64-linux.patch',
+           'Ferret-7.3-site_specific.mk.in.patch']
+
+prebuildopts = "cp site_specific.mk.in site_specific.mk && cp site_specific.mk external_functions/ef_utility && sed -i 's^BUILDDIR^%(builddir)s\/Ferret-7.3^' site_specific.mk && sed -i 's^INSTALLDIR^%(installdir)s^' site_specific.mk &&"
+buildopts = 'CPP_X11="$NIXUSER_PROFILE/include" LD="$CC"'
+
+sanity_check_paths = {
+    'files': ['bin/ferret'],
+    'dirs': ['bin'],
+}
+postinstallcmds =  [" cd %(builddir)s && wget https://github.com/NOAA-PMEL/FerretDatasets/archive/v7.4.tar.gz && cd %(installdir)s && tar -xf %(builddir)s/v7.4.tar.gz && printf '%s\n%s\n%s\n%s\n%s\n%s\n' '2' '%(installdir)s' '%(installdir)s/FerretDatasets-7.4' '%(installdir)s/bin' 'n' '3'|%(installdir)s/bin/Finstall "]
+
+modloadmsg = """To initialize Ferret,
+  do (sh, ash, ksh, and bash)
+              . $EBROOTFERRET/bin/ferret_paths.sh 
+  or (csh, tcsh)
+              source $EBROOTFERRET/bin/ferret_paths.csh
+"""
+
+moduleclass = 'geo'
+
+# Build statistics
+buildstats = [{
+    "build_time": 255.96,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', '--recursive-module-unload-depends-on', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Ferret-7.3-gompi-2016.4.11.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.5.3-re2075d490ddeafd907dd9797fbecf1f53ce79c90",
+    "easybuild-framework_version": "3.5.3-r14580cffbe5f5d7f1ac1a65390e1e03fcd768845",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 307801322,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-KWhxZp/tmp_XEvtW/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1524069998,
+    "total_memory": 241657,
+}]
