@@ -1,0 +1,72 @@
+# Built with EasyBuild version 3.6.0-r0f6ef255058df3faf632a6a5bf32696c8bf28b58 on 2018-06-06_16-19-30
+easyblock = "PackedBinary"
+
+name = "ORCA"
+version = '3.0.3'
+
+openmpiversion = '1.6.5'
+versionsuffix = '-OpenMPI-%s' % openmpiversion
+
+homepage = 'http://cec.mpg.de/forum/'
+description = """ORCA is a flexible, efficient and easy-to-use general purpose tool for quantum chemistry
+ with specific emphasis on spectroscopic properties of open-shell molecules.
+  It features a wide variety of standard quantum chemical methods ranging from semiempirical methods to DFT to single-
+ and multireference correlated ab initio methods.
+ It can also treat environmental and relativistic effects."""
+
+toolchain = {'name': 'iompi', 'version': '2016.3.165'}
+
+sources = ['%%(namelower)s_%s_linux_x86-64_openmpi%s.tar.xz' % (version.replace('.', '_'), openmpiversion)]
+checksums = ['0223abcf2b3ffc3156da994162a6670e']
+
+# ORCA 3.0.3 is compiled only against OpenMPI 1.6.5 for Linux:
+
+sanity_check_paths = {
+    'files': ['orca_%s%s' % (x, y) for x in ['anoint', 'casscf', 'cis', 'cleanup', 'cpscf',
+                                             'eprnmr', 'gtoint', 'mdci', 'mp2', 'mrci', 'pc',
+                                             'rocis', 'scf', 'scfgrad', 'soc']
+              for y in ["", "_mpi"]] +
+    ['orca_%s' % x for x in ['2mkl', 'asa', 'chelpg', 'ciprep', 'eca', 'ecplib',
+                             'euler', 'fci', 'fitpes', 'gstep', 'loc', 'mapspc',
+                                      'md', 'mergefrag', 'ndoint', 'numfreq', 'plot',
+                                      'pltvib', 'pop', 'rel', 'vib', 'vpot']] +
+    ['orca', 'otool_cosmo'],
+    'dirs': [],
+}
+
+postinstallcmds = [ '/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s --add_path=$EBROOTOPENMPI/lib' ]
+
+modextravars = {
+    "SLURM_CPU_BIND": "none",
+    "RSH_COMMAND": "ssh -x",
+}
+
+group = 'soft_orca'
+
+moduleclass = 'chem'
+
+# Build statistics
+buildstats = [{
+    "build_time": 228.24,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources/o/ORCA'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'ORCA-3.0.3-iompi-2016.3.165.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.6.0-r87b12bf1f0fe3b493ad30a490630fc249b45ba90",
+    "easybuild-framework_version": "3.6.0-r0f6ef255058df3faf632a6a5bf32696c8bf28b58",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 6248648932,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1528301970,
+    "total_memory": 241657,
+}]
