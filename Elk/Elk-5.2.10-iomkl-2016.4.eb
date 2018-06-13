@@ -1,0 +1,76 @@
+# Built with EasyBuild version 3.6.1-r7cc8e8f5644ea63bcb902c6179dcffbb89cac49a on 2018-06-13_00-17-40
+easyblock = 'MakeCp'
+
+name = 'Elk'
+version = '5.2.10'
+
+homepage = 'http://elk.sourceforge.net/'
+description = """An all-electron full-potential linearised augmented-plane wave (FP-LAPW) code with
+many advanced features. Written originally at Karl-Franzens-Universität Graz as a milestone of the
+EXCITING EU Research and Training Network, the code is designed to be as simple as possible so that
+new developments in the field of density functional theory (DFT) can be added quickly and reliably.
+"""
+
+toolchain = {'name': 'iomkl', 'version': '2016.4'}
+toolchainopts = {'usempi': True}
+
+sources = [SOURCELOWER_TGZ]
+source_urls = [SOURCEFORGE_SOURCE]
+
+checksums = [
+    'aa62cc22199b2acf9cdfa336b5756b22',  # elk-5.2.10.tgz
+]
+
+dependencies = [
+    ('libxc', '4.2.1'),
+]
+
+# make.inc file is generated interactively by "setup" command, creating it here
+
+prebuildopts  = 'echo "F90 = mpif90" > make.inc && '
+prebuildopts += 'echo "F90_OPTS = -O2 -ip -qopenmp -I${MKLROOT}/include" >> make.inc && '
+prebuildopts += 'echo "F77 = mpif90" >> make.inc && '
+prebuildopts += 'echo "F77_OPTS = -O3 -ip -qopenmp" >> make.inc && '
+prebuildopts += 'echo "LIB_LPK = -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -lpthread -lm -qopenmp" >> make.inc && '
+prebuildopts += 'echo "LIB_libxc = ${EBROOTLIBXC}/lib/libxcf90.a ${EBROOTLIBXC}/lib/libxc.a" >> make.inc && '
+prebuildopts += 'echo "SRC_libxc = libxc_funcs.f90 libxc.f90 libxcifc.f90" >> make.inc && '
+prebuildopts += 'echo "SRC_FFT = zfftifc_fftw.f90" >> make.inc && '
+
+buildopts = 'all'
+
+parallel = 1
+
+files_to_copy = [(['src/elk', 'src/spacegroup/spacegroup', 'src/eos/eos'], 'bin')]
+
+sanity_check_paths = {
+    'files': ['bin/elk', 'bin/spacegroup', 'bin/eos'],
+    'dirs': []
+}
+
+moduleclass = 'phys'
+
+# Build statistics
+buildstats = [{
+    "build_time": 6172.82,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Elk-5.2.10-iomkl-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.6.1-r0ca57d478f198b85ac0ec24300f7d4aabcf82e19",
+    "easybuild-framework_version": "3.6.1-r7cc8e8f5644ea63bcb902c6179dcffbb89cac49a",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 68506186,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1528849060,
+    "total_memory": 241657,
+}]
