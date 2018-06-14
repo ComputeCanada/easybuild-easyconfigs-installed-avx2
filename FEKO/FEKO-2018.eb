@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.6.0-r0f6ef255058df3faf632a6a5bf32696c8bf28b58 on 2018-05-03_20-11-08
+# Built with EasyBuild version 3.6.1-r7cc8e8f5644ea63bcb902c6179dcffbb89cac49a on 2018-06-14_18-51-09
 name = 'FEKO'
 version = '2018'
 
@@ -15,14 +15,20 @@ postinstallcmds = ["/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --pa
 moduleclass = 'phys'
 modluafooter = """
 require("SitePackage")
-local found = find_and_define_license_file("ALTAIR_LICENSE_PATH","feko")
-if (not found) then
-        local error_message = [[
-	We did not find a suitable license for FEKO. If you have access to one, you can create the file $HOME/.licenses/feko.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@computecanada.ca so that we can configure it.
+require("os")
+if mode() == "load" and not os.getenv("ALTAIR_LICENSE_FILE") then 
+	local found, path = find_and_define_license_file("__ALTAIR_LICENSE_FILE", "feko")
+	if (not found) then
+	        local error_message = [[
+		We did not find a suitable license for FEKO. If you have access to one, you can create the file $HOME/.licenses/feko.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@computecanada.ca so that we can configure it.
 
-	Nous n'avons pas trouve de licence utilisable pour FEKO. Si vous avez acces a une licence de FEKO, vous pouvez creer le fichier $HOME/.licenses/feko.lic avec l'information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer.
-	]]
-	LmodError(error_message)
+		Nous n'avons pas trouve de licence utilisable pour FEKO. Si vous avez acces a une licence de FEKO, vous pouvez creer le fichier $HOME/.licenses/feko.lic avec l'information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer.
+		]]
+		LmodError(error_message)
+	elseif (path) then
+		-- load the license file which should contain Lua commands to set the license path
+		assert(loadfile(path))()
+	end
 end
 """
 
@@ -30,26 +36,26 @@ end
 
 # Build statistics
 buildstats = [{
-    "build_time": 309.2,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'FEKO_2018.eb'],
+    "build_time": 4.64,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'FEKO_2018.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.994,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.6.0-r1262508654627d30a6ab5d996e2120c25bb525ae",
-    "easybuild-framework_version": "3.6.0-r0f6ef255058df3faf632a6a5bf32696c8bf28b58",
+    "easybuild-easyblocks_version": "3.6.1-r0ca57d478f198b85ac0ec24300f7d4aabcf82e19",
+    "easybuild-framework_version": "3.6.1-r7cc8e8f5644ea63bcb902c6179dcffbb89cac49a",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/5vq8a8bc68lwl8mswd34494rfg8vq8mi-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 4307808210,
+    "install_size": 4307861399,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-bXum4j/tmpxN1rTh/gcc",
+    "system_gcc_path": "/tmp/eb-dD54St/tmp2VLWCx/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1525378267,
+    "timestamp": 1529002261,
     "total_memory": 241657,
 }]
