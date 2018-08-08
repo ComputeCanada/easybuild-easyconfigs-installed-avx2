@@ -1,27 +1,29 @@
-# Built with EasyBuild version 3.2.0-r37a492084ffe2dfe5236176e1d096d4e204f909b on 2017-05-20_00-24-07
+# Built with EasyBuild version 3.6.2-r1ed7dac97acd22d6301e534c78048f7fcedaa585 on 2018-08-08_15-19-23
 ##
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 #
-# Copyright:: Copyright 2012-2013 University of Luxembourg / LCSB, Cyprus Institute / CaSToRC, Ghent University
-# Authors::   Wiktor Jurkowski <wiktor.jurkowski@uni.lu>, Fotis Georgatos <fotis.georgatos@uni.lu>, \
-#             George Tsouloupas <g.tsouloupas@cyi.ac.cy>, Kenneth Hoste
+# Copyright:: Copyright 2012-2016 University of Luxembourg / LCSB, Cyprus Institute / CaSToRC,
+#                                 Ghent University / The Francis Crick Institute
+# Authors::
+# * Wiktor Jurkowski <wiktor.jurkowski@gmail.com>
+# * Fotis Georgatos <fotis@cern.ch>
+# * George Tsouloupas <g.tsouloupas@cyi.ac.cy>
+# * Kenneth Hoste <kenneth.hoste@ugent.be>
+# * Adam Huffman <adam.huffman@crick.ac.uk>
+# * Oliver Stueker <oliver.stueker@ace-net.ca>
 # License::   MIT/GPL
-# $Id$
 #
 # This work implements a part of the HPCBIOS project and is a component of the policy:
 # http://hpcbios.readthedocs.org/en/latest/HPCBIOS_2012-93.html
-#
-# Version 5.1.4
-# Author: Adam Huffman
-# The Francis Crick Institute
 ##
 
 name = 'GROMACS'
 version = '5.1.4'
 
 homepage = 'http://www.gromacs.org'
-description = """GROMACS is a versatile package to perform molecular dynamics,
- i.e. simulate the Newtonian equations of motion for systems with hundreds to millions of particles."""
+description = """GROMACS is a versatile package to perform molecular dynamics.
+ i.e. simulating the Newtonian equations of motion for systems with hundreds to millions of particles.
+- CC-Wiki: GROMACS"""
 
 toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
 toolchainopts = {'openmp': True, 'usempi': True}
@@ -29,43 +31,41 @@ toolchainopts = {'openmp': True, 'usempi': True}
 source_urls = ['ftp://ftp.gromacs.org/pub/gromacs/']
 sources = [SOURCELOWER_TAR_GZ]
 
-#builddependencies = [('Boost', '1.62.0')]
-
 dependencies = [('Boost', '1.60.0')]
-
-double_precision = True
-configopts = [
-    "-DGMX_THREAD_MPI=OFF",
-]
 
 # Patch OPLS/AA FF due to wrong charges in HISE residue
 # see http://redmine.gromacs.org/issues/2013 and http://redmine.gromacs.org/issues/2117
 patches = [ 'gromacs-5.1.4_issue-2013_OPLSAA_Incorrect_HISE_charge.patch' ]
 
-moduleclass = 'bio'
+configopts = [
+    "-DGMX_THREAD_MPI=OFF -DGMX_DOUBLE=OFF",
+    "-DGMX_THREAD_MPI=OFF -DGMX_DOUBLE=ON" ,
+]
+
+moduleclass = 'chem'
 
 # Build statistics
 buildstats = [{
-    "build_time": 6054.73,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--buildpath='/dev/shm/ebuser'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tk,CFITSIO,libX11,libXft,libXpm,libXext'", "--filter-env-vars='LD_LIBRARY_PATH'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iomkl,2016.4.11'", "--use-ccache='/cvmfs/local/ccache'", '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/abyss/1.9.0/easybuild/ABySS-1.9.0-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/gromacs/2016.3/easybuild/GROMACS-2016.3-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/gromacs/4.6.7/easybuild/GROMACS-4.6.7-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/gromacs/5.0.7/easybuild/GROMACS-5.0.7-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/gromacs/5.1.4/easybuild/GROMACS-5.1.4-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/hpl/2.2/easybuild/HPL-2.2-iomkl-2016.4.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/igraph/0.7.1/easybuild/igraph-0.7.1-iomkl-2016.4.eb'],
+    "build_time": 73.2,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iomkl,2016.4.11'", "--use-ccache='/cvmfs/local/ccache'", 'GROMACS-4.6.7-iomkl-2016.4.eb', 'GROMACS-5.0.7-iomkl-2016.4.eb', 'GROMACS-5.1.4-iomkl-2016.4.eb', 'GROMACS-2016.3-iomkl-2016.4.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-    "cpu_speed": 2399.996,
+    "cpu_speed": 2399.994,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.2.0-racf48280050faf573577599cbb5ef7e783bd946d",
-    "easybuild-framework_version": "3.2.0-r37a492084ffe2dfe5236176e1d096d4e204f909b",
+    "easybuild-easyblocks_version": "3.6.2-reeb1d0ba0173e835efb95eb3d2234b2069bf378d",
+    "easybuild-framework_version": "3.6.2-r1ed7dac97acd22d6301e534c78048f7fcedaa585",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
-    "hostname": "build-node.computecanada.ca",
-    "install_size": 205513844,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.4.5'),
+    "hostname": "build-node",
+    "install_size": 213582171,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
     "os_name": "centos linux",
     "os_type": "Linux",
-    "os_version": "7.2.1511",
+    "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/python-2.7.13/bin/python",
-    "timestamp": 1495239847,
-    "total_memory": 241658,
+    "timestamp": 1533741561,
+    "total_memory": 241657,
 }]
