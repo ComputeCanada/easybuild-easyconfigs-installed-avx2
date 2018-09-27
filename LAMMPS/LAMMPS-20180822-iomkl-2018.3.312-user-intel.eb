@@ -1,0 +1,128 @@
+# Built with EasyBuild version 3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f on 2018-09-27_12-47-38
+##
+# Contributor: 
+# Ali Kerrache, April 2017.
+# Maxime Boissonneault, June 2017
+##
+
+# Lammps: Stable Version - 22Aug2018
+
+name = 'LAMMPS'
+
+# see http://lammps.sandia.gov/bug.html 
+# for overview of stable versions and matching date/SVN rev/Git tag
+
+version = '20180822'
+versionsuffix = '-user-intel'
+modaltsoftname = 'lammps-user-intel'
+
+homepage = 'http://lammps.sandia.gov/'
+description = """ LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is 
+ a classical molecular dynamics simulation. LAMMPS has potentials for solid-state materials 
+ (metals, semiconductors) and soft matter (biomolecules, polymers) and coarse-grained or 
+ mesoscopic systems. It can be used to model atoms or, more generically, as a parallel 
+ particle simulator at the atomic, meso, or continuum scale. It can be coupled to various 
+ programs. The following packages are not included within this version:
+ -GPU, -KOKKOS, -MANYBODY, -MSCG, -QEQ, -USER-ATC, -USER-QUIP"""
+
+toolchain = {'name': 'iomkl', 'version': '2018.3.312'}
+ 
+source_urls = [ 'https://github.com/lammps/lammps/archive/' ]
+sources = [ 'stable_22Aug2018.tar.gz' ]
+
+dependencies = [
+        ('Python', '2.7.14'),
+        ('HDF5','1.10.3'),
+        ('Eigen', '3.3.2'),
+        ('Voro++', '0.4.6'),
+        ('VTK', '6.3.0'),
+        ('KIM', '1.9.7'),
+        #('Quip', '1.1.8'),
+        #('FFTW', '3.3.6', '-mpi'),
+        ('FFmpeg', '3.1.7', "-nix"),
+        ('netCDF', '4.6.1'),
+        ('QuantumESPRESSO', '6.3'),
+        ('tbb', '2018_U5'),
+]
+
+patches = [
+    'LAMMPS-20180822-ebrootpath.patch',
+    'vmd-1.9.3-plugins.patch',
+]
+
+# Will go to the lib/PKGLIB folder and use "make -f <makefile>" 
+# where <makefile> is the most appropriate makefile (in order, 
+# mpicc, mpic++, cc, cxx, f90, gcc, g++, gfortran, 
+# lammps) for each PKGLIB in packaged_libraries:
+
+packaged_libraries = [ 
+	('qmmm', 'Makefile.ifort'), 
+	('poems', 'Makefile.mpi'),      # Works also with: Makefile.icc 
+	('reax', 'Makefile.mpi'),       # Works also with: Makefile.ifort
+ 	('atc', 'Makefile.icc'),  
+	('meam', 'Makefile.ifort'), 
+	('awpmd', 'Makefile.mpicc'), 
+	('colvars', 'Makefile.mpi'),
+	('h5md', 'Makefile.h5cc'),
+]
+
+# Will run "make yes-PKG" for each PKG in this list:
+
+packages_yes = [ 
+         'ASPHERE', 'BODY', 'CLASS2', 'COLLOID', 'COMPRESS', 'CORESHELL',
+         'DIPOLE', 'GRANULAR', 'KIM', 'KSPACE', 'MC', 'MEAM', 'MISC', 
+         'MOLECULE', 'MPIIO', 'OPT', 'POEMS', 'PERI', 'PYTHON', 'REAX', 
+         'REPLICA', 'RIGID', 'SHOCK', 'SNAP', 'SRD', 'USER-AWPMD', 
+         'USER-CGDNA', 'USER-CGSDK', 'USER-COLVARS', 'USER-DIFFRACTION', 
+         'USER-DPD', 'USER-DRUDE', 'USER-EFF', 'USER-FEP', 'USER-H5MD', 
+         'USER-INTEL', 'USER-LB', 'USER-MANIFOLD', 'USER-MOLFILE', 
+         'USER-NETCDF', 'USER-MEAMC', 'USER-MGPT', 'USER-MISC', 
+         'USER-OMP','USER-PHONON', 'USER-QMMM', 'USER-QTB', 'USER-REAXC', 
+         'USER-SMD', 'USER-SMTBQ', 'USER-SPH', 'USER-TALLY', 'USER-VTK', 
+         'VORONOI', 
+] 
+
+# Will run "make no-PKG" for each PKG in this list:
+
+packages_no = [ 
+         'GPU', 'KOKKOS', 'MANYBODY', 'MSCG', 'QEQ', 'USER-ATC', 
+         'USER-QUIP',
+]
+
+build_type = "intel_cpu_openmpi"
+
+build_shared_libs = False
+build_static_libs = False
+ 
+moduleclass = 'chem'
+modluafooter = """
+family("lammps")
+"""
+
+# End of EasyBuild file.
+
+# Build statistics
+buildstats = [{
+    "build_time": 1441.1,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'LAMMPS-20180822-iomkl-2018.3.312-user-intel.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.0-rf663eb78551c0ebe250e200eea5334a30725cf0c",
+    "easybuild-framework_version": "3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 1531630786,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.7.4'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/2.7.14/bin/python",
+    "timestamp": 1538052457,
+    "total_memory": 241657,
+}]
