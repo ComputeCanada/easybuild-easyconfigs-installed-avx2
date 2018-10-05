@@ -1,0 +1,83 @@
+# Built with EasyBuild version 3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f on 2018-10-05_22-47-58
+##
+# @Author: Ali Kerrache, University of Manitoba, Compute Canada.
+# @Date: Feb 06, 2018.
+##
+
+easyblock = 'ConfigureMake'
+
+name = 'CFOUR'
+version = '1.0'
+versionsuffix = '-mpi'
+modaltsoftname = 'cfour-mpi'
+
+homepage = 'http://www.cfour.de/'
+description = """CFOUR (Coupled-Cluster techniques for Computational Chemistry) is a program package for performing high-level quantum chemical calculations on atoms and molecules. The major strength of the program suite is its rather sophisticated arsenal of high-level ab initio methods for the calculation of atomic and molecular properties. Virtually all approaches based on Muller-Plesset (MP) perturbation theory and the coupled-cluster approximation (CC) are available; most of these have complementary analytic derivative approaches within the package as well.
+ CFOUR is not a commercial code. It is rather a program that is undergoing development; new techniques and improvements are constantly being made (mainly in the groups of John F. Stanton (until the end of 2016 at the University of Texas at Austin, USA, now at the Quantum Theory Project of the University of Florida at Gainesville, USA) and Juergen Gauss (Universitat Mainz, Germany)).
+ For non-commercial purposes there is no charge to obtain CFOUR; one must simply sign a license agreement. 
+ http://slater.chemie.uni-mainz.de/cfour/index.php?n=Main.Download"""
+
+toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
+toolchainopts = {'usempi': True, 'pic': True}
+
+# It requires registration and agreement to the license termes to download the source files.
+# For more details:
+# http://slater.chemie.uni-mainz.de/cfour/index.php?n=Main.Download
+
+source_urls = ['http://slater.chemie.uni-mainz.de/cfour/index.php?n=Main.Download']
+sources = ['%(namelower)s_v%(version)s.tar.gz']
+
+preconfigopts = ' export MKLPATH=$MKLROOT && '
+
+configopts  = '--enable-mpi=openmpi --enable-gimic '
+configopts += '--with-blas-dir=$MKLROOT/lib/intel64 '
+configopts += '--with-lapack-dir=$MKLROOT/lib/intel64 ' 
+configopts += 'FC=ifort CC=icc MPIFC=mpif90  FCLAGS=-O2  CFLAGS=-O2 '
+
+cfour_binary_files = [ 
+    "mvapich_wrapper_optional_sort", "xanti", "xclean", "xcubic", "xextrap", "xja2fja",
+    "xlcc", "xrun", "xvcc", "xvee", "xvmol2ja", "xvtran", "qcfour", "xbcktrn", "xcmd", 
+    "xdens", "xint", "xjoda", "xprops", "xsdcc", "xvdint", "xvip", "xvprop", "xwipeout",
+    "xanhdriv", "xcfour", "xcphf", "xecc", "xintprc", "xlambda", "xrefit", "xsymcor",
+    "xvea", "xvmol", "xvscf",
+]
+
+cfour_lib_files = [
+    "libblashc.a", "libecctrip.a", "libecp.a", "libeom.a", "liblibr.a", "liblibrcc.a",
+    "liblibrsp.a", "liblibrsrcc.a", "liblibtdcc.a", "libsdcctrip.a",
+]
+
+sanity_check_paths = {
+    'files': [['bin/%s' % x for x in cfour_binary_files], ['lib/%s' % x for x in cfour_lib_files]],
+    'dirs': ['basis', 'bin', 'lib', 'share'], 
+}
+
+group = 'soft_cfour'
+
+moduleclass = 'chem'
+
+# Build statistics
+buildstats = [{
+    "build_time": 2903.51,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'CFOUR-1.0-iomkl-2016.4.11-mpi.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.0-rf663eb78551c0ebe250e200eea5334a30725cf0c",
+    "easybuild-framework_version": "3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 83170710,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1538779677,
+    "total_memory": 241657,
+}]
