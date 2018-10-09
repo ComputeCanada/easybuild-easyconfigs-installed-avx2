@@ -1,0 +1,118 @@
+# Built with EasyBuild version 3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f on 2018-10-09_17-28-30
+easyblock = 'CMakeMake'
+
+name = 'OpenCV'
+version = '3.4.3'
+
+homepage = 'http://opencv.org/'
+description = """OpenCV (Open Source Computer Vision Library) is an open source computer vision
+ and machine learning software library. OpenCV was built to provide
+ a common infrastructure for computer vision applications and to accelerate
+ the use of machine perception in the commercial products."""
+
+toolchain = {'name': 'gmkl', 'version': '2016.4' }
+
+source_urls = [ 'https://github.com/Itseez/opencv/archive/' ]
+
+sources = [ '%(version)s.zip' ]
+
+#patches = ['OpenCV-%(version)s_with_IPP.patch']
+patches = ['OpenCV-%(version)s-hal-internal.patch']
+
+builddependencies = [
+    ('CMake', '3.5.2'),
+]
+
+dependencies = [
+    ('Eigen', '3.3.2'),
+    ('zlib', '1.2.8'),
+    ('FFmpeg', '3.1.3'),
+    ('libjpeg-turbo', '1.5.0'),
+    ('libpng', '1.6.24'),
+    ('LibTIFF', '4.0.6'),
+    ('JasPer', '1.900.1'),
+    ('Java', '1.8.0_121'),
+    ('ant', '1.9.7', '-Java-%(javaver)s', True),
+    ('GLib', '2.49.5'),
+#    ('GTK+', '2.24.31'),
+]
+separate_build_dir = True
+
+configopts_single = '-DCMAKE_BUILD_TYPE=RELEASE '
+configopts_single += '-DBUILD_PYTHON_SUPPORT=ON '
+configopts_single += '-DBUILD_NEW_PYTHON_SUPPORT=ON '
+configopts_single += '-DZLIB_LIBRARY=$NIXUSER_PROFILE/lib/libz.%s ' % SHLIB_EXT
+configopts_single += '-DZLIB_INCLUDE_DIR=$NIXUSER_PROFILE/include '
+configopts_single += '-DTIFF_LIBRARY=$NIXUSER_PROFILE/lib/libtiff.%s ' % SHLIB_EXT
+configopts_single += '-DTIFF_INCLUDE_DIR=$NIXUSER_PROFILE/include '
+configopts_single += '-DPNG_LIBRARY=$NIXUSER_PROFILE/lib/libpng.%s ' % SHLIB_EXT
+configopts_single += '-DPNG_INCLUDE_DIR=$NIXUSER_PROFILE/include '
+configopts_single += '-DJPEG_LIBRARY=$NIXUSER_PROFILE/lib/libjpeg.%s ' % SHLIB_EXT
+configopts_single += '-DJPEG_INCLUDE_DIR=$NIXUSER_PROFILE/include '
+configopts_single += '-DJASPER_LIBRARY=$EBROOTJASPER/lib/libjasper.a '
+configopts_single += '-DJASPER_INCLUDE_DIR=$EBROOTJASPER/include '
+configopts_single += '-DWITH_IPP=ON '
+configopts_single += '-DCMAKE_SKIP_RPATH=ON '
+configopts_single += '-DENABLE_SSE=ON -DENABLE_SSE2=ON -DENABLE_SSE3=ON '
+configopts_single += '-DWITH_CUDA=OFF '
+configopts_single += '-DOPENCV_SKIP_LAPACK_EXTERN_C=ON '
+
+preconfigopts = [
+	'module load python/2.7 scipy-stack && ',
+	'module load python/3.5 scipy-stack && ', 
+	'module load python/3.6 scipy-stack && ',
+]
+configopts = [
+	configopts_single + " -DPYTHON_PACKAGES_PATH=%(installdir)s/lib/python2.7/site-packages -DPYTHON2_EXECUTABLE=$EBROOTPYTHON/bin/python -DPYTHON2_INCLUDE_DIR=$EBROOTPYTHON/include/python2.7 -DPYTHON2_LIBRARY=$EBROOTPYTHON/lib/libpython2.7.so",
+	configopts_single + " -DPYTHON_PACKAGES_PATH=%(installdir)s/lib/python3.5/site-packages -DPYTHON3_EXECUTABLE=$EBROOTPYTHON/bin/python -DPYTHON3_INCLUDE_DIR=$EBROOTPYTHON/include/python3.5m -DPYTHON3_LIBRARY=$EBROOTPYTHON/lib/libpython3.5m.so",
+	configopts_single + " -DPYTHON_PACKAGES_PATH=%(installdir)s/lib/python3.6/site-packages -DPYTHON3_EXECUTABLE=$EBROOTPYTHON/bin/python -DPYTHON3_INCLUDE_DIR=$EBROOTPYTHON/include/python3.6m -DPYTHON3_LIBRARY=$EBROOTPYTHON/lib/libpython3.6m.so",
+]
+postinstallcmds = [ 
+	"/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s/lib/python2.7/site-packages --add_path %(installdir)s/lib", 
+	"/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s/lib/python3.5/site-packages --add_path %(installdir)s/lib", 
+	"/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s/lib/python3.6/site-packages --add_path %(installdir)s/lib", 
+]
+
+sanity_check_paths = {
+    'files': ['lib/libopencv_core.%s' % SHLIB_EXT] +
+             ['lib/python2.7/site-packages/cv2.%s' % SHLIB_EXT] +
+             ['lib/python3.5/site-packages/cv2.cpython-35m-x86_64-linux-gnu.%s' % SHLIB_EXT] +
+             ['lib/python3.6/site-packages/cv2.cpython-36m-x86_64-linux-gnu.%s' % SHLIB_EXT] +
+             ['bin/opencv_%s' % x for x in ['annotation', 'createsamples', 'traincascade']],
+#             ['lib/libippicv.a'] +
+    'dirs': ['include']
+}
+
+modextrapaths = {
+    'EBPYTHONPREFIXES' : '',
+    'CLASSPATH': 'share/OpenCV/java',
+}
+
+moduleclass = 'vis'
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 910.16,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'OpenCV-3.4.3-gmkl-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.0-rf663eb78551c0ebe250e200eea5334a30725cf0c",
+    "easybuild-framework_version": "3.7.0-rd87eb096d41e017c8f68296771c685f4d57ba80f",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 300245419,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.5'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-_qLvO_/tmpExqbhb/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1539106105,
+    "total_memory": 241657,
+}]
