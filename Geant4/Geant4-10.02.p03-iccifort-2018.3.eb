@@ -1,0 +1,65 @@
+# Built with EasyBuild version 3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390 on 2018-11-08_15-52-09
+# Built with EasyBuild version 3.1.0-r196bbe321f21884e146d86915903cff81c7d674d on 2017-02-27_16-32-09
+name = 'Geant4'
+version = '10.02.p03'
+
+homepage = 'http://geant4.cern.ch/'
+description = """Geant4 is a toolkit for the simulation of the passage of particles through matter.
+ Its areas of application include high energy, nuclear and accelerator physics, 
+ as well as studies in medical and space science."""
+
+toolchain = {'version': '2018.3', 'name': 'iccifort'}
+
+sources = ['%(namelower)s.%(version)s.tar.gz']
+source_urls = ['http://%(namelower)s.cern.ch/support/source']
+
+builddependencies = [
+    ('CMake', '3.4.3'),
+]
+dependencies = [
+    ('CLHEP', '2.3.1.1'),
+]
+
+#configopts = "-DEXPAT_LIBRARY=$EBROOTEXPAT/lib/libexpat.so -DEXPAT_INCLUDE_DIR=$EBROOTEXPAT/include"
+#configopts += " -DGEANT4_INSTALL_DATA=OFF"
+configopts = " -DZLIB_ROOT=$NIXUSER_PROFILE  -DGEANT4_INSTALL_DATA=ON"
+
+
+#modextravars = {
+#     'G4LEVELGAMMADATA': '%(installdir)s/share/Geant4-10.2.3/data/PhotonEvaporation3.2',
+#     'G4NEUTRONXSDATA': '%(installdir)s/share/Geant4-10.2.3/data/G4NEUTRONXS1.4',
+#     'G4LEDATA': '%(installdir)s/share/Geant4-10.2.3/data/G4EMLOW6.48',
+#     'G4NEUTRONHPDATA': '%(installdir)s/share/Geant4-10.2.3/data/G4NDL4.5',
+#     'G4ENSDFSTATEDATA': '%(installdir)s/share/Geant4-10.2.3/data/G4ENSDFSTATE1.2.3',
+#     'G4RADIOACTIVEDATA': '%(installdir)s/share/Geant4-10.2.3/data/RadioactiveDecay4.3.2',
+#     'G4ABLADATA': '%(installdir)s/share/Geant4-10.2.3/data//G4ABLA3.0',
+#     'G4PIIDATA': '%(installdir)s/share/Geant4-10.2.3/data//G4PII1.3',
+#     'G4SAIDXSDATA': '%(installdir)s/share/Geant4-10.2.3/data/G4SAIDDATA1.1',
+#     'G4REALSURFACEDATA': '%(installdir)s/share/Geant4-10.2.3/data/RealSurface1.0',
+#}
+moduleclass = 'phys'
+# Build statistics
+buildstats = [{
+    "build_time": 1048.68,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/mboisson/my_eb_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iccifort,2018.3'", "--use-ccache='/cvmfs/local/ccache'", 'Geant4-10.02.p03-iccifort-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.0-r5c4defe3819ec43fcca223927249ce71ee24bfc8",
+    "easybuild-framework_version": "3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 1244276140,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.8'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1541692327,
+    "total_memory": 241657,
+}]
