@@ -1,0 +1,73 @@
+# Built with EasyBuild version 3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390 on 2018-11-08_20-35-09
+easyblock = 'CMakeMake'
+
+name = 'GMT'
+version = '5.4.2'
+
+homepage = 'http://gmt.soest.hawaii.edu/'
+description = """GMT is an open source collection of about 80 command-line tools for manipulating
+ geographic and Cartesian data sets (including filtering, trend fitting, gridding, projecting,
+ etc.) and producing PostScript illustrations ranging from simple x-y plots via contour maps
+ to artificially illuminated surfaces and 3D perspective views; the GMT supplements add another
+ 40 more specialized and discipline-specific tools. """
+
+toolchain = {'version': '2018.3', 'name': 'iccifort'}
+
+sources = ['%(namelower)s-%(version)s-src.tar.xz', 'gshhg-%(namelower)s-2.3.6.tar.gz', 'dcw-%(namelower)s-1.1.2.tar.gz']
+# 'http://gmt.soest.hawaii.edu/files/download?name=' needs flash enabled browser
+source_urls = [
+    'ftp://ftp.soest.hawaii.edu/%(namelower)s',
+    'ftp://ftp.soest.hawaii.edu/%(namelower)s/legacy',
+    'ftp://ftp.soest.hawaii.edu/gshhg',
+    'ftp://ftp.soest.hawaii.edu/gshhg/legacy',
+    'ftp://ftp.soest.hawaii.edu/dcw',
+    'ftp://ftp.soest.hawaii.edu/dcw/legacy',
+]
+
+patches = ['%(name)s-5.1.2_netCDF.patch']
+
+builddependencies = [
+    ('CMake', '3.8.1'),
+]
+dependencies = [
+    ('GDAL', '2.1.3', '-Python-2.7.13'),
+    ('FFTW', '3.3.6'),
+    ('netCDF', '4.4.1.1'),
+]
+
+configopts = " -DZLIB_ROOT=$NIXUSER_PROFILE  -DOPENGL_INCLUDE_DIR=$NIXUSER_PROFILE/include -DOPENGL_gl_LIBRARY=$NIXUSER_PROFILE/lib/libGL.so  -DOPENGL_glu_LIBRARY=$NIXUSER_PROFILE/lib/libGLU.so  -DJPEG_INCLUDE_DIR=$NIXUSER_PROFILE/include -DJPEG_LIBRARY=$NIXUSER_PROFILE/lib/libjpeg.so  -DPNG_PNG_INCLUDE_DIR=$NIXUSER_PROFILE/include -DPNG_LIBRARY=$NIXUSER_PROFILE/lib/libpng.so  -DPYTHON_EXECUTABLE=$EBROOTPYTHON/bin/python  -DCURL_LIBRARY=$NIXUSER_PROFILE/lib/libcurl.so -DCURL_INCLUDE_DIR=$NIXUSER_PROFILE/include  -DCMAKE_SKIP_RPATH=ON -DCOPY_GSHHG=TRUE -DGSHHG_ROOT=%(builddir)s/gshhg-%(namelower)s-2.3.6 -DCOPY_DCW=TRUE -DDCW_ROOT=%(builddir)s/dcw-%(namelower)s-1.1.2 "
+
+modextrapaths = {'GMTHOME': ''}
+separate_build_dir = True
+
+sanity_check_paths = {
+    'files': ['bin/%(namelower)s', 'bin/isogmt'],
+    'dirs': [],
+}  # country polygons
+
+moduleclass = 'geo'
+# Build statistics
+buildstats = [{
+    "build_time": 790.63,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/mboisson/my_eb_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iccifort,2018.3'", "--use-ccache='/cvmfs/local/ccache'", 'GMT-5.4.2-iccifort-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.0-r5c4defe3819ec43fcca223927249ce71ee24bfc8",
+    "easybuild-framework_version": "3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 327453914,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.8'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1541709308,
+    "total_memory": 241657,
+}]
