@@ -1,0 +1,151 @@
+# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-15_20-22-45
+easyblock = 'Bundle'
+
+name = 'FALCON'
+# version is taken from https://github.com/PacificBiosciences/FALCON-integrate/releases
+version = '1.8.8'
+commit_id = '86cec61'
+
+homepage = 'https://github.com/PacificBiosciences/FALCON'
+description = "Falcon: a set of tools for fast aligning long reads for consensus and assembly"
+
+toolchain = {'name': 'GCC', 'version': '7.3.0'}
+
+dependencies = [('Python', '2.7.14')]
+
+default_easyblock = 'ConfigureMake'
+
+# commit IDs are determined via https://github.com/PacificBiosciences/FALCON-integrate/tree/1.8.8
+# datestamps match commit dates
+components = [
+    ('DAZZ_DB', '20170411', {
+        'source_urls': ['https://github.com/PacificBiosciences/DAZZ_DB/archive/'],
+        'sources': ['f29d27d.tar.gz'],
+        'checksums': ['e1a06eb07da120b291e62d9cecfe4c06899e719c788548a7def21d4f93e6fde1'],
+        'skipsteps': ['configure'],
+        'prebuildopts': "cd DAZZ_DB-* && ",
+        'buildopts': 'CFLAGS="$CFLAGS"',
+        'preinstallopts': "cd DAZZ_DB-* && mkdir %(installdir)s/{bin,include,lib} &&",
+        'installopts': "PREFIX=%(installdir)s",
+    }),
+    ('DALIGNER', '20170410', {
+        'source_urls': ['https://github.com/PacificBiosciences/DALIGNER/archive/'],
+        'sources': ['0fe5240.tar.gz'],
+        'checksums': ['f476281906cccb446126710b0e9a46200279eddea4b999456132c71ebd60c776'],
+        'skipsteps': ['configure'],
+        'prebuildopts': "cd DALIGNER-* && ",
+        'buildopts': 'CFLAGS="$CFLAGS" CPATH=%(installdir)s/include:$CPATH LIBRARY_PATH=%(installdir)s/lib',
+        'preinstallopts': "cd DALIGNER-* && ",
+        'installopts': "PREFIX=%(installdir)s",
+    }),
+    ('DAMASKER', '20170211', {
+        'source_urls': ['https://github.com/PacificBiosciences/DAMASKER/archive/'],
+        'sources': ['144244b.tar.gz'],
+        'checksums': ['61644a75605fddfd136ac41508d1b2caa5119fe68e70df6b19ccd8177413004c'],
+        'skipsteps': ['configure'],
+        'prebuildopts': "cd DAMASKER-* && ",
+        'buildopts': 'CFLAGS="$CFLAGS"',
+        'preinstallopts': "cd DAMASKER-* && ",
+        'installopts': "PREFIX=%(installdir)s",
+    }),
+    ('DEXTRACTOR', '20160809', {
+        'source_urls': ['https://github.com/PacificBiosciences/DEXTRACTOR/archive/'],
+        'sources': ['8972680.tar.gz'],
+        'checksums': ['236a6c10d226ab2ba4724fd0df9c84a2d8b88c1365cf47fb4228f1bdcad41bdf'],
+        'skipsteps': ['configure'],
+        'prebuildopts': "cd DEXTRACTOR-* && ",
+        'buildopts': 'CFLAGS="$CFLAGS"',
+        'preinstallopts': "cd DEXTRACTOR-* && ",
+        'installopts': "PREFIX=%(installdir)s",
+    }),
+    # only download, is used in sanity check to run smoke test(s)
+    ('FALCON-examples', '20170517', {
+        'source_urls': [
+            'https://github.com/pb-cdunn/FALCON-examples/archive/',
+            'https://downloads.pacbcloud.com/public/data/git-sym/',
+        ],
+        'sources': [
+            'b3b0917.tar.gz',
+            'synth5k.2016-11-02.tgz',
+        ],
+        'checksums': [
+            '6ad63ff783537a5f8d244796624b1439f4b8541fe09fad6e9b14fd839ca7a207',  # b3b0917.tar.gz
+            'd6a148c75e52bc45c628be97fde6ed9b83e841ed4668cd08e2aee5d5bf76943a',  # synth5k.2016-11-02.tgz
+        ],
+        'skipsteps': ['configure', 'build', 'install'],
+    }),
+]
+
+# this is a bundle of Python packages
+exts_defaultclass = 'PythonPackage'
+
+exts_list = [
+    ('networkx', '1.10', {
+        'source_urls': ['https://pypi.python.org/packages/source/n/networkx'],
+        'checksums': ['ced4095ab83b7451cec1172183eff419ed32e21397ea4e1971d92a5808ed6fb8'],
+    }),
+    ('pypeFLOW', '20170504', {
+        'source_tmpl': 'f23a1b2.tar.gz',
+        'source_urls': ['https://github.com/PacificBiosciences/pypeFLOW/archive/'],
+        'checksums': ['3ea7bb390370b988dc4254ffed403c3e2b78da140fbef24556a93ce450ad20cb'],
+    }),
+    (name, version, {
+        'modulename': 'falcon_kit',
+        'source_tmpl': '86cec61.tar.gz',
+        'source_urls': ['https://github.com/PacificBiosciences/FALCON/archive/'],
+        'checksums': ['9470563d962546566fc21d3c41b7ab87dcf1ffdd52cda244a7cad54ffa3199a6'],
+    }),
+]
+
+sanity_check_paths = {
+    'files': ['bin/Catrack', 'bin/DBdump', 'bin/fasta2DB', 'include/DB.h', 'include/QV.h', 'lib/libdazzdb.a',  # DAZZ_DB
+              'bin/daligner', 'bin/DB2Falcon', 'bin/HPC.daligner', 'bin/LAmerge', 'bin/LAsort',  # DALIGNER
+              'bin/datander', 'bin/HPC.REPmask', 'bin/HPC.TANmask', 'bin/REPmask', 'bin/TANmask',  # DAMASKER
+              'bin/dexta', 'bin/undexta',  # DEXTRACTOR
+              'bin/heartbeat-wrapper', 'bin/pwatcher-main',  # pypeFLOW
+              'bin/fc_consensus', 'bin/fc_fetch_reads', 'bin/fc_run'],  # FALCON
+    'dirs': ['lib/python%(pyshortver)s/site-packages'],
+}
+
+# cfr. https://github.com/pb-cdunn/FALCON-examples/blob/master/makefile
+sanity_check_commands = [
+    # remove broken symbolic link & move synth5k to right location
+    # needs to be done in two steps because of use of '*' in target path
+    "rm %(builddir)s/FALCON-examples*/run/synth0/data/synth5k",
+    "mv %(builddir)s/synth5k.2016-11-02 %(builddir)s/synth5k",
+    "mv %(builddir)s/synth5k %(builddir)s/FALCON-examples*/run/synth0/data/",
+    # set up test by running fc_run.py
+    "cd %(builddir)s/FALCON-examples* && cd run/synth0 && fc_run.py fc_run.cfg logging.ini",
+    # run actual integration test
+    "cd %(builddir)s/FALCON-examples* && make -C run/synth0 test",
+]
+
+modextrapaths = {'PYTHONPATH': ['lib/python%(pyshortver)s/site-packages']}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 81.98,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCC,7.3.0'", "--use-ccache='/cvmfs/local/ccache'", 'FALCON-1.8.8-intel-2017b.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.1-r3aec1984620e0bb5a4a0d20cc663b327b8ce06f0",
+    "easybuild-framework_version": "3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 12221041,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.8'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-6p0VHc/tmpg6tX74/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/2.7.14/bin/python",
+    "timestamp": 1542313364,
+    "total_memory": 241657,
+}]
