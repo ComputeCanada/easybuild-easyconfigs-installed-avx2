@@ -1,0 +1,91 @@
+# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-15_18-19-06
+##
+# Author: Ali Kerrache, University of Manitoba.
+# Date: May 28, 2018.
+##
+easyblock = 'MakeCp'
+
+name = 'DALTON'
+version = '2017-alpha'
+
+homepage = 'http://daltonprogram.org/'
+description = "The Dalton suite consists of two separate executables, Dalton and LSDalton. The Dalton code is a powerful tool for a wide range of molecular properties at different levels of theory, whereas LSDalton is a linear-scaling HF and DFT code suitable for large molecular systems, now also with some CCSD capabilites. Any published work arising from use of one of the Dalton programs must acknowledge that by a proper reference. The following list of capabilities of the Dalton programs should give you some indication of whether or not the Dalton suite is able to meet your requirements.."
+
+toolchain = {'version': '2018.3.312', 'name': 'iomkl'}
+toolchainopts = {'usempi': True, 'pic': True, 'openmp': True}
+
+# No direct download: download from GitLab using git clone:
+# git clone --recursive https://gitlab.com/dalton/dalton.git
+# mv dalton dalton-2017-alpha && tar -cvf dalton-2017-alpha.tar dalton-2017-alpha/
+# gzip dalton-2017-alpha.tar
+sources = [SOURCELOWER_TAR_GZ]
+
+builddependencies = [
+    ('CMake', '3.7.2'),
+]
+
+prebuildopts = "mkdir build && cd build && ../setup --type release --fc mpif90 --cc mpicc --cxx mpicxx --mpi --omp --timings --coverage --csr --mkl=sequential --static --blas=auto --lapack=auto --blacs=openmpi  --scalapack . && "
+
+postinstallcmds = ['cd %(builddir)s/%(namelower)s-%(version)s/build && mkdir -p %(installdir)s/bin && cp %(namelower)s %(namelower)s.x %(installdir)s/bin/ && cp -r GIT_HASH ../VERSION  lib  ../%(name)s/test tools basis %(installdir)s/']
+files_to_copy = [
+    (['build/%(namelower)s', 'build/%(namelower)s.x'], 'bin'),
+    'build/GIT_HASH',
+    '%(name)s/test',
+    'build/lib',
+    'VERSION',
+    'basis',
+    'tools',
+]
+modextrapaths = {'PATH': 'tools'}
+checksums = ['104e1b2e6d706864f691ddb9f4dac993']  # dalton-2017-alpha.tar.gz
+modextravars = {'BASLIB': '%(installdir)s/basis'}
+skipsteps = ['configure', 'install']
+modloadmsg = """ For more information type / Pour plus d'information tapez: %(namelower)s -h
+
+Note: Do not use / Ne pas utiliser : srun, mpirun, mpiexec
+
+Command line / Ligne de commande:
+
+  %(namelower)s [options] dalinp{.dal} [molinp{.mol} [potinp{.pot}] 
+
+To include the atomic basis add the option / Pour inclure les bases atomiques, ajoutez l'option:
+  
+  -b ${BASLIB}
+
+Example using 2 cores / Exemple avec 2 processeurs:
+
+  %(namelower)s  -b ${BASLIB} -N 2 -dal dft_rspexci_nosym.dal -mol H2O_cc-pVDZ_nosym.mol
+
+"""
+
+sanity_check_paths = {
+    'files': ['bin/%(namelower)s', 'bin/%(namelower)s.x', 'VERSION'],
+    'dirs': ['basis', 'lib', 'tools', 'test'],
+}
+
+moduleclass = 'chem'
+# Build statistics
+buildstats = [{
+    "build_time": 1479.46,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/mboisson/my_eb_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iomkl,2018.3.312'", "--use-ccache='/cvmfs/local/ccache'", 'DALTON-2017-alpha-iomkl-2016.4.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.1-r3aec1984620e0bb5a4a0d20cc663b327b8ce06f0",
+    "easybuild-framework_version": "3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 310054632,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.8'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1542305945,
+    "total_memory": 241657,
+}]
