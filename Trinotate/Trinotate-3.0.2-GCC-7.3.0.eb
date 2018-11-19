@@ -1,41 +1,47 @@
-# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-19_16-13-11
+# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-19_19-14-33
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 # Author: Pablo Escobar Lopez
 # sciCORE - University of Basel
 # SIB Swiss Institute of Bioinformatics
+
 easyblock = 'Tarball'
 
 name = 'Trinotate'
 version = '3.0.2'
 
 homepage = 'https://trinotate.github.io/'
-description = "Trinotate is a comprehensive annotation suite designed for automatic functional annotation of transcriptomes, particularly de novo assembled transcriptomes, from model or non-model organisms."
+description = """Trinotate is a comprehensive annotation suite designed for automatic functional annotation of transcriptomes, particularly de novo assembled transcriptomes, from model or non-model organisms."""
 
-toolchain = {'version': '7.3.0', 'name': 'GCC'}
+toolchain = {'name': 'GCC', 'version': '7.3.0'}
 
+source_urls = ['https://github.com/Trinotate/Trinotate/archive/']
 sources = ['v%(version)s.tar.gz']
-source_urls = ['https://github.com/%(name)s/%(name)s/archive/']
 
 dependencies = [
-    ('Trinity', '2.4.0'),
-    ('TransDecoder', '3.0.1'),
-    ('HMMER', '3.1b2', '', ('iccifort', '2016.4')),
-    ('BLAST+', '2.6.0'),
+               ('Trinity', '2.8.4'),
+               ('TransDecoder', '3.0.1'),
+               ('HMMER', '3.1b2'),
+               ('BLAST+', '2.7.1'),
 ]
 
-modextravars = {'TRINOTATE_HOME': '%(installdir)s'}
-modextrapaths = {'PATH': ''}
-
 sanity_check_paths = {
-    'files': ['%(name)s', 'admin/Build_Trinotate_Boilerplate_SQLite_db.pl'],
-    'dirs': [],
+    'files': ['Trinotate', 'admin/Build_Trinotate_Boilerplate_SQLite_db.pl'],
+    'dirs': []
 }
 
+modextrapaths = {
+    'PATH': '',
+}
+
+modextravars = {
+    'TRINOTATE_HOME': '%(installdir)s',
+}
 moduleclass = 'bio'
+
 # Build statistics
 buildstats = [{
-    "build_time": 37.23,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/mboisson/my_eb_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCC,7.3.0'", "--use-ccache='/cvmfs/local/ccache'", 'Trinotate-3.0.2-GCC-5.4.0.eb'],
+    "build_time": 45.16,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/mboisson/my_eb_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Trinotate-3.0.2-GCC-7.3.0.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.994,
@@ -52,8 +58,8 @@ buildstats = [{
     "os_version": "7.4.1708",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-uS03_a/tmpWl6R__/gcc",
+    "system_gcc_path": "/tmp/eb-qqBQto/tmp71zr_O/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python",
-    "timestamp": 1542643990,
+    "timestamp": 1542654872,
     "total_memory": 241657,
 }]
