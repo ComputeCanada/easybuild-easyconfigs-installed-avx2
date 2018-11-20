@@ -1,0 +1,72 @@
+# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-20_16-51-09
+easyblock = 'CMakeMake'
+
+name = "HH-suite"
+version = "3.0-beta.3"
+ffindex_commit = '74550c8bde3d5b450755ec4be5e9cd56f28a231b'
+
+homepage = 'https://github.com/soedinglab/hh-suite'
+description = """ The HH-suite is an open-source software package for sensitive protein sequence searching
+ based on the pairwise alignment of hidden Markov models (HMMs). """
+
+toolchain = {'name': 'iccifort', 'version': '2018.3'}
+toolchainopts = {'pic': True}
+
+source_urls = [
+    'https://github.com/soedinglab/hh-suite/archive/',
+    'https://github.com/soedinglab/ffindex_soedinglab/archive/',
+]
+sources = [
+    'v%(version)s.tar.gz',
+    {'download_filename': '%s.tar.gz' % ffindex_commit, 'filename': 'ffindex-20171201.tar.gz'},
+]
+checksums = [
+    '483039a642fba375e3ba6ee49e38c16695dfa4f88cad23b09cd042755db01c12',  # v3.0-beta.3.tar.gz
+    '3978901196ee9d34cfb1a847cf27e224d104957f1c6675d900c823a8ee78b1d9',  # ffindex-20171201.tar.gz
+]
+
+builddependencies = [('CMake', '3.10.2')]
+
+preconfigopts = 'cp -a ../ffindex_soedinglab-%s/* ' % ffindex_commit
+preconfigopts += '%(builddir)s/%(namelower)s-%(version)s/lib/ffindex && '
+
+configopts = '-DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" '
+
+separate_build_dir = True
+
+modextravars = {'HHLIB': '%(installdir)s'}
+
+sanity_check_paths = {
+    'files': ["bin/hhalign", "bin/hhblits", "bin/hhconsensus", "bin/hhfilter", "bin/hhmake", "bin/hhsearch",
+              "lib/libffindex.a", "lib/libffindex_shared.%s" % SHLIB_EXT,
+              "include/ffindex.h", "include/ffutil.h"],
+    'dirs': []
+}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 116.92,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'HH-suite-3.0-beta.3-iccifort-2018.3.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.1-r3aec1984620e0bb5a4a0d20cc663b327b8ce06f0",
+    "easybuild-framework_version": "3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 30057837,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.8'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.4.1708",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1542732668,
+    "total_memory": 241657,
+}]
