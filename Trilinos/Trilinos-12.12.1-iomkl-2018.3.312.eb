@@ -1,0 +1,85 @@
+# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-12-17_23-31-38
+easyblock = 'CMakeMake'
+
+name = 'Trilinos'
+version = '12.12.1'
+
+homepage = 'http://trilinos.sandia.gov/'
+description = """The Trilinos Project is an effort to develop algorithms and enabling technologies
+ within an object-oriented software framework for the solution of large-scale, complex multi-physics
+ engineering and scientific problems. A unique design feature of Trilinos is its focus on packages."""
+
+toolchain = {'version': '2018.3.312', 'name': 'iomkl'}
+toolchainopts = {'usempi': True, 'pic': True, 'strict': True}
+version_major = version.split('.')[0]
+version_minor_1 = version.split('.')[1]
+version_minor_2 = version.split('.')[2]
+namelower = '%(namelower)s'
+
+sources = [{'filename':'%(name)s.tar.gz',
+           'git_config': {
+           'tag': '%s-release-%s-%s-%s' % (namelower, version_major, version_minor_1, version_minor_2),
+           'repo_name': '%(name)s',
+           'url': 'https://github.com/trilinos',
+           'recursive': True,
+            }
+}
+]
+
+builddependencies = [
+    ('CMake', '3.7.1'),
+    ('Boost', '1.68.0', '-mpi'),
+    ('netCDF', '4.6.1', '-mpi'),
+]
+preconfigopts = "pip install numpy --prefix=%(installdir)s && export PYTHONPATH=$PYTHONPATH:%(installdir)s/lib/python2.7/site-packages && export CPATH=$CPATH:%(installdir)s/lib/python2.7/site-packages/numpy/core/include && "
+configopts = '-DTrilinos_ENABLE_ALL_PACKAGES=ON -DTrilinos_ENABLE_TESTS=ON  -DTPL_ENABLE_Matio=OFF  -DTrilinos_VERBOSE_CONFIGURE=OFF  -DTPL_ENABLE_MPI=ON  -DBUILD_SHARED_LIBS=ON  -DCMAKE_VERBOSE_MAKEFILE=OFF  -DCMAKE_BUILD_TYPE=RELEASE  -DTPL_ENABLE_MKL=ON  -DTPL_BLAS_LIBRARIES=-mkl  -DTPL_LAPACK_LIBRARIES=-mkl'
+
+skipsteps = ['install']
+postinstallcmds = [
+   "pip install numpy --prefix=%(installdir)s", 
+   "export PYTHONPATH=$PYTHONPATH:%(installdir)s/lib/python2.7/site-packages", 
+   "export CPATH=$CPATH:%(installdir)s/lib/python2.7/site-packages/numpy/core/include", 
+   "make install"
+]
+
+# see https://trilinos.org/oldsite/release_notes-11.10.html and https://github.com/trilinos/Trilinos/issues/19
+#skip_exts = ['STKClassic', 'STKDoc_tests']
+# too parallel is too slow, and may cause build/tests to fail
+maxparallel = 10
+parallel = 8
+configure_cmd_prefix = " CC=mpicc CXX=mpicxx FC=mpif90 FF=mpif77 "
+#patches = ['fix-parmetis.patch']
+separate_build_dir = True
+
+sanity_check_paths = {
+    'files': ['lib/libtriutils.so.12'],
+    'dirs': ['include', 'lib'],
+}
+modextrapaths = {'PYTHONPATH': ':%(installdir)s/lib/python2.7/site-packages'}
+moduleclass = 'numlib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 114.48,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Trilinos-12.12.1-iomkl-2018.3.312.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.7.1-rb86bcadc300ac8b37932a2219ef39e1cc76cfba0",
+    "easybuild-framework_version": "3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 1701281327,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1545089496,
+    "total_memory": 241656,
+}]
