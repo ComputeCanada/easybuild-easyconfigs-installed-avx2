@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-08_05-14-19
+# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-08_19-03-56
 easyblock = 'CMakeMake'
 
 name = 'Trilinos'
@@ -33,7 +33,7 @@ builddependencies = [
     ('CMake', '3.12.3'),
     ('Boost', '1.68.0', '-mpi'),
     ('netCDF', '4.6.1', '-mpi'),
-    ('HDF5', '1.8.18', '-mpi'),
+    ('HDF5', '1.10.3', '-mpi'),
     ('OpenBLAS', '0.2.20'),
     ('MATIO', '1.5.2'),
      
@@ -79,7 +79,7 @@ configopts += '-DHDF5_INCLUDE_DIRS="$EBROOTHDF5/include" '
 configopts += '-DHDF5_LIBRARY_DIRS="$EBROOTHDF5/lib" '
 configopts += '-DTPL_ENABLE_Netcdf:BOOL=ON '
 configopts += '-DNetcdf_INCLUDE_DIRS:PATH="$EBROOTNETCDF/include" '
-configopts += '-DNetcdf_LIBRARY_DIRS:PATH="$EBROOTNETCDF/lib" '
+configopts += '-DNetcdf_LIBRARY_DIRS:PATH="$EBROOTNETCDF/lib64" '
 configopts += '-DTPL_ENABLE_MPI:BOOL=ON '
 configopts += '-DTPL_ENABLE_Boost:BOOL=ON '
 configopts += '-DTPL_Boost_INCLUDE_DIRS="$EBROOTBOOST" '
@@ -108,7 +108,7 @@ moduleclass = 'numlib'
 
 # Build statistics
 buildstats = [{
-    "build_time": 498.71,
+    "build_time": 522.03,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/home/aroudgar/src/Trilinos/Trilinos-lapack-12.12.1-gompi-2016.4.11.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
@@ -126,8 +126,8 @@ buildstats = [{
     "os_version": "7.5.1804",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-D7zXDe/tmpdQ09Lx/gcc",
+    "system_gcc_path": "/tmp/eb-zAExXn/tmptk3uuD/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1546924458,
+    "timestamp": 1546974235,
     "total_memory": 241656,
 }]
