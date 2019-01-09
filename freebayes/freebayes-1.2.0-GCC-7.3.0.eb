@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20 on 2018-11-30_18-15-16
+# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-09_22-18-54
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 # Author: Pablo Escobar Lopez
 # Swiss Institute of Bioinformatics
@@ -11,15 +11,9 @@ version = '1.2.0'
 homepage = 'https://github.com/ekg/freebayes'
 description = " Bayesian haplotype-based polymorphism discovery and genotyping. "
 
-toolchain = {'version': '7.3.0', 'name': 'GCC'}
+toolchain = {'name': 'GCC', 'version': '7.3.0'}
 
-# No direct download url. 
-# The version downloaded do not work: use git --recursive
-# The download has been done with git:
-# $ git clone --recursive https://github.com/ekg/freebayes.git
-# $ mv freebayes freebayes-1.2.0 
-# $ tar -czf freebayes-1.2.0.tar.gz freebayes-1.2.0 && rm -rf freebayes-1.2.0
-sources = [SOURCE_TAR_GZ]
+sources = [{'git_config': {'url': 'https://github.com/ekg', 'commit': '29c4002', 'recursive': True, 'repo_name': '%(name)s'}, 'filename': '%(name)s-v%(version)s.tar.gz'}]
 
 builddependencies = [
     ('CMake', '3.2.1'),
@@ -28,12 +22,14 @@ builddependencies = [
 # Workaround to avoid the error:
 # "The C compiler identification is unknown".
 prebuildopts = "unset CC && unset CXX && "
-# Option to also build vcflib, this will add these commands to the end of the 
-# Build command, and run them if the build completes
+# Option to also build vcflib, this will add these commands to 
+# the end of the build command, and run them if the build completes.
 buildopts = " && cd vcflib && make && cd .."
 
 parallel = 1
 
+# Add scripts dir to PATH:
+postinstallcmds = ['/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s/vcflib/lib']
 files_to_copy = [
     'bin',
     'README.md',
@@ -43,8 +39,7 @@ files_to_copy = [
     'test',
     (['vcflib/bin', 'vcflib/scripts', 'vcflib/examples', 'vcflib/lib', 'vcflib/samples'], 'vcflib'),
 ]
-# Add scripts dir to PATH
-modextrapaths = {'PATH': 'scripts'}
+modextrapaths = {'PATH': 'vcflib/scripts'}
 
 sanity_check_paths = {
     'files': ['bin/%(name)s', 'bin/bamleftalign'],
@@ -53,6 +48,10 @@ sanity_check_paths = {
 
 moduleclass = 'bio'
 
+#modluafooter = """
+#depends_on("python")
+#depends_on("r")
+#"""
 # To run tests after installing with the command (note tests must be done 
 # in-place (hard coded paths)) $ eb <this file>:
 # 1a) $ cd /home/$USER/.local/easybuild/software/2017/avx2/Compiler/gcc5.4/freebayes/1.1.0/test
@@ -64,26 +63,26 @@ moduleclass = 'bio'
 # 4) $ make test
 # Build statistics
 buildstats = [{
-    "build_time": 1033.88,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCC,7.3.0'", "--use-ccache='/cvmfs/local/ccache'", 'freebayes-1.2.0-GCC-5.4.0.eb'],
+    "build_time": 199.76,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCC,7.3.0'", "--use-ccache='/cvmfs/local/ccache'", 'freebayes-1.2.0-GCC-5.4.0.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.994,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.7.1-rb86bcadc300ac8b37932a2219ef39e1cc76cfba0",
-    "easybuild-framework_version": "3.7.1-r37dd3b99b7418ce5a2122c255948faaf4536da20",
+    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
+    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 225691120,
+    "install_size": 225679147,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.11'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.5.1804",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-My0LAu/tmpFt5ppB/gcc",
+    "system_gcc_path": "/tmp/eb-H9yFRG/tmp8NuOHT/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1543601713,
+    "timestamp": 1547072333,
     "total_memory": 241656,
 }]
