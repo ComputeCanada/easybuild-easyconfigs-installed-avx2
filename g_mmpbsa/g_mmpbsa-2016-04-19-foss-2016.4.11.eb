@@ -1,0 +1,75 @@
+# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-11_15-03-18
+# This file is an EasyBuild reciPY as per https://github.com/easybuilders/easybuild
+# Author: Oliver Stueker
+# ACENET / Compute Canada
+# Memorial University of Newfoundland
+# St. John's, Nfld, Canada
+
+name = 'g_mmpbsa'
+version = '2016-04-19'
+commit_id = '160f685'
+
+easyblock = 'CMakeMake'
+
+homepage = 'https://rashmikumari.github.io/g_mmpbsa/'
+description = """ G_MMPBSA calculates components of binding energy using MM-PBSA method 
+except the entropic term and energetic contribution of each residue to the binding using 
+energy decomposition scheme. - CC-Wiki: GROMACS """
+
+toolchain = {'name': 'foss', 'version': '2016.4.11'}
+
+sources = [{
+    'filename': '%(name)s-%(version)s-'+commit_id+'.tar.gz',
+    'git_config': {
+        'url': 'https://github.com/RashmiKumari',
+        'repo_name': name,
+        'commit': commit_id ,
+        'recursive': True,
+    },
+}]
+
+
+dependencies = [
+    ('APBS', '1.3'),
+    ('GROMACS', '5.1.5'),
+]
+
+configopts =  ' -DGMX_PATH=$EBROOTGROMACS'
+configopts += ' -DAPBS_INSTALL=$EBROOTAPBS'
+configopts += ' -DAPBS_SRC=$EBROOTAPBS/src/apbs-1.3-source'
+configopts += ' -DFFTW_LIB=${EBROOTFFTW}/lib/'
+configopts += ' -DCMAKE_EXE_LINKER_FLAGS="-fopenmp" '
+
+sanity_check_paths = {
+    'files': ['bin/g_mmpbsa'],
+    'dirs': []
+}
+
+moduleclass = 'chem'
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 65.65,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'g_mmpbsa-2016.04.19-foss-2016.4.11.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
+    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 5440662,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.11'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-3c807M/tmp4n8DBM/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1547218997,
+    "total_memory": 241656,
+}]
