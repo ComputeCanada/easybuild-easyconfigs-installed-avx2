@@ -1,0 +1,107 @@
+# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-17_18-52-19
+##
+# This file is an EasyBuild reciPY as per https://github.com/easybuilders/easybuild
+#
+# Copyright:: Copyright 2012-2014 Uni.Lu/LCSB, NTUA
+# Authors::   Fotis Georgatos <fotis@cern.ch>
+# License::   MIT/GPL
+# $Id$
+#
+# This work implements a part of the HPCBIOS project and is a component of the policy:
+# http://hpcbios.readthedocs.org/en/latest/HPCBIOS_2012-94.html
+##
+
+easyblock = 'ConfigureMake'
+
+name = 'MEME'
+version = '5.0.3'
+
+homepage = 'http://meme-suite.org'
+description = """The MEME Suite allows you to: 
+ - discover motifs using MEME, DREME (DNA only) or GLAM2 on groups of related DNA or protein sequences, 
+ - search sequence databases with motifs using MAST, FIMO, MCAST or GLAM2SCAN, 
+ - compare a motif to all motifs in a database of motifs, 
+ - associate motifs with Gene Ontology terms via their putative target genes, 
+ - analyse motif enrichment using SpaMo or CentriMo.
+"""
+
+toolchain = {'name': 'iompi', 'version': '2016.4.11'}
+
+sources = [
+    '%(namelower)s-%(version)s.tar.gz',
+    'motif_databases.12.18.tgz',
+    'gomo_databases.3.2.tgz'
+]
+source_urls = [
+    'http://meme-suite.org/meme-software/%(version)s/',
+    'http://meme-suite.org/meme-software/Databases/motifs/',
+    'http://meme-suite.org/meme-software/Databases/gomo/',
+]
+
+checksums = [
+    '7d5525b7d008ecdb19195906fab22660', # meme-5.0.3.tar.gz
+    'f6dd80e54f2184f8275c83dd706a3c89', # motif_databases.12.18.tgz
+    '5b8fcf3c541b30e2a66580f289132e97', # gomo_databases.3.2.tgz
+]
+
+dependencies = [
+    ('Python', '3.5.4'),
+    ('Perl', '5.22.4'),
+    #('libxml2', '2.9.1'),     # Provided from nix.
+    #('libxslt', '1.1.28'),    # Provided from nix.
+    ('zlib', '1.2.8'),
+]
+
+configopts  = '--with-url="http://meme-suite.org/" '
+configopts += '--enable-build-libxml2 --enable-build-libxslt '
+configopts += '--with-db=%(installdir)s/db '
+configopts += '--with-perl=$EBROOTPERL/bin/perl '
+configopts += '--with-python=$EBROOTPYTHON/bin/python '
+configopts += '--with-python3=$EBROOTPYTHON/bin/python '
+configopts += '--with-gs=$NIXUSER_PROFILE/bin/gs '
+
+meme_binary_files = [
+    "ame", "centrimo", "dreme", "dust", "fimo", "glam2", "glam2scan", "gomo",
+    "mast", "mcast", "meme", "meme-chip", "momo", "purge", "spamo", "tomtom",
+]
+
+postinstallcmds =  ['mkdir -p %(installdir)s/db && cd %(builddir)s/%(namelower)s-%(version)s/ && cp -r ../gomo_databases ../motif_databases %(installdir)s/db && cp -r scripts tests %(installdir)s/']
+
+modextrapaths = {
+    'PATH': 'scripts',
+    'PERL5LIB': 'lib/%(namelower)s-%(version)s/perl',
+    'PYTHONPATH': 'lib/%(namelower)s-%(version)s/python',
+}
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in meme_binary_files],
+    'dirs': ['db', 'lib', 'libexec', 'share'],
+}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 237.64,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'MEME-5.0.3-iompi-2016.4.11.eb'],
+    "core_count": 56,
+    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+    "cpu_speed": 2399.994,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
+    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node",
+    "install_size": 701242336,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python",
+    "timestamp": 1547751138,
+    "total_memory": 241656,
+}]
