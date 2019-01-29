@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-03_20-38-23
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-01-29_16-08-31
 name = 'Python'
 version = '3.7.0'
 
@@ -11,6 +11,7 @@ toolchainopts = {'pic': True}
 
 source_urls = ['http://www.python.org/ftp/%(namelower)s/%(version)s/']
 sources = [SOURCE_TGZ]
+checksums = ['85bb9feb6863e04fb1700b018d9d42d1caac178559ffa453d7e6a436e259fd0d']
 
 configopts = '--with-tcltk-includes=-I$NIXUSER_PROFILE/include --with-tcltk-libs="-L$NIXUSER_PROFILE/lib -ltcl8.6 -ltk8.6"'
 prebuildopts = 'sed -i -e "s;/usr;$NIXUSER_PROFILE;g" setup.py && '
@@ -43,21 +44,26 @@ dependencies = [
 # order is important!
 # package versions updated July 25th 2018
 exts_list = [
-    ('setuptools', '40.0.0', {
+    ('setuptools', '40.6.3', {
         'source_tmpl': '%(name)s-%(version)s.zip',
         'source_urls': ['https://pypi.python.org/packages/source/s/setuptools/'],
+        'checksums': ['3b474dad69c49f0d2d86696b68105f3a6f195f7ab655af12ef9a9c326d2b08f8'],
     }),
-    ('pip', '18.0', {
+    ('pip', '18.1', {
         'source_urls': ['https://pypi.python.org/packages/source/p/pip/'],
+        'checksums': ['c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1'],
     }),
-    ('virtualenv', '16.0.0', {
+    ('virtualenv', '16.1.0', {
         'source_urls': ['https://pypi.python.org/packages/source/v/virtualenv'],
+        'checksums': ['f899fafcd92e1150f40c8215328be38ff24b519cd95357fa6e78e006c7638208'],
     }),
-    ('wheel', '0.31.1', {
+    ('wheel', '0.32.3', {
         'source_urls': ['https://pypi.python.org/packages/source/w/wheel'],
+        'checksums': ['029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6'],
     }),
     ('gnureadline', '6.3.8', {
         'source_urls': ['https://pypi.python.org/packages/source/g/gnureadline'],
+        'checksums': ['58e208ed34a53456ecf58bc11eacbe332c50d322b329457e2c645bd15192b035'],
     }),
 ]
 
@@ -66,26 +72,26 @@ moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 246.13,
+    "build_time": 222.12,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Python-2.7.14-dummy-dummy.eb', 'Python-3.5.4-dummy-dummy.eb', 'Python-3.6.3-dummy-dummy.eb', 'Python-3.7.0-dummy-dummy.eb'],
     "core_count": 56,
     "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
     "cpu_speed": 2399.994,
     "cpu_vendor": "Intel",
     "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
-    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
+    "easybuild-framework_version": "3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/cl9wjvnhm73fh6idjvcqmch4q4122lpx-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node",
-    "install_size": 176700869,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.11'),
+    "install_size": 176693398,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.5.1804",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-czedpc/tmpHLM7cT/gcc",
+    "system_gcc_path": "/tmp/eb-UVcf7A/tmprmol2o/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1546547902,
+    "timestamp": 1548778110,
     "total_memory": 241656,
 }]
