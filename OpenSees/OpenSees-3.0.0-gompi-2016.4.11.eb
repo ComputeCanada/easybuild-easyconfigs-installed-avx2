@@ -1,0 +1,70 @@
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-02-12_19-09-21
+easyblock = 'MakeCp'
+
+name = 'OpenSees'
+
+version = '3.0.0'
+
+homepage = 'http://opensees.berkeley.edu/'
+description = """OpenSees is a software framework for developing applications to simulate the performance of structural and geotechnical systems subjected to earthquakes. This version is built using DISTRIBUTED_MP platform setting.
+"""
+
+toolchain = {'name': 'gompi', 'version': '2016.4.11'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/OpenSees/OpenSees/archive/']
+sources = [ 'v%(version)s.tar.gz' ]
+patches = ['OpenSees-%(version)s-mpi-openblas.patch']
+checksums = [
+    '8c4e7e3a9ef728e91b4de3742011e8e71c3ffecc0c1c4209780a64b49930547d',  # v3.0.0.tar.gz
+    '6b3271f1ba4188b28b055accf3ee4f6428684664187d2e1cef0b43d39bca1fc8',  # OpenSees-3.0.0-mpi-openblas.patch
+]
+
+dependencies = [
+    ('Tcl', '8.5.19'),
+    ('OpenBLAS', '0.2.20'),
+]
+
+
+prebuildopts= ' mkdir %(builddir)s/bin && mkdir %(builddir)s/lib && ln -s %(builddir)s/OpenSees-3.0.0 %(builddir)s/OpenSees &&cp %(builddir)s/OpenSees/MAKES/Makefile.def.EC2-REDHAT-ENTERPRISE %(builddir)s/OpenSees/Makefile.def && '
+buildopts = 'HOME=%(builddir)s'
+
+
+files_to_copy = [(['%(builddir)s/bin/OpenSees'], 'bin'), 
+                 (['%(builddir)s/OpenSees/EXAMPLES'], 'EXAMPLES'),
+                 ]
+
+
+sanity_check_paths = {
+    'files': ['bin/OpenSees'],
+    'dirs': ['bin', 'EXAMPLES'],
+}
+
+moduleclass = 'geo'
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 239.88,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'OpenSees-3.0.0-gompi-2016.4.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.072,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
+    "easybuild-framework_version": "3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/lvjwgn6hpngyy6k4xqcqa9h2cxy3fl30-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 37364279,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-l_YJnb/tmpHIx1OX/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1549998539,
+    "total_memory": 60232,
+}]
