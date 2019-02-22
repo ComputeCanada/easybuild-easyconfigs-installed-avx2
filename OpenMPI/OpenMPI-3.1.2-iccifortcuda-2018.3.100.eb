@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-10_13-27-30
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-02-22_17-17-51
 easyblock = 'ConfigureMake'
 
 name = 'OpenMPI'
@@ -50,18 +50,8 @@ sanity_check_paths = {
 
 moduleclass = 'mpi'
 
-modextravars = {'SLURM_MPI_TYPE': 'pmi2'}
-
 modluafooter = """
-setenv("OMPI_MCA_mtl", "^mxm")
-if os.getenv("RSNT_INTERCONNECT") == "omnipath" then
-        setenv("OMPI_MCA_pml", "^ucx,yalla")
-        setenv("OMPI_MCA_btl", "^openib")
-        setenv("OMPI_MCA_oob", "^ud")
-        setenv("OMPI_MCA_coll", "^fca,hcoll")
-else
-        setenv("OMPI_MCA_pml", "^yalla")
-end
+assert(loadfile("/cvmfs/soft.computecanada.ca/config/lmod/openmpi_custom.lua"))("%(version_major_minor)s")
 
 add_property("type_","mpi")
 family("mpi")
@@ -69,19 +59,19 @@ family("mpi")
 
 # Build statistics
 buildstats = [{
-    "build_time": 29.46,
+    "build_time": 35.45,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'OpenMPI-3.1.2-iccifortcuda-2018.3.100.eb'],
-    "core_count": 56,
-    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-    "cpu_speed": 2399.994,
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.072,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
-    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
-    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
+    "easybuild-easyblocks_version": "3.8.0-r8419a472381f3d6b03b1a9947199663796bba983",
+    "easybuild-framework_version": "3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/rrwlh3bahkdwnbjvzm0nkq3504v451yl-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
-    "hostname": "build-node",
-    "install_size": 48957380,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.11'),
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 49057606,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.5.1804",
@@ -89,6 +79,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1547126849,
-    "total_memory": 241656,
+    "timestamp": 1550855870,
+    "total_memory": 60232,
 }]
