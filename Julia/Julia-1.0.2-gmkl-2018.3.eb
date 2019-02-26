@@ -1,72 +1,55 @@
-# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-02-22_02-46-17
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-02-26_14-59-36
 # Built with EasyBuild version 3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390 on 2018-10-23_23-21-03
-easyblock = "ConfigureMake"
+easyblock = 'ConfigureMake'
 
-name = "Julia"
-version = "1.0.2"
+name = 'Julia'
+version = '1.0.2'
 
-homepage = "http://julialang.org"
-description = """A high-level, high-performance dynamic language for technical computing."""
+homepage = 'http://julialang.org'
+description = "A high-level, high-performance dynamic language for technical computing."
 
 toolchain = {'name': 'gmkl', 'version': '2018.3'}
 
-source_urls = ['https://github.com/JuliaLang/julia/releases/download/v%(version)s']
+source_urls = ['https://github.com/JuliaLang/%(namelower)s/releases/download/v%(version)s']
 sources = [SOURCELOWER_TAR_GZ]
 
-skipsteps = ['configure']
-
 builddependencies = [
-     ('LLVM', '6.0.1'),
-     ('SuiteSparse', '4.5.4'),
+    ('LLVM', '6.0.1'),
+    ('SuiteSparse', '4.5.4'),
 ]
 
-library_paths = "$EBROOTLLVM/lib:$MKLROOT/lib/intel64:$EBROOTSUITESPARSE/lib"
-prebuildopts = "declare -A ARCH_MAP=( [sse3]=nocona [avx]=sandybridge [avx2]=haswell [avx512]=skx ) && "
-prebuildopts += "module load llvm/6.0.1 && LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%s"%library_paths
-
+prebuildopts = "declare -A ARCH_MAP=( [sse3]=nocona [avx]=sandybridge [avx2]=haswell [avx512]=skx ) && module load llvm/6.0.1 && LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EBROOTLLVM/lib:$MKLROOT/lib/intel64:$EBROOTSUITESPARSE/lib"
 # Specifying JULIA_CPU_TARGET allows use on non-identical CPUs.  Doesn't affect JIT or linked toolchain components.
-buildopts = " prefix=%(installdir)s"
-buildopts += " USE_SYSTEM_CURL=1 USE_SYSTEM_GMP=1 USE_SYSTEM_LIBGIT2=1 USE_SYSTEM_LIBSSH2=1 USE_SYSTEM_LIBUNWIND=1 USE_SYSTEM_LLVM=1"
-buildopts += " USE_SYSTEM_MPFR=1 USE_SYSTEM_PATCHELF=1 USE_SYSTEM_PCRE=1 USE_SYSTEM_SUITESPARSE=1 USE_SYSTEM_ZLIB=1"
-buildopts += " USE_INTEL_MKL=1 JULIA_CPU_TARGET=${ARCH_MAP[$RSNT_ARCH]}"
-buildopts += " USE_BLAS64=0"
+buildopts = " prefix=%(installdir)s USE_SYSTEM_CURL=1 USE_SYSTEM_GMP=1 USE_SYSTEM_LIBGIT2=1 USE_SYSTEM_LIBSSH2=1 USE_SYSTEM_LIBUNWIND=1 USE_SYSTEM_LLVM=1 USE_SYSTEM_MPFR=1 USE_SYSTEM_PATCHELF=1 USE_SYSTEM_PCRE=1 USE_SYSTEM_SUITESPARSE=1 USE_SYSTEM_ZLIB=1 USE_INTEL_MKL=1 JULIA_CPU_TARGET=${ARCH_MAP[$RSNT_ARCH]} USE_BLAS64=0"
 
-preinstallopts = prebuildopts
-installopts = buildopts
-# set rpath in Julia library so it can find LLVM, MKL and SuiteSparse
-installopts += " && patchelf --set-rpath '$ORIGIN':'$ORIGIN/julia':%s"%library_paths
-installopts +=      " %(installdir)s/lib/libjulia.so"
-# remove symbolic links to system libraries
-installopts += " && for i in %(installdir)s/lib/julia/*; do if [[ -L $i && $(readlink $i | cut -c 1-28) == '/cvmfs/soft.computecanada.ca' ]]; then rm $i; fi; done"
+preinstallopts = "declare -A ARCH_MAP=( [sse3]=nocona [avx]=sandybridge [avx2]=haswell [avx512]=skx ) && module load llvm/6.0.1 && LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$EBROOTLLVM/lib:$MKLROOT/lib/intel64:$EBROOTSUITESPARSE/lib"
+installopts = " prefix=%(installdir)s USE_SYSTEM_CURL=1 USE_SYSTEM_GMP=1 USE_SYSTEM_LIBGIT2=1 USE_SYSTEM_LIBSSH2=1 USE_SYSTEM_LIBUNWIND=1 USE_SYSTEM_LLVM=1 USE_SYSTEM_MPFR=1 USE_SYSTEM_PATCHELF=1 USE_SYSTEM_PCRE=1 USE_SYSTEM_SUITESPARSE=1 USE_SYSTEM_ZLIB=1 USE_INTEL_MKL=1 JULIA_CPU_TARGET=${ARCH_MAP[$RSNT_ARCH]} USE_BLAS64=0 && patchelf --set-rpath '$ORIGIN':'$ORIGIN/%(namelower)s':$EBROOTLLVM/lib:$MKLROOT/lib/intel64:$EBROOTSUITESPARSE/lib %(installdir)s/lib/libjulia.so && for i in %(installdir)s/lib/%(namelower)s/*; do if [[ -L $i && $(readlink $i | cut -c 1-28) == '/cvmfs/soft.computecanada.ca' ]]; then rm $i; fi; done"
 
 # install arpack, overriding downloaded library...
 postinstallcmds = [
-   "echo 'using Pkg; Pkg.activate(\"globalenv\",shared=true); Pkg.add(\"Arpack\")' > temp.jl",
-   "JULIA_DEPOT_PATH=%(installdir)s %(installdir)s/bin/julia temp.jl &> /dev/null",
-   "sed -i 's/^    install/    #install/' %(installdir)s/packages/Arpack/UiiMc/deps/build.jl",
-   "module load arpack-ng/3.5.0 && ln -sf $EBROOTARPACKMINNG/lib/libarpack.so.2.0.0 %(installdir)s/packages/Arpack/*/deps/usr/lib",
-   "echo 'using Pkg; Pkg.activate(\"globalenv\",shared=true); Pkg.build(\"Arpack\")' > temp.jl",
-   "JULIA_DEPOT_PATH=%(installdir)s %(installdir)s/bin/julia temp.jl &> /dev/null",
-   "rm temp.jl",
+    """echo 'using Pkg; Pkg.activate("globalenv",shared=true); Pkg.add("Arpack")' > temp.jl""",
+    "JULIA_DEPOT_PATH=%(installdir)s %(installdir)s/bin/%(namelower)s temp.jl &> /dev/null",
+    "sed -i 's/^    install/    #install/' %(installdir)s/packages/Arpack/UiiMc/deps/build.jl",
+    "module load arpack-ng/3.5.0 && ln -sf $EBROOTARPACKMINNG/lib/libarpack.so.2.0.0 %(installdir)s/packages/Arpack/*/deps/usr/lib",
+    """echo 'using Pkg; Pkg.activate("globalenv",shared=true); Pkg.build("Arpack")' > temp.jl""",
+    "JULIA_DEPOT_PATH=%(installdir)s %(installdir)s/bin/%(namelower)s temp.jl &> /dev/null",
+    "rm temp.jl",
 ]
+modluafooter = """setenv("JULIA_DEPOT_PATH", pathJoin(os.getenv('HOME'), ".%(namelower)s") .. ":%(installdir)s")"""
+modextravars = {'JULIA_LOAD_PATH': '@:@v#.#:@stdlib:%(installdir)s/environments/globalenv'}  # :@stdlib:%(installdir)s/environments/globalenv'}
+skipsteps = ['configure']
 
 sanity_check_paths = {
-    'files': ["bin/julia"],
-    'dirs': ["lib"]
+    'files': ['bin/%(namelower)s'],
+    'dirs': ['lib'],
 }
-
-modextravars = {
-    "JULIA_LOAD_PATH": "@:@v#.#:@stdlib:%(installdir)s/environments/globalenv",
-}
-
-modluafooter = """setenv("JULIA_DEPOT_PATH", pathJoin(os.getenv('HOME'), ".julia") .. ":%(installdir)s")"""
 
 moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 1101.11,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'Julia-1.0.2-gmkl-2018.3.eb'],
+    "build_time": 1126.69,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/Compiler/gcc7.3/julia/1.0.2/easybuild/reprod/Julia-1.0.2-gmkl-2018.3.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.072,
@@ -76,15 +59,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/rrwlh3bahkdwnbjvzm0nkq3504v451yl-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 285252208,
+    "install_size": 284882049,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.5.1804",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-vR1PSu/tmpqPssGX/gcc",
+    "system_gcc_path": "/tmp/eb-AhErpT/tmpgOTrYN/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1550803575,
+    "timestamp": 1551193175,
     "total_memory": 60232,
 }]
