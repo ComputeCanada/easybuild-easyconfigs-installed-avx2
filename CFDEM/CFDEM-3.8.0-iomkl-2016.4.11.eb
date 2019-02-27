@@ -1,0 +1,64 @@
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-02-27_21-45-11
+easyblock = 'MakeCp'
+
+name = 'CFDEM'
+version = '3.8.0'
+
+homepage = 'https://www.cfdem.com/'
+description = """CFDEM coupling provides an open source parallel coupled CFD-DEM framework combining the strengths of LIGGGHTS DEM code and the Open Source CFD package OpenFOAM(*) """
+
+toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
+toolchainopts = {'usempi': True}
+dependencies = [
+    ('OpenFOAM', '5.0'),
+    ('VTK', '6.3.0', '-mpi'),
+    ('ParaView', '5.5.2'),
+    ('Octave', '4.2.1'),
+]
+
+sources = ['%(name)scoupling-PUBLIC-%(version)s.zip']
+
+patches = ['%(name)s-%(version)s.patch']
+skipsteps = ['build']
+with_configure = True
+configure_cmd_prefix = "unzip  -d %(builddir)s/ /cvmfs/soft.computecanada.ca/easybuild/sources/c/CFDEM/LIGGGHTS-PUBLIC-3.8.0.zip && unzip -d %(builddir)s/ /cvmfs/soft.computecanada.ca/easybuild/sources/c/CFDEM/LPP-master.zip && export CFDEM_VERSION=%(version)s && export CFDEM_PROJECT_DIR=%(builddir)s/CFDEMcoupling-PUBLIC-$CFDEM_VERSION && export CFDEM_PROJECT_USER_DIR=%(builddir)s/aroudgar && export CFDEM_bashrc=$CFDEM_PROJECT_DIR/src/lagrangian/cfdemParticle/etc/bashrc && export CFDEM_LIGGGHTS_SRC_DIR=%(builddir)s/LIGGGHTS-PUBLIC-$CFDEM_VERSION/src && export CFDEM_LIGGGHTS_MAKEFILE_NAME=auto && export CFDEM_LPP_DIR=%(builddir)s/LPP-master/src && cp $CFDEM_PROJECT_DIR/src/lagrangian/cfdemParticle/etc/addLibs_universal/additionalLibs_5.x $CFDEM_PROJECT_DIR/src/lagrangian/cfdemParticle/etc/addLibs_universal/additionalLibs_5.0 && source $CFDEM_bashrc && MPICXX=mpicxx CXX=icpc && bash $CFDEM_SRC_DIR/lagrangian/cfdemParticle/etc/compileCFDEMcoupling_all.sh "
+
+
+
+#preconfigopts = ["chmod -R o-rwx %(installdir)s && pip install numpy --prefix=%(installdir)s && pip install subprocess32 --prefix=%(installdir)s && pip install ase --prefix=%(installdir)s"]
+parallel = 1
+
+files_to_copy = ["platforms/linux64IccDPInt32Opt/bin", "platforms/linux64IccDPInt32Opt/lib", (['src/lagrangian/cfdemParticle/etc/functions.sh'], 'etc'), (['%(builddir)s/LIGGGHTS-PUBLIC-%(version)s/src/lmp_auto'], 'bin'), (['%(builddir)s/LPP-master/src/lpp.py'], 'bin')]
+
+sanity_check_paths = {
+    'files': ['bin/cfdemPostproc', 'bin/cfdemSolverIB', 'bin/cfdemSolverPiso', 'bin/cfdemSolverPisoScalar', 'bin/cfdemSolverPisoSTM'],
+    'dirs': ["lib"]
+}
+modextrapaths = {'CFDEM_LIGGGHTS_EXEC': ['bin/lmp_auto'], 'CFDEM_LPP_DIR': ['bin']}
+moduleclass = 'phys'
+
+# Build statistics
+buildstats = [{
+    "build_time": 2328.64,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'CFDEM-3.8.0-intel-2016.4.11.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.072,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.0-r8419a472381f3d6b03b1a9947199663796bba983",
+    "easybuild-framework_version": "3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/m64vdgyzr1d29j8372iibl2m3ixg2f0d-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 39151930,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1551303909,
+    "total_memory": 60232,
+}]
