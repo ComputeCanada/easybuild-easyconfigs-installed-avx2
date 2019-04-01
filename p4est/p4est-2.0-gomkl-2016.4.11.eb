@@ -1,0 +1,49 @@
+# Built with EasyBuild version 3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299 on 2019-04-01_20-06-58
+easyblock = 'ConfigureMake'
+
+name = 'p4est'
+version = '2.0'
+
+homepage = 'http://www.p4est.org/'
+description = """The p4est software library enables the dynamic management of a collection of adaptive octrees, conveniently called a forest of octrees. p4est is designed to work in parallel and scales to hundreds of thousands of processor cores. It is free software released under GNU General Public Licence version 2, or (at your option) any later version."""
+
+toolchain = {'name': 'gomkl', 'version': '2016.4.11'}
+
+sources = ['p4est-%(version)s.tar.gz']
+source_urls = [('http://p4est.github.io/release/')]
+
+configopts  = 'CC=mpicc CXX=mpiCC F77=mpif90 FC=mpif90 F90=mpif90 --enable-mpi '
+configopts += 'BLAS_LIBS="-L$MKLROOT/lib/intel64  -lmkl_rt -lmkl_gf_lp64 -lmkl_core -lmkl_sequential -lpthread -lm"'
+
+sanity_check_paths = {
+    'files': ['lib/libp4est.a', 'bin/p4est_balance_seeds'],
+    'dirs': ['bin', 'lib', 'etc', 'share', 'include'],
+}
+
+moduleclass = 'lib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 126.96,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'p4est-2.0-gomkl-2016.4.11.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.072,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.0-rfa005acd2846dcfd6c56333199f5b3fac469b44e",
+    "easybuild-framework_version": "3.8.0-r2f58107c2b9aed07020e61c148688ed4f1c9a299",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/m64vdgyzr1d29j8372iibl2m3ixg2f0d-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 5775767,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.5.1804",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-NwdVeA/tmpfOGp9W/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1554149218,
+    "total_memory": 60232,
+}]
