@@ -5,7 +5,6 @@ name = "ORCA"
 version = '4.1.2'
 
 openmpiversion = '3.1.2'
-versionsuffix = '-OpenMPI-%s' % openmpiversion
 
 homepage = 'http://cec.mpg.de/forum/'
 description = """ORCA is a flexible, efficient and easy-to-use general purpose tool for quantum chemistry
