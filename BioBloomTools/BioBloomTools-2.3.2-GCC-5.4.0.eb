@@ -1,0 +1,74 @@
+# Built with EasyBuild version 3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e on 2019-04-22_19-25-17
+##
+# @Author: Ali Kerrache, University of Manitoba
+# @Date: Apr 22, 2019 
+##
+
+easyblock = 'ConfigureMake'
+
+name = 'BioBloomTools'
+version = '2.3.2'
+
+homepage = 'https://github.com/bcgsc/biobloom'
+description = """BioBloom Tools (BBT) provides the means to create filters for a given reference and then to categorize sequences. This methodology is faster than alignment but does not provide mapping locations. BBT was initially intended to be used for pre-processing and QC applications like contamination detection, but is flexible to accommodate other purposes. This tool is intended to be a pipeline component to replace costly alignment steps."""
+
+toolchain = {'name': 'GCC', 'version': '5.4.0'}
+toolchainopts = {'pic': True, 'openmp': True}
+
+sources = [{
+    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'https://github.com/bcgsc',
+        'repo_name': 'biobloom',
+        'commit': '093f87f',
+        'recursive': True,
+    },
+}]
+
+dependencies = [
+    ('Boost', '1.60.0'),
+    ('SDSL-Lite', '2.1.1'),
+]
+
+preconfigopts = 'sh ./autogen.sh && ' 
+
+configopts  = '--with-boost=$EBROOTBOOST '
+configopts += '--with-sparsehash=$NIXUSER_PROFILE/lib/pkgconfig/libsparsehash.pc '
+configopts += '--with-sdsl=$EBROOTSDSLMINLITE '
+
+binary_files = [
+     "biobloomcategorizer", "biobloommaker", "biobloommicategorizer", "biobloommimaker",
+]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in binary_files],
+    'dirs': ['share'],
+}
+
+moduleclass = 'bio'
+
+# Build statistics
+buildstats = [{
+    "build_time": 79.15,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'BioBloomTools-2.3.2-GCC-5.4.0.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.072,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.1-rd82d9fa2a78291b7607cd6df2e3939fadb98dcac",
+    "easybuild-framework_version": "3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/m64vdgyzr1d29j8372iibl2m3ixg2f0d-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 1279603,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.6.1810",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/tmp/eb-_IkPMX/tmpzGxfFs/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1555961117,
+    "total_memory": 60232,
+}]
