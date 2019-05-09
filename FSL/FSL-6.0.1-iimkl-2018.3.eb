@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e on 2019-05-07_01-02-00
+# Built with EasyBuild version 3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e on 2019-05-09_18-34-47
 name = 'FSL'
 version = '6.0.1'
 
@@ -27,7 +27,7 @@ dependencies = [
     ('VTK', '6.3.0'),
     ('newmat', '10'),
 ]
-postinstallcmds = ["for i in %(installdir)s/fsl/bin/*; do sed  's|${FSLDIR}/bin/immv|immv|' < $i  | sed  's|$FSLDIR/bin/immv|immv|' | sed  's|${FSLDIR}/bin/imcp|imcp|' | sed  's|$FSLDIR/bin/imcp|imcp|' | sed  's|${FSLDIR}/bin/imglob|imglob|' | sed  's|$FSLDIR/bin/imglob|imglob|'  | sed  's|${FSLDIR}/bin/atlasquery|atlasquery|'   | sed  's|$FSLDIR/bin/atlasquery|atlasquery|' > tmp; mv tmp $i; done"] 
+postinstallcmds = ["for i in %(installdir)s/fsl/bin/*; do sed  's|${FSLDIR}/bin/immv|immv|' < $i  | sed  's|$FSLDIR/bin/immv|immv|' | sed  's|${FSLDIR}/bin/imcp|imcp|' | sed  's|$FSLDIR/bin/imcp|imcp|' | sed  's|${FSLDIR}/bin/imglob|imglob|' | sed  's|$FSLDIR/bin/imglob|imglob|'  | sed  's|${FSLDIR}/bin/atlasquery|atlasquery|'   | sed  's|$FSLDIR/bin/atlasquery|atlasquery|' > tmp; mv tmp $i; done; chmod 755 %(installdir)s/fsl/bin/* "] 
 modextrapaths = {
     'PATH': 'fsl/etc/fslconf'
 }
@@ -58,13 +58,13 @@ setenv("FSLWISH","wish")
 
 # Build statistics
 buildstats = [{
-    "build_time": 6381.79,
+    "build_time": 6911.64,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/home/aroudgar/src/fsl/FSL-6.0.1-iimkl-2018.3.222.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.076,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.8.1-re99e5318462b8b456ae21e160036c7732989c6ec",
+    "easybuild-easyblocks_version": "3.8.1-ra0c2dc4a61f5a7b196222e8a8681b342e8ee4d1a",
     "easybuild-framework_version": "3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/rrwlh3bahkdwnbjvzm0nkq3504v451yl-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
@@ -78,6 +78,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1557190919,
+    "timestamp": 1557426886,
     "total_memory": 60232,
 }]
