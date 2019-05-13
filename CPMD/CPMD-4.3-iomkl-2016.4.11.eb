@@ -1,0 +1,71 @@
+# Built with EasyBuild version 3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e on 2019-05-13_17-17-41
+easyblock = 'MakeCp'
+name = 'CPMD'
+version = '4.3'
+
+homepage = 'http://cpmd.org'
+description = """The CPMD code is a parallelized plane wave / pseudopotential
+implementation of Density Functional Theory, particularly designed for
+ab-initio molecular dynamics."""
+
+toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
+toolchainopts = {'usempi': True, 'openmp': False}
+
+# URL where traj2xyz.pl and out2xyz.pl can be downloaded from.
+# CPMD tarball and patches and other utils should be downloaded manually and placed into the sources dir.
+source_urls = ['http://www.theochem.ruhr-uni-bochum.de/~legacy.akohlmey/cpmd-vmd/files/']
+
+sources = [
+    'cpmd-v4.3.tar.gz','cpmd2cube.tar.gz','fourier.tar.gz',
+    {'filename':'traj2xyz.pl', 'extract_cmd': 'cp %s %(builddir)s'},
+    {'filename': 'out2xyz.pl', 'extract_cmd': 'cp %s %(builddir)s'},
+]
+
+patches = ['patch.to.4612','patch.to.4615','patch.to.4616','patch.to.4621','patch.to.4624','patch.to.4627']
+
+prebuildopts  = 'cd %(builddir)s/cpmd2cube/ && ./Configure Linux-PC-IFORT > Makefile && make && '
+prebuildopts += 'cd %(builddir)s/fourier/ && make && '
+prebuildopts += 'cd %(builddir)s/CPMD/ && ./configure.sh LINUX-X86_64-INTEL-MPI-FFTW && '
+
+buildopts = "CPP='fpp -P -C'"
+
+files_to_copy = [(['bin/cpmd.x', '%(builddir)s/out2xyz.pl', '%(builddir)s/traj2xyz.pl', '%(builddir)s/cpmd2cube/cpmd2cube.x', '%(builddir)s/cpmd2cube/cutcube.x', '%(builddir)s/cpmd2cube/trimcube.x', '%(builddir)s/fourier/fourier.x', '%(builddir)s/fourier/trajec2atoms.x'], 'bin')]
+
+# Set exec permissions on the two Perl scripts. Note that EasyBuild executes this step after files_to_copy.
+postinstallcmds = [
+    'chmod a+rx %(installdir)s/bin/*.pl'
+]
+
+sanity_check_paths = {
+    'files': ['bin/cpmd.x', 'bin/fourier.x', 'bin/cpmd2cube.x', 'bin/out2xyz.pl'],
+    'dirs': []
+}
+
+group = "soft_cpmd"
+moduleclass = 'chem'
+
+# Build statistics
+buildstats = [{
+    "build_time": 563.54,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'CPMD-4.3-iomkl-2016.4.11.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.076,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "3.8.1-rb538bc991c5bd338dc1e556f6df2b0331a83bb28",
+    "easybuild-framework_version": "3.8.1-rc5f26b53fc8dd1c8936f9e668dc4abdadc41e29e",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/m64vdgyzr1d29j8372iibl2m3ixg2f0d-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 93188090,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.6.1810",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1557767860,
+    "total_memory": 60232,
+}]
