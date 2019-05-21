@@ -1,5 +1,5 @@
---- fsl/src/sgeutils/fsl_sub.orig	2019-03-01 15:40:29.000000000 +0000
-+++ fsl/src/sgeutils/fsl_sub	2019-04-02 17:09:07.067083178 +0000
+--- fsl/src/sgeutils/fsl_sub.orig	2019-05-21 13:08:06.000000000 -0700
++++ fsl/src/sgeutils/fsl_sub	2019-05-21 13:09:09.000000000 -0700
 @@ -81,7 +81,7 @@
  # "NONE". Note that a user can unset SGE_ROOT if they don't want the
  # cluster to be used.
@@ -142,7 +142,7 @@
 +while read line
 +do
 +    if [ "x$line" != "x" ] ; then
-+sbatch -J $_SRMNAME -o "slurm-log-$_SRMNAME-%j-%N.out" -t 24:00:00 -p $queue -n 1 <<EOF
++sbatch -J $_SRMNAME -o "slurm-log-$_SRMNAME-%j-%N.out" -t 24:00:00 -A ${SLURM_JOB_ACCOUNT%_*}  -n 1 <<EOF
 +#!/bin/sh
 +echo 
 +echo $SLURM_JOB_NAME
