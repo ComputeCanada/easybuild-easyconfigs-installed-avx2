@@ -109,7 +109,7 @@
 +#!/bin/sh
 +#SBATCH -n ${cores}
 +#SBATCH -t ${timelimit}
-+#SBATCH -p ${queue}
++#SBATCH -A ${SLURM_JOB_ACCOUNT%_*} 
 +#SBATCH -J ${JobName}-${SLURM_JOB_ID}-tasks
 +
 +echo FSL sub-task job
@@ -120,9 +120,9 @@
 +echo Parent job nodelist: $SLURM_JOB_NODELIST
 +echo
 +
-+source /etc/profile.d/modules.sh
-+module load staskfarm
-+staskfarm -v $taskfile
++
++
++
 +EOF
 +
 +                # now submit
