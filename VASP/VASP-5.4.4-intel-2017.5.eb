@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5 on 2019-01-28_22-08-19
+# Built with EasyBuild version 3.9.1-rbd39f1deaa85f18de0d688185f3415e39a99ba39 on 2019-06-04_17-13-17
 easyblock = 'MakeCp'
 
 name = 'VASP'
@@ -17,6 +17,8 @@ dependencies = [
     ('wannier90', '1.2'),
 ]
 
+patches = ['patch.5.4.4.16052018', 
+           'vasp-5.4.4.patch']
 
 # Vasp is proprietary software, see http://www.vasp.at/index.php/faqs on how to get access to the code
 sources = ['vasp.5.4.4.tar.gz']
@@ -25,19 +27,21 @@ prebuildopts = 'sed -i.orig "s/-Duse_shmem/-Duse_shmem\ -Dsol_compat\ -Dlibbeef\
 prebuildopts += "sed -i.orig '/^LLIBS/s/$/ -lbeef\ -lwannier/' arch/makefile.include.linux_intel && "
 prebuildopts += 'cp arch/makefile.include.linux_intel ./makefile.include && '
 prebuildopts += 'cp src/solvation.F src/solvation.F.orig && '
-prebuildopts += 'git clone https://github.com/henniggroup/VASPsol && '
-prebuildopts += 'cd VASPsol/ && '
-prebuildopts += 'git checkout  a31bcc3 && '
-prebuildopts += 'cd .. && '
-prebuildopts += 'cp VASPsol/src/solvation.F src  && '
-prebuildopts += 'wget http://theory.cm.utexas.edu/code/vtstscripts_old/vtstscripts-937.tgz && tar xzf vtstscripts-937.tgz && '
-
+prebuildopts += 'wget https://github.com/henniggroup/VASPsol/archive/V1.0.tar.gz && '
+prebuildopts += 'tar xzf V1.0.tar.gz && '
+prebuildopts += 'cp VASPsol-1.0/src/solvation.F src  && '
 prebuildopts += 'unset LIBS && '
+prebuildopts += 'wget http://theory.cm.utexas.edu/code/vtstscripts_old/vtstscripts-939.tgz && tar xzf vtstscripts-939.tgz && '
+prebuildopts += 'wget http://theory.cm.utexas.edu/code/vtstcode_old/vtstcode-178.tgz && tar xzf vtstcode-178.tgz  && '
+prebuildopts += 'cp vtstcode-178/* src && '
+prebuildopts += 'chmod u+x src/mkbdrpro.pl && '
+prebuildopts += 'cd src && ./mkbdrpro.pl bdr_changes && cd .. &&'
+
 
 postinstallcmds = ["chmod -R o-rwx %(installdir)s && pip install numpy --prefix=%(installdir)s && pip install subprocess32 --prefix=%(installdir)s && pip install ase --prefix=%(installdir)s"]
 parallel = 1
 
-files_to_copy = [(['bin/vasp_std', 'bin/vasp_gam', 'bin/vasp_ncl'], 'bin'), 'vtstscripts-937']
+files_to_copy = [(['bin/vasp_std', 'bin/vasp_gam', 'bin/vasp_ncl'], 'bin'), 'vtstscripts-939']
 
 sanity_check_paths = {
     'files': ['bin/vasp_std', 'bin/vasp_gam', 'bin/vasp_ncl'],
@@ -48,26 +52,26 @@ moduleclass = 'phys'
 
 # Build statistics
 buildstats = [{
-    "build_time": 40.83,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/opt/software/easybuild/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/home/aroudgar/my/easybuild-easyconfigs/easybuild/easyconfigs/v/VASP'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/home/aroudgar/src/vasp/VASP-5.4.4-intel-2017.5.eb'],
-    "core_count": 56,
-    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-    "cpu_speed": 2399.994,
+    "build_time": 2425.57,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/opt/software/easybuild/2017'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '/home/aroudgar/src/vasp/VASP-5.4.4-intel-2017.5.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.076,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.8.0-r44266da00f3e49516ba75daf6d4f2c8704487471",
-    "easybuild-framework_version": "3.8.0-r365b7b9cd763bac0f2218d6682a152113e999bd5",
-    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/cf40xkqhsg1m4b8anl7l7x113apll6yb-gfortran-6.4.0/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 6.4.0 (GCC) ; ",
+    "easybuild-easyblocks_version": "3.9.1-r0f23bac5f2e0935edc643f1f95745f0759c3be93",
+    "easybuild-framework_version": "3.9.1-rbd39f1deaa85f18de0d688185f3415e39a99ba39",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/avg9l4h1j6ni7vz0zrc11fw7bri1zizq-gfortran-6.4.0/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 6.4.0 (GCC) ; ",
     "glibc_version": "2.24",
-    "hostname": "build-node",
-    "install_size": 305621757,
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 289449991,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
     "os_name": "centos linux",
     "os_type": "Linux",
-    "os_version": "7.5.1804",
+    "os_version": "7.6.1810",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-6.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/2.7.14/bin/python",
-    "timestamp": 1548713298,
-    "total_memory": 241656,
+    "timestamp": 1559668396,
+    "total_memory": 60232,
 }]
