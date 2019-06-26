@@ -1,5 +1,4 @@
-# Built with EasyBuild version 3.9.1-r5167691f0570449d8f3cb128053ec3ca449cda4d on 2019-06-25_15-13-00
-# Built with EasyBuild version 3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390 on 2018-10-26_20-36-40
+# Built with EasyBuild version 3.9.1-r5167691f0570449d8f3cb128053ec3ca449cda4d on 2019-06-26_13-42-25
 name = 'PETSc'
 version = '3.10.2'
 
@@ -10,72 +9,56 @@ description = """PETSc, pronounced PET-see (the S is silent), is a suite of data
 toolchain = {'name': 'gomkl', 'version': '2018.3.312'}
 toolchainopts = {'usempi': True, 'pic': True}
 
-source_urls = ['http://ftp.mcs.anl.gov/pub/%(namelower)s/release-snapshots']
+source_urls = ['http://ftp.mcs.anl.gov/pub/petsc/release-snapshots']
 sources = [SOURCELOWER_TAR_GZ]
 
+patches = [
+    'PETSc_ranlib-fix.patch',
+    'PETSc-3.9.3_fix-AVX512.patch',
+]
+checksums = [
+    '9d3381bcf9c63abe6521b21a88efc70f8e893293503cff497971d0d9c1ec68cc',  # petsc-3.10.2.tar.gz
+    '64cf9d5008d5e92117e65bdec5316d991b6a6b8c8ecf7ea46eb790a498266297',  # PETSc_ranlib-fix.patch
+    'f11e3d7c36ec9939b10550c9913320e0ee4b34585bdf9458977548686f90bfa8',  # PETSc-3.9.3_fix-AVX512.patch
+]
+
+shared_libs = 1
+pic = 1
+
+downloadinstall = True
+
 builddependencies = [
-    ('CMake', '3.5.2'),
+	('METIS','5.1.0','',('GCC','7.3.0')),
+	('ParMETIS','4.0.3'),
 ]
 dependencies = [
-    ('HDF5', '1.10.3', '-mpi', ('gompi', '2018.3.312')),
-    ('FFTW', '3.3.8', '-mpi', ('gompi', '2018.3.312')),
+	('HDF5','1.10.3','-mpi'),
+	('FFTW','3.3.8','-mpi'),
 ]
-
-configopts = "--with-mkl_pardiso=1 --with-mkl_pardiso-dir=$MKLROOT --with-hdf5=1 --with-hdf5-dir=$EBROOTHDF5 --with-mkl-sparse-optimize=1"
-
-# Build statistics
-buildstats = [{'glibc_version': '2.24', 'total_memory': 241657, 'python_version': '2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]', 'build_time': 3233.78, 'system_gcc_path': '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc', 'cpu_speed': 2399.994, 'cpu_vendor': 'Intel', 'core_count': 56, 'modules_tool': ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.5'), 'gcc_version': 'Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/%(arch)s-pc-linux-gnu/7.3.0/lto-wrapper; Target: %(arch)s-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ', 'hostname': 'build-node', 'command_line': ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '%(name)s-%(version)s-iomkl-%(toolchain_version)s-download.eb'], 'os_version': '7.4.1708', 'system_python_path': '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python', 'os_name': 'centos linux', 'timestamp': 1540586200, 'cpu_model': 'Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz', 'easybuild-easyblocks_version': '3.7.0-raeff3ccc4cd6eccc59f8a6f2cb31dab8c978a95c', 'install_size': 221420886, 'easybuild-framework_version': '3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390', 'platform_name': '%(arch)s-unknown-linux', 'os_type': 'Linux'}]
+download_deps_static = ['mumps', 'ptscotch', 'superlu', 'superlu_dist', 'ml', 'suitesparse', 'hypre', 'prometheus']
 download_deps = ['triangle']
-postinstallcmds = ['ln -sf %(installdir)s/lib/%(namelower)s/bin %(installdir)s/bin']
+
 keepsymlinks = True
-modluafooter = """
-family("%(namelower)s")
-"""
-shared_libs = 1
-download_deps_static = [
-    'mumps',
-    'ptscotch',
-    'superlu',
-    'superlu_dist',
-    'parmetis',
-    'metis',
-    'ml',
-    'suitesparse',
-    'hypre',
-    'prometheus',
-]
+
+configopts = ""
+configopts += "--with-mkl_pardiso=1 --with-mkl_pardiso-dir=$MKLROOT "
+configopts += "--with-hdf5=1 --with-hdf5-dir=$EBROOTHDF5 "
+configopts += "--with-mkl-sparse-optimize=1"
+
+postinstallcmds =  ['ln -sf %(installdir)s/lib/petsc/bin %(installdir)s/bin']
+
+builddependencies = [('CMake', '3.5.2')]
 
 moduleclass = 'numlib'
 
+modluafooter = """
+family("petsc")
+"""
+
 # Build statistics
-buildstats = [
-{
-    "build_time": 3233.78,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", '--ignore-osdeps', "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'PETSc-3.10.2-iomkl-2018.3.312-download.eb'],
-    "core_count": 56,
-    "cpu_model": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-    "cpu_speed": 2399.994,
-    "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "3.7.0-raeff3ccc4cd6eccc59f8a6f2cb31dab8c978a95c",
-    "easybuild-framework_version": "3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390",
-    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/0ay179ly6fwiwj6avlfnmncsnm94i2mf-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
-    "glibc_version": "2.24",
-    "hostname": "build-node",
-    "install_size": 221420886,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.5'),
-    "os_name": "centos linux",
-    "os_type": "Linux",
-    "os_version": "7.4.1708",
-    "platform_name": "x86_64-unknown-linux",
-    "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc",
-    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1540586200,
-    "total_memory": 241657,
-},
-{
-    "build_time": 2365.89,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='gomkl,2018.3.312'", "--use-ccache='/cvmfs/local/ccache'", 'PETSc-3.10.2-iomkl-2018.3.312.eb'],
+buildstats = [{
+    "build_time": 975.54,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", 'PETSc-3.10.2-gomkl-2018.3.312-download.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
@@ -85,16 +68,15 @@ buildstats = [
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/rrwlh3bahkdwnbjvzm0nkq3504v451yl-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 166115582,
+    "install_size": 162966476,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '7.8.15'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.6.1810",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-f8E2IC/tmpGnn6rL/gcc",
+    "system_gcc_path": "/tmp/eb-oUulJL/tmpr7DGC0/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1561475579,
+    "timestamp": 1561556545,
     "total_memory": 60232,
-},
-]
+}]
