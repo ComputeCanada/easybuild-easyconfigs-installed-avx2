@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.9.3-r1ad8735dce3ff7b4e163a6df3eaf39e3ad8f34b0 on 2019-08-11_18-02-03
+# Built with EasyBuild version 3.9.3-r1ad8735dce3ff7b4e163a6df3eaf39e3ad8f34b0 on 2019-08-11_19-17-55
 easyblock = 'ConfigureMake'
 
 name = 'OpenMPI'
@@ -42,7 +42,7 @@ moduleclass = 'mpi'
 
 # Build statistics
 buildstats = [{
-    "build_time": 1189.03,
+    "build_time": 744.54,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='gcccuda,2018.3.92'", "--use-ccache='/cvmfs/local/ccache'", 'OpenMPI-3.1.2-iccifortcuda-2018.3.100.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
@@ -60,8 +60,8 @@ buildstats = [{
     "os_version": "7.6.1810",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-pUINhp/tmpKFht5Y/gcc",
+    "system_gcc_path": "/tmp/eb-ldyZ_v/tmpNFnzcr/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1565546522,
+    "timestamp": 1565551074,
     "total_memory": 60232,
 }]
