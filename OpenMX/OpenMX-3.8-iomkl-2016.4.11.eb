@@ -1,4 +1,7 @@
-# Built with EasyBuild version 3.9.3-rac4ebe51c4a72b99ff41e7153e540fb8a1626c01 on 2019-09-18_22-10-54
+# Built with EasyBuild version 3.9.3-rac4ebe51c4a72b99ff41e7153e540fb8a1626c01 on 2019-09-19_15-19-35
+# Grigory A Shamov, University of Manitoba / ComputeCanada
+#
+
 easyblock = 'MakeCp'
 
 name = 'OpenMX'
@@ -22,8 +25,9 @@ toolchainopts = {'pic': True}
 source_urls = ['http://t-ozaki.issp.u-tokyo.ac.jp/' ]
 sources = [ 'openmx3.8.tar.gz' ]
 
-#GAS Ozaki-san's "patch" is remade into a proper patch along with Makefile changes.
-#GAS Liberi to be made into a library first, otherwise make fails under EB
+#GAS Ozaki-san's "patch" is remade into a proper diffutils patch along with Makefile changes.
+#GAS Liberi to be made into a library first, otherwise make fails under EB for the liberi subdir
+#GAS 
 			
 patches = ['OpenMX-3.8-to-3.8.5.patch',
 	   'OpenMX-3.8.5-makefile-iomkl.patch',
@@ -34,6 +38,9 @@ patches = ['OpenMX-3.8-to-3.8.5.patch',
 
 dependencies = [
     ('FFTW', '3.3.6'),
+]
+
+builddependencies = [
     ('make', '3.82'),
 ]
 
@@ -49,14 +56,15 @@ files_to_copy = [
 		     './source/analysis_example', './source/intensity_map', 
 		     './source/md2axsf', './source/bandgnu13', 
 		     './source/cube2xsf', './source/bin2txt', ], 'bin'),
-                 (['./DFT_DATA13'], 'pseudo'),
-                 (['openmx3.8.pdf'],'doc')
+                 (['./DFT_DATA13'], ''),
+                 (['openmx3.8.pdf'],'doc'),
+                 (['work'],'work'),
                  ]
 
 
 sanity_check_paths = {
     'files': ['bin/openmx', 'bin/DosMain' ],
-    'dirs': ['bin', 'pseudo', 'doc'],
+    'dirs': ['bin', 'DFT_DATA13', 'doc'],
 }
 
 moduleclass = 'chem'
@@ -64,8 +72,8 @@ moduleclass = 'chem'
 
 # Build statistics
 buildstats = [{
-    "build_time": 891.05,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'OpenMX-3.8.5-iomkl-2016.4.11.eb'],
+    "build_time": 876.38,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'OpenMX-3.8.5-iomkl-2016.4.11.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
@@ -75,7 +83,7 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/m64vdgyzr1d29j8372iibl2m3ixg2f0d-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 441561221,
+    "install_size": 621567693,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.1.13'),
     "os_name": "centos linux",
     "os_type": "Linux",
@@ -84,6 +92,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1568844653,
+    "timestamp": 1568906374,
     "total_memory": 60232,
 }]
