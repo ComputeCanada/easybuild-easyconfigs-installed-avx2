@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.9.3-rac4ebe51c4a72b99ff41e7153e540fb8a1626c01 on 2019-10-15_14-59-02
+# Built with EasyBuild version 3.9.3-rac4ebe51c4a72b99ff41e7153e540fb8a1626c01 on 2019-10-15_17-58-22
 easyblock = 'MakeCp'
 
 name = 'HISAT2'
@@ -10,35 +10,122 @@ description = """HISAT2 is a fast and sensitive alignment program for mapping ne
 
 toolchain = {'name': 'iccifort', 'version': '2016.4'}
 
-source_urls = ['ftp://ftp.ccb.jhu.edu/pub/infphilo/%(namelower)s/downloads/']
 sources = ['%(namelower)s-%(version)s-source.zip']
+source_urls = ['ftp://ftp.ccb.jhu.edu/pub/infphilo/%(namelower)s/downloads/']
+
 checksums = ['8b566d1b7e6c5801c8ae9824ed2da3d0']
 
-dependencies = [
-    ('SAMtools', '1.3.1'),
+dependencies = [('SAMtools', '1.3.1'),]
+
+#buildopts = "USE_SRA=1 NCBI_NGS_DIR=$EBROOTNGS NCBI_VDB_DIR=$EBROOTNCBIMINVDB"
+
+executables = [
+    'hisat2',
+    'hisat2-align-l',
+    'hisat2-align-s',
+    'hisat2-build',
+    'hisat2-build-l',
+    'hisat2-build-s',
+    'hisat2-inspect',
+    'hisat2-inspect-s',
+    'hisat2-inspect-l'
+]
+
+shell_scripts = [
+    "scripts/convert_quals.pl",
+    "scripts/gen_2b_occ_lookup.pl",
+    "scripts/gen_occ_lookup.pl",
+    "scripts/gen_solqual_lookup.pl",
+    "scripts/infer_fraglen.pl",
+    "scripts/make_a_thaliana_tair.sh",
+    "scripts/make_bdgp6.sh",
+    "scripts/make_bdgp6_tran.sh",
+    "scripts/make_b_taurus_UMD3.sh",
+    "scripts/make_canFam2.sh",
+    "scripts/make_ce10.sh",
+    "scripts/make_dm6.sh",
+    "scripts/make_e_coli.sh",
+    "scripts/make_grch37.sh",
+    "scripts/make_grch37_snp.sh",
+    "scripts/make_grch37_snp_tran_ercc.sh",
+    "scripts/make_grch37_snp_tran.sh",
+    "scripts/make_grch37_tran.sh",
+    "scripts/make_grch38.sh",
+    "scripts/make_grch38_snp.sh",
+    "scripts/make_grch38_snp_tran_ercc.sh",
+    "scripts/make_grch38_snp_tran.sh",
+    "scripts/make_grch38_tran.sh",
+    "scripts/make_grcm38.sh",
+    "scripts/make_grcm38_snp.sh",
+    "scripts/make_grcm38_snp_tran.sh",
+    "scripts/make_grcm38_tran.sh",
+    "scripts/make_hg19.sh",
+    "scripts/make_hg38_allsnp.sh",
+    "scripts/make_hg38.sh",
+    "scripts/make_hg38_snp.sh",
+    "scripts/make_hg38_snp_tran.sh",
+    "scripts/make_mm10.sh",
+    "scripts/make_mm9.sh",
+    "scripts/make_r64.sh",
+    "scripts/make_r64_tran.sh",
+    "scripts/make_rn4.sh",
+    "scripts/make_rn6.sh",
+    "scripts/make_rnor6.sh",
+    "scripts/make_rnor6_tran.sh",
+    "scripts/make_sc3.sh",
+    "scripts/make_wbcel235.sh",
+    "scripts/make_wbcel235_tran.sh",
+    "scripts/make_zm3_snp_tran_ercc.sh",
+]
+
+python_scripts = [
+    "hisatgenotype_build_genome.py",
+    "hisatgenotype_extract_vars.py",
+    "hisatgenotype_extract_reads.py",
+    "hisat2_extract_snps_haplotypes_VCF.py",
+    "hisatgenotype.py",
+    "extract_splice_sites.py",
+    "hisatgenotype_modules/hisatgenotype_assembly_graph.py",
+    "hisatgenotype_modules/hisatgenotype_typing_common.py",
+    "hisatgenotype_modules/__init__.py",
+    "hisatgenotype_modules/hisatgenotype_extract_cyp_data.py",
+    "hisatgenotype_modules/hisatgenotype_extract_codis_data.py",
+    "hisatgenotype_modules/hisatgenotype_convert_codis.py",
+    "hisatgenotype_modules/hisatgenotype_gene_typing.py",
+    "hisatgenotype_hla_cyp.py",
+    "extract_exons.py",
+    "hisatgenotype_scripts/extract_Omixon_HLA.py",
+    "hisatgenotype_scripts/hisatgenotype_HLA_genotyping_PGs.py",
+    "hisatgenotype_scripts/compare_HLA_Omixon.py",
+    "hisatgenotype_scripts/hisatgenotype_locus_samples.py",
+    "hisat2_simulate_reads.py",
+    "hisatgenotype_locus.py",
+    "hisat2_extract_exons.py",
+    "hisat2_extract_splice_sites.py",
+    "hisat2_extract_snps_haplotypes_UCSC.py",
 ]
 
 files_to_copy = [
-    (['%(namelower)s', '%(namelower)s-align-l', '%(namelower)s-align-s', '%(namelower)s-build', '%(namelower)s-build-l', '%(namelower)s-build-s', '%(namelower)s-inspect', '%(namelower)s-inspect-s', '%(namelower)s-inspect-l'], 'bin'),
+    (executables, 'bin'),
     (['*.py'], 'bin'),
-    (['hisatgenotype_modules/*'], 'bin/hisatgenotype_modules'),
-    (['hisatgenotype_scripts/*'], 'bin/hisatgenotype_scripts'),
+    (["hisatgenotype_modules/*"], 'bin/hisatgenotype_modules'),
+    (["hisatgenotype_scripts/*"], 'bin/hisatgenotype_scripts'),
     'scripts',
     'doc',
     'example',
 ]
 
 sanity_check_paths = {
-    'files': ['bin/%(namelower)s', 'bin/%(namelower)s-align-l', 'bin/%(namelower)s-align-s', 'bin/%(namelower)s-build', 'bin/%(namelower)s-build-l', 'bin/%(namelower)s-build-s', 'bin/%(namelower)s-inspect', 'bin/%(namelower)s-inspect-s', 'bin/%(namelower)s-inspect-l', 'bin/hisatgenotype_build_genome.py', 'bin/hisatgenotype_extract_vars.py', 'bin/hisatgenotype_extract_reads.py', 'bin/hisat2_extract_snps_haplotypes_VCF.py', 'bin/hisatgenotype.py', 'bin/extract_splice_sites.py', 'bin/hisatgenotype_modules/hisatgenotype_assembly_graph.py', 'bin/hisatgenotype_modules/hisatgenotype_typing_common.py', 'bin/hisatgenotype_modules/__init__.py', 'bin/hisatgenotype_modules/hisatgenotype_extract_cyp_data.py', 'bin/hisatgenotype_modules/hisatgenotype_extract_codis_data.py', 'bin/hisatgenotype_modules/hisatgenotype_convert_codis.py', 'bin/hisatgenotype_modules/hisatgenotype_gene_typing.py', 'bin/hisatgenotype_hla_cyp.py', 'bin/extract_exons.py', 'bin/hisatgenotype_scripts/extract_Omixon_HLA.py', 'bin/hisatgenotype_scripts/hisatgenotype_HLA_genotyping_PGs.py', 'bin/hisatgenotype_scripts/compare_HLA_Omixon.py', 'bin/hisatgenotype_scripts/hisatgenotype_locus_samples.py', 'bin/hisat2_simulate_reads.py', 'bin/hisatgenotype_locus.py', 'bin/hisat2_extract_exons.py', 'bin/hisat2_extract_splice_sites.py', 'bin/hisat2_extract_snps_haplotypes_UCSC.py', 'scripts/convert_quals.pl', 'scripts/gen_2b_occ_lookup.pl', 'scripts/gen_occ_lookup.pl', 'scripts/gen_solqual_lookup.pl', 'scripts/infer_fraglen.pl', 'scripts/make_a_thaliana_tair.sh', 'scripts/make_bdgp6.sh', 'scripts/make_bdgp6_tran.sh', 'scripts/make_b_taurus_UMD3.sh', 'scripts/make_canFam2.sh', 'scripts/make_ce10.sh', 'scripts/make_dm6.sh', 'scripts/make_e_coli.sh', 'scripts/make_grch37.sh', 'scripts/make_grch37_snp.sh', 'scripts/make_grch37_snp_tran_ercc.sh', 'scripts/make_grch37_snp_tran.sh', 'scripts/make_grch37_tran.sh', 'scripts/make_grch38.sh', 'scripts/make_grch38_snp.sh', 'scripts/make_grch38_snp_tran_ercc.sh', 'scripts/make_grch38_snp_tran.sh', 'scripts/make_grch38_tran.sh', 'scripts/make_grcm38.sh', 'scripts/make_grcm38_snp.sh', 'scripts/make_grcm38_snp_tran.sh', 'scripts/make_grcm38_tran.sh', 'scripts/make_hg19.sh', 'scripts/make_hg38_allsnp.sh', 'scripts/make_hg38.sh', 'scripts/make_hg38_snp.sh', 'scripts/make_hg38_snp_tran.sh', 'scripts/make_mm10.sh', 'scripts/make_mm9.sh', 'scripts/make_r64.sh', 'scripts/make_r64_tran.sh', 'scripts/make_rn4.sh', 'scripts/make_rn6.sh', 'scripts/make_rnor6.sh', 'scripts/make_rnor6_tran.sh', 'scripts/make_sc3.sh', 'scripts/make_wbcel235.sh', 'scripts/make_wbcel235_tran.sh', 'scripts/make_zm3_snp_tran_ercc.sh'],
-    'dirs': ['bin', 'scripts', 'doc', 'example'],
+    'files': ["bin/%s" % x for x in list(executables + python_scripts)] + shell_scripts,
+    'dirs': ["bin", "scripts", 'doc', 'example'],
 }
 
 moduleclass = 'bio'
 
 # Build statistics
 buildstats = [{
-    "build_time": 151.6,
-    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='iccifort,2016.4'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'HISAT2-2.1.0-icc-2016.4.eb'],
+    "build_time": 148.04,
+    "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--rebuild', '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'HISAT2-2.1.0-iccifort-2016.4.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
@@ -57,6 +144,6 @@ buildstats = [{
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-5.4.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1571165941,
+    "timestamp": 1571176702,
     "total_memory": 60232,
 }]
