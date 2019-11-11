@@ -1,4 +1,4 @@
-# Built with EasyBuild version 3.9.3-re3ee48e8439a42f6dd87474f94b240e077aa5352 on 2019-11-11_15-22-47
+# Built with EasyBuild version 3.9.3-re3ee48e8439a42f6dd87474f94b240e077aa5352 on 2019-11-11_19-15-06
 # Built with EasyBuild version 3.7.0-rc7b39e420d4f1af2b79028319dfd5ed90b504390 on 2018-10-23_23-21-03
 easyblock = "ConfigureMake"
 
@@ -13,7 +13,10 @@ toolchain = {'name': 'gmkl', 'version': '2018.3'}
 source_urls = ['https://github.com/JuliaLang/julia/releases/download/v%(version)s']
 sources = [SOURCELOWER_TAR_GZ]
 
-patches = ['julia-1.2.0-makefile-llvm-libs.patch']
+patches = [
+    'julia-1.2.0-makefile-llvm-libs.patch',
+    'julia-1.2.0-distro-in-load-path.patch'
+]
 
 skipsteps = ['configure']
 
@@ -43,10 +46,10 @@ installopts += " && for i in %(installdir)s/lib/julia/*; do if [[ -L $i && $(rea
 
 # install arpack, overriding downloaded library...
 postinstallcmds = [
-   "JULIA_DEPOT_PATH=%(installdir)s/share/julia %(installdir)s/bin/julia -e 'using Pkg; Pkg.add(\"Arpack\")' &> /dev/null",
+   "JULIA_DEPOT_PATH=%(installdir)s/share/julia %(installdir)s/bin/julia -e 'using Pkg; Pkg.activate(\"distro\",shared=true); Pkg.add(\"Arpack\")' &> /dev/null",
    "sed -i 's/^    install/    #install/' %(installdir)s/share/julia/packages/Arpack/*/deps/build.jl",
    "module load arpack-ng/3.5.0 && ln -sf $EBROOTARPACKMINNG/lib/libarpack.so.2.0.0 %(installdir)s/share/julia/packages/Arpack/*/deps/usr/lib",
-   "JULIA_DEPOT_PATH=%(installdir)s/share/julia %(installdir)s/bin/julia -e 'using Pkg; Pkg.build(\"Arpack\"); using Arpack'",
+   "JULIA_DEPOT_PATH=%(installdir)s/share/julia %(installdir)s/bin/julia -e 'using Pkg; Pkg.activate(\"distro\",shared=true); Pkg.build(\"Arpack\"); using Arpack'",
    "rm -rf %(installdir)s/share/julia/registries",
 ]
 
@@ -59,7 +62,7 @@ moduleclass = 'lang'
 
 # Build statistics
 buildstats = [{
-    "build_time": 923.52,
+    "build_time": 821.03,
     "command_line": ['--add-dummy-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'Julia-1.2.0-gmkl-2018.3.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
@@ -70,15 +73,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/c9qaklf3dvjvlbky3fiakmafb1p8l106-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 260940612,
+    "install_size": 260904591,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.1.13'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.7.1908",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-V9knKe/tmp7BBpRB/gcc",
+    "system_gcc_path": "/tmp/eb-fob5hL/tmp3gCC4G/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1573485766,
+    "timestamp": 1573499705,
     "total_memory": 60232,
 }]
