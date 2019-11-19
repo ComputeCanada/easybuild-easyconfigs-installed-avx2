@@ -27,7 +27,7 @@ description = """
  software stack.
 """
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 
 sources = [SOURCELOWER_TAR_GZ]
 source_urls = ['http://icl.cs.utk.edu/projects/%(namelower)s/downloads/']

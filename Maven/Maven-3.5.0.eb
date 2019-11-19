@@ -14,7 +14,7 @@ the concept of a project object model (POM), Maven can manage a project's build,
 central piece of information.
 """
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 sources = ['apache-maven-%(version)s-bin.tar.gz']
 source_urls = ['http://mirror.dsrg.utoronto.ca/apache/maven/maven-%(version_major)s/%(version)s/binaries/']
 #Belaid: checksum is important :-)

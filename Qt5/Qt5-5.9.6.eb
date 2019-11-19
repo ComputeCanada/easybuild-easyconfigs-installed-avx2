@@ -7,7 +7,7 @@ version = '5.9.6'
 homepage = 'http://qt.io/'
 description = "Qt is a comprehensive cross-platform C++ application framework."
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 
 sources = ['qt-everywhere-opensource-src-%(version)s.tar.xz', 'sip-4.19.8.tar.gz', 'PyQt5_gpl-%(version_major_minor)s.2.tar.gz']
 source_urls = [

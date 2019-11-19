@@ -13,7 +13,7 @@ description = """The LLVM Core libraries provide a modern source- and target-ind
  particularly easy to invent your own language (or port an existing compiler)
  to use LLVM as an optimizer and code generator."""
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 toolchainopts = {'cstd': 'gnu++11'}
 
 source_urls = ["http://llvm.org/releases/%(version)s"]

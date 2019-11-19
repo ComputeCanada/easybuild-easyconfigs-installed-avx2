@@ -9,7 +9,7 @@ homepage = 'http://www.gnu.org/software/guile'
 description = """Guile is the GNU Ubiquitous Intelligent Language for Extensions,
  the official extension language for the GNU operating system."""
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 
 sources = [SOURCELOWER_TAR_GZ]
 source_urls = [GNU_SOURCE]

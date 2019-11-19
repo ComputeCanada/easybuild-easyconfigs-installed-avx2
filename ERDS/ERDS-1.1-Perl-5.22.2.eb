@@ -12,7 +12,7 @@ description = """ERDS is an open-source software free to academia and nor-profit
  read depth (RD) information, and integrates other information including paired end mapping (PEM) and soft-clip signature 
  to call CNVS sensitively and accurately."""
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 
 sources = ['%(namelower)s%(version)s.tar']
 source_urls = ['http://www.utahresearch.org/wp-content/uploads/2014/01/']

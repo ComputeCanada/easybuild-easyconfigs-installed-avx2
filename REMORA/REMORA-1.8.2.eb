@@ -12,7 +12,7 @@ version = '1.8.2'
 homepage = 'https://github.com/TACC/remora'
 description = "REsource MOnitoring for Remote Applications"
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 
 source_urls = ['https://github.com/TACC/remora/archive/']
 sources = ['v%(version)s.tar.gz']

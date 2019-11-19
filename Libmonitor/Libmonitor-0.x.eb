@@ -9,7 +9,7 @@ description = """
  HPCToolkit performance tools: libmonitor - a substrate for monitoring tools
 """
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 toolchainopts = {'pic': True}
 
 #source_urls = ['http://ftp.gnu.org/gnu/readline']

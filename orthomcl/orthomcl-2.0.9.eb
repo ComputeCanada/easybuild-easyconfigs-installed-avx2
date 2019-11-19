@@ -6,7 +6,7 @@ version = '2.0.9'
 homepage = 'http://orthomcl.org/'
 description = "OrthoMCL is a genome-scale algorithm for grouping orthologous protein sequences."
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 
 sources = ['%(name)sSoftware-v%(version)s.tar.gz']
 source_urls = ['http://%(name)s.org/common/downloads/software/v2.0/']

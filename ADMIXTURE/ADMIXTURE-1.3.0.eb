@@ -9,7 +9,7 @@ description = """ADMIXTURE is a software tool for maximum likelihood estimation 
 multilocus SNP genotype datasets. It uses the same statistical model as STRUCTURE but calculates estimates much 
 more rapidly using a fast numerical optimization algorithm."""
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 
 source_urls = ['https://www.genetics.ucla.edu/software/%(namelower)s/binaries/']
 sources = ['%(namelower)s_linux-%(version)s.tar.gz']

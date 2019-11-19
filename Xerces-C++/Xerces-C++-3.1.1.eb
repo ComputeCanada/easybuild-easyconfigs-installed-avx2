@@ -12,7 +12,7 @@ read and write XML data. A shared library is provided for parsing, generating,
 manipulating, and validating XML documents using the DOM, SAX, and SAX2
 APIs."""
 
-toolchain = {'version': 'dummy', 'name': 'dummy'}
+toolchain = SYSTEM
 
 sources = ['xerces-c-%(version)s.tar.gz']
 source_urls = ['http://archive.apache.org/dist/xerces/c/%(version_major)s/sources/']

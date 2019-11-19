@@ -9,7 +9,7 @@ perlshortver = '.'.join(version.split('.')[:1])
 homepage = 'https://mariadb.org/'
 description = """MariaDB An enhanced, drop-in replacement for MySQL."""
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 
 nix_profile = '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/mariadb-%(version)s'
 nix_attribute = 'mariadb'

@@ -8,7 +8,7 @@ versionsuffix = '-Perl-%(perlver)s'
 homepage = 'https://metacpan.org/pod/Perl4::CoreLibs'
 description = "Libraries historically supplied with Perl 4"
 
-toolchain = {'name': 'dummy', 'version': 'dummy'}
+toolchain = SYSTEM
 
 source_urls = ['http://search.cpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/']
 sources = [SOURCE_TAR_GZ]
