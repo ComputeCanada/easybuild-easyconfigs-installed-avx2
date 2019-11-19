@@ -9,18 +9,18 @@ description = """Intel Cluster Toolchain Compiler Edition provides Intel C/C++ a
 
 toolchain = SYSTEM
 
-compver = '2016.4.258'
-iccifortver = '2016.4'
-comp = ('iccifort', iccifortver)
+local_compver = '2016.4.258'
+local_iccifortver = '2016.4'
+comp = ('iccifort', local_iccifortver)
 
 dependencies = [
-    ('icc', compver),
-    ('ifort', compver),
-    ('iccifort', iccifortver),
+    ('icc', local_compver),
+    ('ifort', local_compver),
+    ('iccifort', local_iccifortver),
     ('CUDA', '8.0.44', '', comp),
-    ('OpenMPI', '2.1.1', '', ('iccifortcuda', iccifortver)),
+    ('OpenMPI', '2.1.1', '', ('iccifortcuda', local_iccifortver)),
     ('imkl', '11.3.4.258'),
-    ('iimkl', iccifortver),
+    ('iimkl', local_iccifortver),
     ('iompic', version),
 ]
 

@@ -9,12 +9,12 @@ description = """Toolchain with Intel C, C++ and Fortran compilers, alongside Op
 
 toolchain = SYSTEM
 
-compver = '2016.4.258'
-compversuff = '-GCC-5.4.0-nix'
+local_compver = '2016.4.258'
+local_compversuff = '-GCC-5.4.0-nix'
 
 dependencies = [
-    ('icc', compver, compversuff),
-    ('ifort', compver, compversuff),
+    ('icc', local_compver, local_compversuff),
+    ('ifort', local_compver, local_compversuff),
     ('iccifort', version),
     ('OpenMPI', '2.0.2', '', ('iccifort', version)),
 ]
