@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.0.1-r4ec537973f321ec869e295e1fa7e1fb0c1acb6eb on 2019-12-19_20-40-03
+# Built with EasyBuild version 4.0.1-r4ec537973f321ec869e295e1fa7e1fb0c1acb6eb on 2019-12-20_12-58-19
 easyblock = 'Bundle'
 
 name = 'GCCcore'
@@ -10,8 +10,15 @@ description = """The GNU Compiler Collection includes front ends for C, C++, Obj
 
 toolchain = SYSTEM
 
+# Put symbolic links: the prefix-ed structure is expected by some easyblocks.
 postinstallcmds = [
-    'ln -s $EBROOTGENTOO/usr/x86_64-pc-linux-gnu/gcc-bin/%(version)s %(installdir)s/bin',
+    'triplet=$(gcc -dumpmachine) && '
+    'cd %(installdir)s && mkdir -p lib/gcc/$triplet include/c++ && '
+    'ln -s $EBROOTGENTOO/usr/$triplet/gcc-bin/%(version)s bin && '
+    'ln -s $EBROOTGENTOO/usr/lib/gcc/$triplet/%(version)s lib/gcc/$triplet/%(version)s && '
+    'ln -s $EBROOTGENTOO/usr/lib/gcc/$triplet/%(version)s lib64 && '
+    'ln -s $EBROOTGENTOO/usr/lib/gcc/$triplet/%(version)s/include/g++-v* include/c++/%(version)s && '
+    'ln -s $EBROOTGENTOO/usr/share/gcc-data/$triplet/%(version)s share'
 ]
 
 hidden = True
@@ -21,7 +28,7 @@ moduleclass = 'compiler'
 # Build statistics
 buildstats = [{
     "build_time": 1.43,
-    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2019'", "--subdir-software='software/2019'", "--subdir-user-modules='.local/easybuild/modules/2019'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'GCCcore-9.2.0-gentoo.eb'],
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LIBRARY_PATH,CPATH'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2019'", "--subdir-software='software/2019'", "--subdir-user-modules='.local/easybuild/modules/2019'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'GCCcore-9.2.0-gentoo.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
@@ -38,8 +45,8 @@ buildstats = [{
     "os_version": "7.7.1908",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.7.5 (default, Dec 10 2019, 19:52:22) ; [GCC 9.2.0]",
-    "system_gcc_path": "/tmp/eb-8sqlrdxu/tmphax6yq5r/gcc",
+    "system_gcc_path": "/tmp/eb-sedutgll/tmppxt5wfa2/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2019/usr/bin/python",
-    "timestamp": 1576788001,
+    "timestamp": 1576846699,
     "total_memory": 60232,
 }]
