@@ -7,9 +7,9 @@
 -panther.models.dir=data/panther/14.1/
 -panther.hmm.path=data/panther/14.1/panther.hmm
 -panther.names.tab=data/panther/14.1/names.tab
-+panther.models.dir=/cvmfs/data.rsnt.computecanada.ca/easybuild/software/2017/avx2/Compiler/gcc7.3/interproscan/5.40-77.0/data/panther/14.1/
-+panther.hmm.path=/cvmfs/data.rsnt.computecanada.ca/easybuild/software/2017/avx2/Compiler/gcc7.3/interproscan/5.40-77.0/data/panther/14.1/panther.hmm
-+panther.names.tab=/cvmfs/data.rsnt.computecanada.ca/easybuild/software/2017/avx2/Compiler/gcc7.3/interproscan/5.40-77.0/data/panther/14.1/names.tab
++panther.models.dir=/cvmfs/data.rsnt.computecanada.ca/easybuild/data/2017/Core/interproscan/5.40-77.0/panther/14.1/
++panther.hmm.path=/cvmfs/data.rsnt.computecanada.ca/easybuild/data/2017/Core/interproscan/5.40-77.0/panther/14.1/panther.hmm
++panther.names.tab=/cvmfs/data.rsnt.computecanada.ca/easybuild/data/2017/Core/interproscan/5.40-77.0/panther/14.1/names.tab
  
  # PFam
  pfam-a.hmm.path=data/pfam/32.0/pfam_a.hmm
