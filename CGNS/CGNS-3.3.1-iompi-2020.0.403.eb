@@ -1,0 +1,62 @@
+# Built with EasyBuild version 4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab on 2020-02-13_19-10-08
+easyblock = 'CMakeMake'
+
+name = 'CGNS'
+version = '3.3.1'
+
+homepage = 'https://cgns.github.io/'
+description = """The CGNS system is designed to facilitate the exchange of data between sites and applications,
+ and to help stabilize the archiving of aerodynamic data."""
+
+toolchain = {'name': 'iompi', 'version': '2020.0.403'}
+toolchainopts = {'usempi': True, 'pic': True}
+
+sources = ['v%(version)s.tar.gz']
+source_urls = ['https://github.com/%(name)s/%(name)s/archive/']
+
+builddependencies = [
+    ('CMake', '3.6.1'),
+]
+dependencies = [
+    ('HDF5', '1.10.3', '-mpi'),
+]
+
+configopts = " -DZLIB_ROOT=$NIXUSER_PROFILE  -DOPENGL_INCLUDE_DIR=$NIXUSER_PROFILE/include -DOPENGL_gl_LIBRARY=$NIXUSER_PROFILE/lib/libGL.so  -DOPENGL_glu_LIBRARY=$NIXUSER_PROFILE/lib/libGLU.so  -DJPEG_INCLUDE_DIR=$NIXUSER_PROFILE/include -DJPEG_LIBRARY=$NIXUSER_PROFILE/lib/libjpeg.so  -DPNG_PNG_INCLUDE_DIR=$NIXUSER_PROFILE/include -DPNG_LIBRARY=$NIXUSER_PROFILE/lib/libpng.so  -DPYTHON_EXECUTABLE=$EBROOTPYTHON/bin/python  -DCURL_LIBRARY=$NIXUSER_PROFILE/lib/libcurl.so -DCURL_INCLUDE_DIR=$NIXUSER_PROFILE/include  -DCMAKE_SYSTEM_PREFIX_PATH=$NIXUSER_PROFILE  -DCMAKE_SKIP_RPATH=ON     -DCMAKE_SKIP_RPATH=ON    -DCGNS_BUILD_CGNSTOOLS=OFF    -DCGNS_ENABLE_TESTS=OFF    -DCGNS_ENABLE_FORTRAN=ON    -DCGNS_ENABLE_HDF5=ON    -DCGNS_ENABLE_PARALLEL=ON    -DCGNS_ENABLE_SCOPING=ON    -DHDF5_DIR=$EBROOTHDF5    -DHDF5_NEED_MPI=ON    -DHDF5_NEED_SZIP=ON    -DHDF5_NEED_ZLIB=ON    -DSZIP_LIBRARY=$EBROOTNIXPKGS/lib/libsz.so    -DZLIB_LIBRARY=$EBROOTNIXPKGS/lib/libz.so"
+
+parallel = 8
+
+start_dir = '%(builddir)s/%(name)s-%(version)s/'
+unwanted_env_vars = {}
+checksums = ['81093693b2e21a99c5640b82b267a495625b663d7b8125d5f1e9e7aaa1f8d469']
+
+sanity_check_paths = {
+    'files': ['bin/cgnscheck', 'bin/cgnscompress', 'bin/cgnsconvert', 'bin/cgnsdiff', 'bin/cgnslist', 'bin/cgnsnames', 'bin/cgnsupdate'],
+    'dirs': [],
+}
+
+moduleclass = 'cae'
+# Build statistics
+buildstats = [{
+    "build_time": 65.75,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--disable-map-toolchains', '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2019'", "--subdir-software='software/2019'", "--subdir-user-modules='.local/easybuild/modules/2019'", "--suffix-modules-path=''", "--tmpdir='/cvmfs/local/tmp'", "--try-toolchain-version='2020.0.403'", "--use-ccache=''", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2018.3/openmpi3.1/cgns/3.3.1/easybuild/reprod/CGNS-3.3.1-iompi-2018.3.312.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2018.3/openmpi3.1/su2/6.0.1/easybuild/reprod/SU2-6.0.1-iompi-2018.3.312.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2018.3/openmpi3.1/su2/6.1.0/easybuild/reprod/SU2-6.1.0-iompi-2018.3.312.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2018.3/openmpi3.1/su2/6.2.0/easybuild/reprod/SU2-6.2.0-iompi-2018.3.312.eb', '/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2018.3/openmpi3.1/su2/7.0.0/easybuild/reprod/SU2-7.0.0-iompi-2018.3.312.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.078,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.1.1-rb040ff812d93799b3ec8f5d728724b2279db2eb5",
+    "easybuild-framework_version": "4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/libexec/gcc/x86_64-pc-linux-gnu/9.2.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2019/var/tmp/portage/sys-devel/gcc-9.2.0-r2/work/gcc-9.2.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2019/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/x86_64-pc-linux-gnu/gcc-bin/9.2.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.2.0-r2 p3' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2019; Thread model: posix; gcc version 9.2.0 (Gentoo 9.2.0-r2 p3) ; ",
+    "glibc_version": "2.29",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 6669074,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.2.10'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.7.1908",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.5 (default, Dec 10 2019, 19:52:22) ; [GCC 9.2.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2019/Core/gcccore/9.2.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2019/usr/bin/python",
+    "timestamp": 1581620989,
+    "total_memory": 60232,
+}]
