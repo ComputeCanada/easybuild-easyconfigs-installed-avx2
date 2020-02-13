@@ -1,0 +1,62 @@
+# Built with EasyBuild version 4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab on 2020-02-13_18-23-37
+easyblock = 'Binary'
+# Note: 'Binary' looks odd but it does what we need to do, treating the tarball as a pip-processed blob
+
+name = 'mpi4py'
+version = '3.0.3'
+
+homepage = 'https://bitbucket.org/mpi4py/mpi4py'
+description = """MPI for Python (mpi4py) provides bindings of the Message Passing Interface (MPI) standard for
+ the Python programming language, allowing any Python program to exploit multiple processors."""
+
+toolchain = {'name': 'iompi', 'version': '2020.0.403'}
+
+source_urls = [BITBUCKET_DOWNLOADS]
+sources = [SOURCE_TAR_GZ]
+checksums = ['012d716c8b9ed1e513fcc4b18e5af16a8791f51e6d1716baccf988ad355c5a1f']
+
+local_pyvers = ['2.7.17', '3.6.9', '3.7.5', '3.8.1']
+local_pyshortvers = ['.'.join(local_pyver.split('.')[:2]) for local_pyver in local_pyvers]
+
+local_install_template = 'module load python/{0} && pip install --prefix=%(installdir)s ' + SOURCE_TAR_GZ
+install_cmd = ';'.join([local_install_template.format(local_pyver) for local_pyver in local_pyvers])
+
+modextrapaths = {'EBPYTHONPREFIXES': ['']}
+
+# if some python is already loaded, use it, otherwise use default python module
+modluafooter = """
+depends_on("python")
+"""
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['lib/python%s/site-packages/mpi4py'%local_pyshortver for local_pyshortver in local_pyshortvers],
+}
+
+moduleclass = 'mpi'
+
+# Build statistics
+buildstats = [{
+    "build_time": 57.11,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/dev/shm/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2019'", "--subdir-software='software/2019'", "--subdir-user-modules='.local/easybuild/modules/2019'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'mpi4py-3.0.3-iompi-2020.0.403.eb'],
+    "core_count": 16,
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.078,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.1.1-rb040ff812d93799b3ec8f5d728724b2279db2eb5",
+    "easybuild-framework_version": "4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/libexec/gcc/x86_64-pc-linux-gnu/9.2.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2019/var/tmp/portage/sys-devel/gcc-9.2.0-r2/work/gcc-9.2.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2019/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/x86_64-pc-linux-gnu/gcc-bin/9.2.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2019/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.2.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.2.0-r2 p3' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2019; Thread model: posix; gcc version 9.2.0 (Gentoo 9.2.0-r2 p3) ; ",
+    "glibc_version": "2.29",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 12023720,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.2.10'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.7.1908",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.5 (default, Dec 10 2019, 19:52:22) ; [GCC 9.2.0]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2019/Core/gcccore/9.2.0/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2019/usr/bin/python",
+    "timestamp": 1581618216,
+    "total_memory": 60232,
+}]
