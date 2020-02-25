@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab on 2020-02-21_18-04-46
+# Built with EasyBuild version 4.1.1-rf312b754b3a377fbd5057b6207f73845cab491ab on 2020-02-25_06-27-03
 easyblock = 'Tarball'
 
 name = 'InterProScan'
@@ -16,7 +16,7 @@ source_urls = [
 ]
 
 checksums = ['62eef3b024e8e6a538333721992b7c92']
-
+patches = ['InterProScan-5.40-77.0.patch']
 dependencies = [
     ('Java', '13.0.1',),
     ('Python', '3.7.4',),
@@ -33,7 +33,8 @@ hiddendependencies = [
 
 
 modextrapaths = {'PATH': '.'}
-postinstallcmds = ['cd %(installdir)s && sed -i \'s@\'"^number.of.embedded.workers.*"\'@\'number.of.embedded.workers=1\'@\' interproscan.properties && sed -i \'s@\'"^maxnumber.of.embedded.workers.*"\'@\'maxnumber.of.embedded.workers=1\'@\' interproscan.properties && sed -i \'s@\'"data\/panther\/14.1"\'@\'"${EBROOTPANTHER}"\'@\' interproscan.properties && for directory in `ls data/`; do sed -i \'s@\'"data\/${directory}"\'@\'"${EBROOTINTERPROSCAN}\/data\/${directory}"\'@\' interproscan.properties; done  && rm -rf data ']
+postinstallcmds = ['cd %(installdir)s && sed -i \'s@\'"^number.of.embedded.workers.*"\'@\'number.of.embedded.workers=1\'@\' interproscan.properties && sed -i \'s@\'"^maxnumber.of.embedded.workers.*"\'@\'maxnumber.of.embedded.workers=1\'@\' interproscan.properties && sed -i \'s@\'"data\/panther\/14.1"\'@\'"${EBROOTPANTHER}"\'@\' interproscan.properties && for directory in `ls data/`; do sed -i \'s@\'"data\/${directory}"\'@\'"${EBROOTINTERPROSCAN}\/data\/${directory}"\'@\' interproscan.properties; if [ $directory != "freemarker" ]; then rm -rf data/$directory ; fi; done  ']
+
 
 
 sanity_check_paths = {
@@ -45,8 +46,8 @@ moduleclass = 'bio'
 
 # Build statistics
 buildstats = [{
-    "build_time": 640.65,
-    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/aroudgar/src/InterProScan/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/home/aroudgar/src/InterProScan/InterProScan-5.40-77.0-system.eb'],
+    "build_time": 723.92,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/home/aroudgar/src/InterProScan/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/home/aroudgar/src/InterProScan//InterProScan-5.40-77.0-system.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
@@ -56,15 +57,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/mn7c98fdilbmsqc3h77y32qy0hqz2ckz-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 264975432,
+    "install_size": 267757974,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.2.10'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.7.1908",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-CcykZR/tmpjD4ysF/gcc",
+    "system_gcc_path": "/tmp/eb-bT3G9S/tmpRWazdJ/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.7.4/bin/python",
-    "timestamp": 1582308285,
+    "timestamp": 1582611693,
     "total_memory": 60232,
 }]
