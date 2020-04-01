@@ -1,10 +1,11 @@
-# Built with EasyBuild version 4.1.1-rbf6d1cefeb7560172e68bf8eb3afa0c4755a3046 on 2020-04-01_00-14-34
+# Built with EasyBuild version 4.1.1-rbf6d1cefeb7560172e68bf8eb3afa0c4755a3046 on 2020-04-01_15-50-36
 easyblock = 'ConfigureMake'
 
 name = 'CMake'
-version = "3.16.3"
+version = '3.16.3'
 
 homepage = 'http://www.cmake.org'
+
 description = """
  CMake, the cross-platform, open-source build system.  CMake is a family of
  tools designed to build, test and package software.
@@ -14,31 +15,37 @@ toolchain = SYSTEM
 
 source_urls = ['http://www.%(namelower)s.org/files/v%(version_major_minor)s']
 sources = [SOURCELOWER_TAR_GZ]
-
-builddependencies = [
-    ('binutils', '2.29'),
-]
-
-dependencies = [
-    ('ncurses', '6.1'),
-]
-
-osdependencies = [('openssl-devel', 'libssl-dev', 'libopenssl-devel')]
+checksums = ['e54f16df9b53dac30fd626415833a6e75b0e47915393843da1825b096ee60668']
 
 patches = ['cmake-3.16.3-search-path.patch']
 
-configopts = "-- -DCMAKE_USE_OPENSSL=1 -DCMAKE_PREFIX_PATH=$EBROOTNCURSES"
+dependencies = [
+    ('ncurses', '6.1'),
+    # OS dependency should be preferred if the os version is more recent then this version,
+    # it's nice to have an up to date openssl for security reasons
+    # ('OpenSSL', '1.1.0h'),
+]
+
+osdependencies = [
+    ('openssl-devel', 'libssl-dev', 'libopenssl-devel'),
+]
+
+# Add Nix libs to the default link paths
+preconfigopts = 'sed -i -e "s|@libc_lib@|$NIXUSER_PROFILE|g"'
+preconfigopts += ' -e "s|@libc_dev@|$NIXUSER_PROFILE|g"'
+preconfigopts += ' Modules/Platform/UnixPaths.cmake && '
+configopts = '-- -DCMAKE_USE_OPENSSL=1'
 
 sanity_check_paths = {
-    'files': ['bin/%(namelower)s', 'bin/cpack', 'bin/ctest'],
+    'files': ["bin/%s" % x for x in ['ccmake', 'cmake', 'cpack', 'ctest']],
     'dirs': [],
-}  
+}
 
 moduleclass = 'devel'
 
 # Build statistics
 buildstats = [{
-    "build_time": 181.47,
+    "build_time": 309.17,
     "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.10[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\', \\'Intel\\': \\'xCore-AVX2\\', \\'PGI\\': \\'tp=haswell\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'CMake-3.16.3.eb'],
     "core_count": 16,
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
@@ -49,15 +56,15 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/mn7c98fdilbmsqc3h77y32qy0hqz2ckz-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 79680607,
+    "install_size": 79683541,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lmod/lmod/libexec/lmod', '8.2.10'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.7.1908",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "2.7.13 (default, Dec 17 2016, 20:05:07) ; [GCC 5.4.0]",
-    "system_gcc_path": "/tmp/eb-GtgCI8/tmpNd0cIV/gcc",
+    "system_gcc_path": "/tmp/eb-V54Qzl/tmpJMCpao/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1585700073,
+    "timestamp": 1585756235,
     "total_memory": 60232,
 }]
