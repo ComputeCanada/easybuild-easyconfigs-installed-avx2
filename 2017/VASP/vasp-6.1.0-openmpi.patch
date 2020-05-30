@@ -1,0 +1,13 @@
+--- arch/makefile.include.linux_intel.orig	2020-05-28 19:21:02.000000000 -0700
++++ arch/makefile.include.linux_intel	2020-05-28 19:25:18.000000000 -0700
+@@ -14,8 +14,8 @@
+ 
+ CPP        = fpp -f_com=no -free -w0  $*$(FUFFIX) $*$(SUFFIX) $(CPP_OPTIONS)
+ 
+-FC         = mpiifort
+-FCL        = mpiifort -mkl=sequential
++FC         = mpifort
++FCL        = mpifort -mkl=sequential
+ 
+ FREE       = -free -names lowercase
+ 
