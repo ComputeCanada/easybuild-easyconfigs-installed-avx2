@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.2.0-rbba5be883d5b568ae1afc08af83fcf47a6d495f2 on 2020-06-05_00-23-30
+# Built with EasyBuild version 4.2.0-rbba5be883d5b568ae1afc08af83fcf47a6d495f2 on 2020-06-06_02-47-38
 easyblock = 'EB_Qt'
 
 name = 'Qt5'
@@ -15,8 +15,14 @@ source_urls = [
     'https://download.qt.io/archive/qt/%(version_major_minor)s/%(version)s/single/'
 ]
 sources = ['qt-everywhere-src-%(version)s.tar.xz']
+patches = [
+    'Qt5-5.12.3_fix-avx2.patch',
+    'Qt5-5.12.3_fix-qmake-libdir.patch',
+]
 checksums = [
     '9142300dfbd641ebdea853546511a352e4bd547c4c7f25d61a40cd997af1f0cf',  # qt-everywhere-src-5.12.8.tar.xz
+    '6f46005f056bf9e6ff3e5d012a874d18ee03b33e685941f2979c970be91a9dbc',  # Qt5-5.12.3_fix-avx2.patch
+    '50974f2ed761a8a70fbdf2e80b9107af68cc29ee951885e26fa0c19bdb6a9c7b',  # Qt5-5.12.3_fix-qmake-libdir.patch
 ]
 
 builddependencies = [
@@ -48,11 +54,17 @@ dependencies = [
     ('libjpeg-turbo', '2.0.4'),
 ]
 
+preconfigopts = 'EBROOTX11=$EBROOTGENTOO EBROOTLIBGLU=$EBROOTGENTOO '
+
 # qtgamepad needs recent kernel/libevdev (fails on RHEL 6.x)
 configopts = '-skip qtgamepad'
 configopts += ' -no-feature-statx'      # bug 672856
 configopts += ' -no-feature-getentropy' # needs kernel 3.17
 configopts += ' -no-feature-renameat2'  # needs kernel 3.16
+
+# see https://patchwork.ozlabs.org/project/buildroot/patch/20180629143521.9018-1-gael.portay@savoirfairelinux.com/
+parallel = 16
+prebuildopts = "NINJAFLAGS='-j%s' "%parallel
 
 # make sure QtWebEngine component is being built & installed
 check_qtwebengine = True
@@ -150,19 +162,19 @@ moduleclass = 'devel'
 
 # Build statistics
 buildstats = [{
-    "build_time": 37920.19,
-    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'Qt5-5.12.8-GCCcore-9.3.0.eb'],
+    "build_time": 7421.24,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus,texinfo,libsndfile'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'Qt5-5.12.8-GCCcore-9.3.0.eb'],
     "core_count": 16,
     "cpu_arch_name": "UNKNOWN",
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2095.078,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "4.2.0-re4d44330922583301eb996ad18d75f3ad636cac7",
+    "easybuild-easyblocks_version": "4.2.0-r83d0dd7c5126f8835617108a31deb402c957a960",
     "easybuild-framework_version": "4.2.0-rbba5be883d5b568ae1afc08af83fcf47a6d495f2",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; Target: x86_64-pc-linux-gnu; Configured with: ../configure --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020 --enable-languages=c,c++,fortran --enable-lto --enable-checking=release --disable-multilib --enable-shared=yes --enable-static=yes --enable-threads=posix --enable-plugins --enable-gold=default --enable-ld --with-plugin-ld=ld.gold --prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0 --with-local-prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0 --enable-bootstrap --with-isl=/tmp/ebuser/avx2/GCCcore/9.3.0/system-system/gcc-9.3.0/stage2_stuff; Thread model: posix; gcc version 9.3.0 (GCC) ; ",
     "glibc_version": "2.30",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 1497464930,
+    "install_size": 1498371733,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.3.8'),
     "os_name": "centos linux",
     "os_type": "Linux",
@@ -171,6 +183,6 @@ buildstats = [{
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/avx2/Core/python/3.8.2/bin/python",
-    "timestamp": 1591316609,
+    "timestamp": 1591411657,
     "total_memory": 60232,
 }]
