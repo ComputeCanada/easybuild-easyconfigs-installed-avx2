@@ -1,0 +1,75 @@
+# Built with EasyBuild version 4.3.1-rda6f1d3a85efeb0d1bea31fc1d991f1f825c7535 on 2020-12-09_12-33-10
+# Note:
+# This is an easyconfig file for EasyBuild, see https://github.com/easybuilders/easybuild
+easyblock = 'ConfigureMake'
+
+name = 'PMIx'
+version = '1.2.5'
+
+homepage = 'https://pmix.org/'
+description = """Process Management for Exascale Environments
+PMI Exascale (PMIx) represents an attempt to resolve these questions by
+providing an extended version of the PMI standard specifically designed
+to support clusters up to and including exascale sizes. The overall
+objective of the project is not to branch the existing pseudo-standard
+definitions - in fact, PMIx fully supports both of the existing PMI-1
+and PMI-2 APIs - but rather to (a) augment and extend those APIs to
+eliminate some current restrictions that impact scalability, and (b)
+provide a reference implementation of the PMI-server that demonstrates
+the desired level of scalability.
+"""
+
+toolchain = {'name': 'system', 'version': 'system'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/%(namelower)s/%(namelower)s/releases/download/v%(version)s']
+sources = [SOURCELOWER_TAR_BZ2]
+checksums = ['a2b02d489ee730c06ee40e7f9ffcebb6c35bcb4f95153fab7c4276a3add6ae31']
+
+builddependencies = [
+    ('binutils', '2.28'),
+]
+dependencies = [
+    ('libevent', '2.1.8'),
+    ('hwloc', '1.11.7'),
+]
+
+configopts = " --with-libevent=$EBROOTLIBEVENT  --with-hwloc=$EBROOTHWLOC "
+
+buildopts = 'V=1'
+
+
+sanity_check_paths = {
+    'files': ['lib/libpmix.so', 'include/%(namelower)s.h'],
+    'dirs': ['include/%(namelower)s', 'share/%(namelower)s'],
+}
+
+moduleclass = 'lib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 15.9,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", '--backup-modules', "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-nix.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash=:2.0.3[,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,libevent=:2.1.11['", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_nix.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2017'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2017'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-amend='moduleclass=lib'", "--try-toolchain='system,system'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'PMIx-1.2.5-GCCcore-6.4.0.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.3.1-radab546e8802c71434d64fd6f4ee22e02c3bfff4",
+    "easybuild-framework_version": "4.3.1-rda6f1d3a85efeb0d1bea31fc1d991f1f825c7535",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/mn7c98fdilbmsqc3h77y32qy0hqz2ckz-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 3882801,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.16'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-jzc5gakx/tmpm8v8cfyb/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1607516793,
+    "total_memory": 60232,
+}]
