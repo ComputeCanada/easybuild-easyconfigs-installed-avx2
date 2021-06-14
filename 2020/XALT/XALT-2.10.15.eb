@@ -1,0 +1,120 @@
+# Built with EasyBuild version 4.3.4-rb538cf08261fd3bc40f99577ceda72fcf34cb007 on 2021-06-14_18-01-36
+name = 'XALT'
+version = '2.10.15'
+
+homepage = 'https://github.com/xalt/xalt'
+description = """XALT 2 is a tool to allow a site to track user executables
+  and library usage on a cluster. When installed it can tell a site what are
+  the top executables by Node-Hours or by the number of users or the number
+  of times it is run. XALT 2 also tracks library usage as well. XALT 2 can
+  also track package use by R, MATLAB or Python. It tracks both MPI and
+  non-MPI programs."""
+
+toolchain = SYSTEM
+
+# The location of XALT configuration file must be specified via
+# 'config_py' easyconfig parameter. See
+# https://xalt.readthedocs.io/en/latest/030_site_filtering.html for
+# more information.
+config_py = '%(builddir)s/CC_config.py'
+
+# The name of the system must be specified via the 'syshost'
+# easyconfig parameter. See
+# https://xalt.readthedocs.io/en/latest/020_site_configuration.html
+# for more information.
+syshost = 'env_var:CC_CLUSTER'
+
+# The XALT transmission method must be specified via the
+# 'transmission' easyconfig parameter. See
+# https://xalt.readthedocs.io/en/latest/020_site_configuration.html
+# for more information.
+transmission = 'file'
+
+# Additional options
+
+# Enable XALT tracking when module is loaded.
+executable_tracking = True
+
+# Enable GPU tracking. Setting to None automatically detects if
+# necessary configuration is present. See
+# https://xalt.readthedocs.io/en/latest/020_site_configuration.html
+# for more information.
+gpu_tracking = None
+
+# URL for cURL file transmission method.
+logging_url = None
+
+# MySQL support. Needs MySQL packages and python MySQL package. See
+# https://xalt.readthedocs.io/en/latest/060_setup_db.html
+# for more information.
+mysql = False
+
+# Enable the scalar sampling rules set in the config.py file.
+scalar_sampling = True
+
+# If XALT is built with a more recent compiler than the system
+# compiler, then XALT likely will depend on symbol versions not
+# available in the system libraries. Link statically as a workaround.
+static_cxx = False
+
+# Where the XALT record files are stored. Defaults to $HOME/.xalt.d
+# if file_prefix is set to None.
+file_prefix = '/var/log/xalt'
+
+source_urls = ['https://github.com/xalt/xalt/archive/']
+sources = [
+    SOURCELOWER_TAR_GZ,
+    {'filename':'CC_config.py','extract_cmd':'cp %s .'}
+]
+checksums = [
+    'debc7bee65617a30093c0cf5f6cb318cc0b7a4e368b2534b56c9e69af2e39fc1',  # xalt-2.10.15.tar.gz
+    '6796e1ddc11cfeee60bc66c77bb03252e34093e7b0b8acd04a822fce1e8052ac',  # CC_config.py
+]
+
+osdependencies = [
+    ('bc'),
+    ('coreutils'),
+    ('libelf-dev', 'elfutils-libelf-devel'),
+    OS_PKG_OPENSSL_DEV,
+]
+
+postinstallcmds = [
+    # Remove RPATH from the only files for which the RPATH is set
+    "patchelf --remove-rpath %(installdir)s/lib64/{libxalt_init.so,libcrcFast.so}",
+]
+
+# LD_PRELOAD is filtered out by the config. Bypass the filter with modluafooter.
+modluafooter = """
+prepend_path("LD_PRELOAD", pathJoin(root, "lib64/libxalt_init.so"))
+setenv("XALT_PRELOAD_ONLY", "no")
+"""
+
+moduleclass = 'lib'
+
+# Build statistics
+buildstats = [{
+    "build_time": 33.41,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='3.5,3.7,5.0,6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--git-working-dirs-path='/home/ebuser'", "--github-user='JLague'", '--hidden', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'XALT-2.10.15.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.3.4-r1f10e91b7b751de817500a56caa05674b9c3217b",
+    "easybuild-framework_version": "4.3.4-rb538cf08261fd3bc40f99577ceda72fcf34cb007",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /var/tmp/portage/sys-devel/gcc-9.3.0/work/gcc-9.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2020/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/x86_64-pc-linux-gnu/gcc-bin/9.3.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.3.0 p2' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-libada --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020; Thread model: posix; gcc version 9.3.0 (Gentoo 9.3.0 p2) ; ",
+    "glibc_version": "2.30",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 21604768,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.20'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-d4eoamf5/tmpkqc95648/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/python",
+    "timestamp": 1623693695,
+    "total_memory": 60232,
+}]
