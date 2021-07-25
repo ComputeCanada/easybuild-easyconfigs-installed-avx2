@@ -1,0 +1,100 @@
+# Built with EasyBuild version 4.4.0-r10c76509400a38816a9c930d6563d3895a13f31d on 2021-07-25_23-44-45
+# Requires manually loading StdEnv/2016 before building to install under
+# [roberpj@build-node:~/.local/easybuild/software/2017/Core/ansys/2020R2] or
+# [roberpj@buidl-node:/cvmfs/restricted.computecanada.ca/easybuild/software/2017/Core/ansys/2020R2] 
+
+name = 'ANSYS'
+version = '2020R2'
+versionsuffix = '202'
+versionprefix = '2018.3.222'
+
+homepage = 'http://www.ansys.com'
+description = """ANSYS simulation software enables organizations to confidently predict 
+    how their products will operate in the real world. We believe that every product is 
+    a promise of something greater."""
+
+toolchain = SYSTEM
+
+# create tar ball from installation isos
+sources = ['ANSYS-%(version)s.tar']
+
+# sha256sum ANSYS-2020R2.tar
+checksums = ['ba81b7b7697c893485105061c0c9e8bc']
+
+postinstallcmds = [
+  # Set same perms on all directories
+  "find %(installdir)s -type d -exec chmod 755 {} \;",
+  # Set same perms on all shared libraries to avoid warning in log file
+  "find %(installdir)s -type f \( -name '*.so' -o -name '*.so.*' \) -exec chmod 755 {} \;",
+  # Rename built-in libstdc++.so* to libstdc++.so*.bak as they are older than whats in nix, and cause problem with other binaries
+  "find %(installdir)s -name 'libstdc++.so*' -exec mv {} {}.bak \;",
+  # Find all non-binary files containing  [:"]/usr/lib or [:"]/lib on one line and remove them from the paths
+  "for f in $(grep -rIl '[:\"]/usr/lib\|[:\"]/lib' %(installdir)s); do echo Modifying file $f; \
+    sed -i -e '/[:\"]\/usr\/lib/s/:*\/usr\/lib[^:\"]*//g' -e '/[:\"]\/lib/s/:*\/lib[^:\"]*//g' $f; done",
+  # Run setrpaths.sh in all dirs so all bins use nix interpreter and all bins/libs find qt libs for ensight
+  "/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s \
+    --add_path %(installdir)s/v%(versionsuffix)s/CEI/apex%(versionsuffix)s/machines/linux_2.6_64/qt-5.12.6/lib",
+  # Set any_interpreter for some license binaries
+  "find %(installdir)s -type f \( -name 'lmutil' -o -name 'lmgrd' -o -name 'NTI' \) -exec \
+    /cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path {} --any_interpreter \;",
+  # Enable additive extension on the workbench ACT start page
+  "cp /cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYS/wizard/AdditiveWizard.wbex-%(version)s \
+    %(installdir)s/v%(versionsuffix)s/aisol/WBAddins/MechanicalExtensions/AdditiveWizard.wbex",
+  # Manually patch setup-mwuser (original filesize 4470 -> 4472 when patched) for ansys versions >= 17.2
+  # /cvmfs/restricted.computecanada.ca/easybuild/software/2017/Core/ansys/2020R2/v202/commonfiles/MainWin/linx64/mw/setup-mwuser
+  "cp -a %(installdir)s/v%(versionsuffix)s/commonfiles/MainWin/linx64/mw/setup-mwuser %(installdir)s/v%(versionsuffix)s/commonfiles/MainWin/linx64/mw/orig_setup-mwuser",
+  "patch -d%(installdir)s/v%(versionsuffix)s -p2 < /cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYS/patch/setup-mwuser.patch-2020R2",
+]
+
+modluafooter = """
+require("SitePackage")
+local found, path = find_and_define_license_file("__ANSYS_LICENSE_FILE", "ansys")
+if (not found) then
+	local error_message = [[
+We did not find a suitable license for ANSYS. If you have access to one, you can create the file $HOME/.licenses/ansys.lic with the license information. If you think you should have access to one as part of your institution, please write to support@computecanada.ca so that we can configure it. For more information about configuring an ANSYS license, please see https://docs.computecanada.ca/wiki/ANSYS 
+
+Nous n'avons pas trouve de licence utilisable pour ANSYS. Si vous avez acces a une licence de ANSYS, vous pouvez creer le fichier $HOME/.licenses/ansys.lic avec l'information de la licence. Si vous   pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer. Pour plus d'information sur la facon de configurer une licence pour ANSYS, veuillez consulter la page https://docs.computecanada.ca/wiki/ANSYS/fr
+	]]
+	LmodError(error_message)
+elseif (path) then
+	-- load the license file which should contain Lua commands to set the license path
+	assert(loadfile(path))()
+end
+setenv("ENSIGHT10_LM","ansys")
+setenv("ANS_FLEXLM_DISABLE_DEFLICPATH","1")
+if os.getenv("RSNT_INTERCONNECT") == "omnipath" then
+        -- /cvmfs/restricted.computecanada.ca/easybuild/software/2017/Core/ansys \
+        --   /2020R2/v202/commonfiles/MPI/Intel/2018.3.222/linx64/etc/tmi.conf
+        setenv("TMI_CONFIG",pathJoin(root,"v%(versionsuffix)s/commonfiles/MPI/Intel/%(versionprefix)s/linx64/etc/tmi.conf"))
+end
+"""
+
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 7787.05,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-nix.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash=:2.0.3[,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,libevent=:2.1.11['", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_nix.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2017'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2017'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'ANSYS-2020R2.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.4.0-r4d2cedab7754f1697636eee5c5fc551b8ac906c1",
+    "easybuild-framework_version": "4.4.0-r10c76509400a38816a9c930d6563d3895a13f31d",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/mn7c98fdilbmsqc3h77y32qy0hqz2ckz-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 45837463051,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.20'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-dv27xfph/tmpmuiteemu/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1627256534,
+    "total_memory": 60232,
+}]
