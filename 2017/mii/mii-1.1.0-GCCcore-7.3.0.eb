@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.4.1-r651ee1e4f8ee05492f645e34218d56e6ef3e4307 on 2021-08-27_20-03-56
+# Built with EasyBuild version 4.4.1-r73a32642a48430484a7c9a4654e7afda27268be4 on 2021-09-08_14-16-16
 #EasyBuild easyconfig
 import os
 
@@ -18,6 +18,7 @@ patches = [
     'mii-1.1.0_global-index.patch', 
     'mii-1.1.0_hierarchic-modulepath.patch',
     'mii-1.1.0-interactive-detection.patch',
+    'mii-1.1.0_source_detection.patch',
     'mii-1.1.0-localization.patch',
 ]
 checksums = [
@@ -25,7 +26,8 @@ checksums = [
     '72db9fa725e542d56544f027e9462d10435ee8d7a2aad36880e78d3ee9ae23d3',  # mii-1.1.0_global-index.patch
     'a59532b1778feeea0f3b92caf8a6fe700ecd05f306953de56a6f759928203a0c',  # mii-1.1.0_hierarchic-modulepath.patch
     'fc29395437297c17dcc00bed6f65b5d95cccb5cba56fe36233f0a0862121c5f3',  # mii-1.1.0-interactive-detection.patch
-    '74ea5d0ba3ba4098eb1b2078cdcca8db65c9f6c4e449a2e35f2f3cd87b188d9b',  # mii-1.1.0-localization.patch
+    '985c9c62009ef824aef09de562e04824f950493650892ff198351a0dbcce9a16',  # mii-1.1.0_source_detection.patch
+    '08b8fa1971ec3c1002509a1100a5e481128d16ba0f4a317a26fc85b423486f59',  # mii-1.1.0-localization.patch
 ]
 
 # only make install is needed
@@ -62,6 +64,14 @@ if (shell == "bash" or shell == "zsh") then
         hook_name = hook_name .. 'r'
     end
 
+    -- detect if the current context is being sourced
+    if (shell == "zsh") then
+    	hook_def = "[[ $ZSH_EVAL_CONTEXT =~ '.*file.*' ]] && SOURCED=1 || SOURCED=0; " .. hook_def
+    end
+    if (shell == "bash") then
+    	hook_def = '[[ -n "${BASH_SOURCE[1]}" ]] && SOURCED=1 || SOURCED=0; ' .. hook_def
+    end
+
     -- Define command not found hook
     set_shell_function(hook_name, hook_def, "")
 end
@@ -69,7 +79,7 @@ end
 
 # Build statistics
 buildstats = [{
-    "build_time": 36.27,
+    "build_time": 53.49,
     "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-nix.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash=:2.0.3[,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,libevent=:2.1.11['", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_nix.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--disable-map-toolchains', '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2017'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2017'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--try-toolchain='GCCcore,7.3.0'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'mii-1.1.0.eb'],
     "core_count": 16,
     "cpu_arch": "x86_64",
@@ -78,19 +88,19 @@ buildstats = [{
     "cpu_speed": 2494.14,
     "cpu_vendor": "Intel",
     "easybuild-easyblocks_version": "4.4.1-r070e0eae9cb186ca3d7d08fb4b9214463bbe8a7e",
-    "easybuild-framework_version": "4.4.1-r651ee1e4f8ee05492f645e34218d56e6ef3e4307",
+    "easybuild-framework_version": "4.4.1-r73a32642a48430484a7c9a4654e7afda27268be4",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/gcc-7.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/c9qaklf3dvjvlbky3fiakmafb1p8l106-gfortran-7.3.0/libexec/gcc/x86_64-pc-linux-gnu/7.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: ; Thread model: posix; gcc version 7.3.0 (GCC) ; ",
     "glibc_version": "2.24",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 142561,
+    "install_size": 142756,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.20'),
     "os_name": "centos linux",
     "os_type": "Linux",
     "os_version": "7.9.2009",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
-    "system_gcc_path": "/tmp/eb-jkbdc6wi/tmpewed7mvi/gcc",
+    "system_gcc_path": "/tmp/eb-on1e_iqd/tmpzh7cq4gl/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
-    "timestamp": 1630094635,
+    "timestamp": 1631110574,
     "total_memory": 60232,
 }]
