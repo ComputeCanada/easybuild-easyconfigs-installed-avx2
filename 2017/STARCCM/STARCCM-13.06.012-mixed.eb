@@ -1,0 +1,69 @@
+# Built with EasyBuild version 4.5.0-rbe97b6553afcefae7f1731e6e0e75462bb032218 on 2021-11-28_22-23-17
+# module load StdEnv/2016
+
+name = 'STARCCM'
+version = '13.06.012'
+versionsuffix = "-mixed"
+modaltsoftname = "starccm-mixed"
+
+homepage = 'http://mdx.plm.automation.siemens.com/star-ccm-plus'
+description = """Predicting the real-world performance of a product requires simulation tools 
+that span a variety of engineering disciplines. STAR-CCM+ is an all-in-one solution that delivers 
+accurate and efficient multidisciplinary technologies in a single integrated user interface.
+
+This version uses mixed precision."""
+
+toolchain = SYSTEM
+
+# sha256sum /cvmfs/restricted.computecanada.ca/easybuild/sources/s/STARCCM/STAR-CCM+13.06.012_01_linux-x86_64.tar.gz 
+sources = ['STAR-CCM+%(version)s_01_linux-x86_64.tar.gz']
+checksums = ['79e4cf1e9ae94a9e345299b61d97ba0cc4916ab6a8d08a541f75f04c206b6d3b']
+
+postinstallcmds = [
+  # Avoid ldd warnings you do not have execution permission
+  "find %(installdir)s -type f \( -name '*.so' -o -name '*.so.*' \) -exec chmod -v 755 {} \;",
+  # Run setrpaths.sh in all directories
+  "/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s",
+]
+
+moduleclass = 'tools'
+modluafooter = """
+require("SitePackage")
+local found = find_and_define_license_file("CDLMD_LICENSE_FILE","starccm")
+if (mode() == "load" and not found) then
+        local warning_message = [[
+	We did not find a suitable license file for StarCCM+. If you have access to one, you can create the file $HOME/.licenses/starccm.lic with the license information. You may also define the CDLMD_LICENSE_FILE environment variable yourself. This is only a warning. For more details, see https://docs.computecanada.ca/wiki/Star-CCM%2B
+	
+	Nous n'avons pas trouve de fichier de license utilisable pour StarCCM+. Si vous avez acces a une license de StarCCM+, vous pouvez creer le fichier $HOME/.licenses/starccm.lic avec l'information de la license. Vous pouvez aussi definir la variable d'environnement CDLMD_LICENSE_FILE. Ceci n'est pas une erreur. Pour plus de details, voir la page https://docs.computecanada.ca/wiki/Star-CCM%2B 
+	]]
+	LmodWarning(warning_message)
+end
+"""
+
+# Build statistics
+buildstats = [{
+    "build_time": 98255.48,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='nixpkgs'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-nix.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.12.3[,flex,ncurses,libreadline,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,sparsehash=:2.0.3[,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12[,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,ant,gettext,X11,pkg-config,LLVM=:6.0.1[,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,gnuplot,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,CFITSIO,libX11,libXft,libXpm,libXext,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,libevent=:2.1.11['", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_nix.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2017'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'PGI\\': \\'tp=haswell\\', \\'Intel\\': \\'xCore-AVX2\\', \\'GCC\\': \\'march=core-avx2\\', \\'GCCcore\\': \\'GENERIC\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2017'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2017:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2017'", "--subdir-software='software/2017'", "--subdir-user-modules='.local/easybuild/modules/2017'", "--suffix-modules-path=''", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'STARCCM-13.06.012-mixed.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.078,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.5.0-r57756ad4a5d7fbb0a9af3b2b99b188089f753c9b",
+    "easybuild-framework_version": "4.5.0-rbe97b6553afcefae7f1731e6e0e75462bb032218",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/nix/store/mn7c98fdilbmsqc3h77y32qy0hqz2ckz-gfortran-5.4.0/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/lto-wrapper; Target: x86_64-unknown-linux-gnu; Configured with: ; Thread model: posix; gcc version 5.4.0 (GCC) ; ",
+    "glibc_version": "2.24",
+    "hostname": "build-node2.computecanada.ca",
+    "install_size": 6555118102,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.20'),
+    "os_name": "centos linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-swlld226/tmpou27old9/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/python",
+    "timestamp": 1638137892,
+    "total_memory": 60232,
+}]
