@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.5.3-r7ef8e492dc501c62e1cd706105e5d4e3e5fe41a1 on 2022-03-16_17-50-43
+# Built with EasyBuild version 4.5.3-r7ef8e492dc501c62e1cd706105e5d4e3e5fe41a1 on 2022-03-16_18-00-42
 easyblock = 'ConfigureMake'
 
 name = 'MrBayes'
@@ -53,8 +53,8 @@ buildstats = [{
     "os_version": "7.9.2009",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
-    "system_gcc_path": "/tmp/eb-j0ko4qbb/tmp3xbzxgom/gcc",
+    "system_gcc_path": "/tmp/eb-2e71r95r/tmp14z3bzet/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/python",
-    "timestamp": 1647452826,
+    "timestamp": 1647453641,
     "total_memory": 60232,
 }]
