@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.5.3-r7ef8e492dc501c62e1cd706105e5d4e3e5fe41a1 on 2022-03-17_18-18-07
+# Built with EasyBuild version 4.5.3-r7ef8e492dc501c62e1cd706105e5d4e3e5fe41a1 on 2022-03-30_14-16-31
 # Built with EasyBuild version 4.5.0-rbe97b6553afcefae7f1731e6e0e75462bb032218 on 2021-12-23_19-09-56
 # Built with EasyBuild version 4.4.2-r70243fd7e2a672699d8f1af6e2283e599943b20b on 2021-09-16_00-27-36
 easyblock = 'Tarball'
@@ -13,7 +13,8 @@ InterProScan is a sequence analysis application (nucleotide and protein
 sequences) that combines different protein signature recognition methods 
 into one resource."""
 
-print('Installing InterProScan %(version)s with data linked from data.rsnt')
+# WARNING: THIS RECIPE DOES NOT PREPARES THE DATA, SEE COMMENTED SECTION BEFORE postinstallcmds
+# TO INCLUDE THE DATA PART IF NOT ON THE DATA REPO
 
 toolchain = SYSTEM
 source_urls = ['ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/%(version)s',
@@ -28,12 +29,19 @@ dependencies = [
 ]
 
 modextrapaths = {'PATH': '.'}
+#'export DATA_DIR=$(echo %(installdir)s | sed "s/-/./g") && '
+#'export DATA_DIR=${DATA_DIR///soft.computecanada.ca\/easybuild\/software\///data.rsnt.computecanada.ca\/content\/easybuild\/data/}'
+#'&& for i in h3f h3i h3m h3p; do find . -name "*.${i}" -exec rm {} + ; done &&'
+#'python %(installdir)s/initial_setup.py && mkdir -p ${DATA_DIR} && cp -r data/* ${DATA_DIR} && rm -rf %(installdir)s/data/* && '
+#"ln -s ${DATA_DIR}/* %(installdir)s/data/ && sed -i 's/head -n 1/grep version/g' %(installdir)s/interproscan.sh",
 postinstallcmds = [
 'export DATA_DIR=$(echo %(installdir)s | sed "s/-/./g") && '
 'export DATA_DIR=${DATA_DIR///soft.computecanada.ca\/easybuild\/software\///data.rsnt.computecanada.ca\/content\/easybuild\/data/}'
-'&& for i in h3f h3i h3m h3p; do find . -name "*.${i}" -exec rm {} + ; done &&'
-'python %(installdir)s/initial_setup.py && mkdir -p ${DATA_DIR} && cp -r data/* ${DATA_DIR} && rm -rf %(installdir)s/data/* && '
-"ln -s ${DATA_DIR}/* %(installdir)s/data/ && sed -i 's/head -n 1/grep version/g' %(installdir)s/interproscan.sh",
+' && rm -rf %(installdir)s/data/* && ln -s ${DATA_DIR}/* %(installdir)s/data/ && '
+"sed -i 's/head -n 1/grep version/g' %(installdir)s/interproscan.sh",
+'/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s --any_interpreter',
+'find %(installdir)s/bin -type d | xargs -i /cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path {} --any_interpreter',
+'find %(installdir)s/lib -type d | xargs -i  /cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path {} --any_interpreter',
 ]
 
 
@@ -42,6 +50,66 @@ sanity_check_paths = {
     'dirs': ['bin', 'lib',],
 }
 
+sanity_check_commands = [
+#'interproscan.sh --help', # Help always return code 1
+#'%(installdir)s/bin/pirsr/0.1/pirsr-preprocess.pl -help', # Help always return code 1
+'%(installdir)s/bin/pirsr/0.1/pirsr.py -h',
+'%(installdir)s/bin/ncoils/2.2.1/ncoils -h',
+#'%(installdir)s/bin/prosite/altbin/pfsearchV3.centos7 --help', # Help always return code 1
+#'%(installdir)s/bin/prosite/altbin/pfscan.centos7 --help', # Help always return code 1
+#'%(installdir)s/bin/prosite/pfscan --help', # Help always return code 1
+'%(installdir)s/bin/prosite/pfscanV3 --help',
+#'%(installdir)s/bin/prosite/ps_scan.pl -h',  # Help always return code 1
+#'%(installdir)s/bin/prosite/pfsearch -h', # Help always return code 255
+'%(installdir)s/bin/prosite/pfsearchV3 -h',
+#'%(installdir)s/bin/pirsf/3.10/pirsf.pl -h',# Help always return code 255
+'%(installdir)s/bin/sfld/sfld_postprocess -h',
+'%(installdir)s/bin/mobidb/2.0/binx/espritz/bin/align/getAlignments.pl',
+#'%(installdir)s/bin/mobidb/2.0/binx/espritz/bin/espritz.pl --help', # Help always return code 255
+#'%(installdir)s/bin/superfamily/1.75/a2m2selex.pl -h',  # Help always return code 255
+#'%(installdir)s/bin/superfamily/1.75/ass3.pl', # Help always return code 255
+#'%(installdir)s/bin/superfamily/1.75/hmmscan.pl -h', # Help always return code 1
+#'%(installdir)s/bin/superfamily/1.75/fasta_checker.pl -h', # Help always return code 1
+'%(installdir)s/bin/gene3d/4.3.0/cath-resolve-hits -h',
+#'%(installdir)s/bin/nucleotide/esl-translate -h', # Help always return code 1
+'%(installdir)s/bin/blast/ncbi-blast-2.10.1+/rpsblast -h',
+'%(installdir)s/bin/blast/ncbi-blast-2.10.1+/rpsbproc -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/hmmsearch -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-seqstat -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alipid -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-selectn -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-construct -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-stranslate -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-afetch -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alimap -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-compstruct -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-compalign -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-mask -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-weight -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-seqrange -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-reformat -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alimask -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-histplot -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-shuffle -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alistat -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-cluster -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-sfetch -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-ssdraw -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alimerge -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/easel/miniapps/esl-alimanip -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/hmmpress -h', 
+'%(installdir)s/bin/hmmer/hmmer3/3.1b1/hmmscan -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.3/esl-translate -h',
+'%(installdir)s/bin/hmmer/hmmer3/3.3/hmmsearch -h', 
+'%(installdir)s/bin/hmmer/hmmer3/3.3/hmmpress -h', 
+'%(installdir)s/bin/hmmer/hmmer3/3.3/hmmscan -h',
+'%(installdir)s/bin/hmmer/hmmer2/2.3.2/hmmconvert -h',
+'%(installdir)s/bin/hmmer/hmmer2/2.3.2/hmmpfam -h' ,
+'%(installdir)s/bin/hmmer/hmmer2/2.3.2/hmmsearch -h',
+'%(installdir)s/bin/hmmer/hmmer2/2.3.2/hmmbuild -h',
+'%(installdir)s/bin/hmmer/hmmer2/2.3.2/hmmcalibrate -h',
+]
+
 modextravars = {'JAVA': '/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/java/11.0.2/bin/java'}
 
 
@@ -49,28 +117,28 @@ moduleclass = 'bio'
 
 # Build statistics
 buildstats = [{
-    "build_time": 4330.91,
-    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/easyconfigs/i/InterProScan/InterProScan-5.55-88.0.eb'],
+    "build_time": 3011.19,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/easyconfigs/i/InterProScan/InterProScan-5.55-88.0.eb'],
     "core_count": 16,
     "cpu_arch": "x86_64",
     "cpu_arch_name": "UNKNOWN",
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2494.14,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "4.5.3-rd32a51a54e5df3e21ee5a8f5190fb6c1eab75be6",
+    "easybuild-easyblocks_version": "4.5.3-r2f6860ca7821b42ac0e9f299491ed6d9b105799a",
     "easybuild-framework_version": "4.5.3-r7ef8e492dc501c62e1cd706105e5d4e3e5fe41a1",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /var/tmp/portage/sys-devel/gcc-9.3.0/work/gcc-9.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2020/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/x86_64-pc-linux-gnu/gcc-bin/9.3.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.3.0 p2' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-libada --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020; Thread model: posix; gcc version 9.3.0 (Gentoo 9.3.0 p2) ; ",
     "glibc_version": "2.30",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 213244319,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.6.11'),
+    "install_size": 216174849,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.6.16'),
     "os_name": "CentOS Linux",
     "os_type": "Linux",
     "os_version": "7.9.2009",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
-    "system_gcc_path": "/tmp/eb-me_ux1ei/tmp00kg8cs8/gcc",
+    "system_gcc_path": "/tmp/eb-itgg2hy9/tmphybn2_71/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/avx2/Core/python/3.7.9/bin/python",
-    "timestamp": 1647540900,
+    "timestamp": 1648649612,
     "total_memory": 60232,
 }]
