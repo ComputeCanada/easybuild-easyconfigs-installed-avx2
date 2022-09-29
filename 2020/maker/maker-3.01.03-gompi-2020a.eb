@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.3.1-r5e44ff7386b8710ec5f035eae98e9c720d38dec8 on 2021-02-04_05-37-24
+# Built with EasyBuild version 4.6.0-ra6dbb4b22832c431590f725219d89d82c9946dba on 2022-09-29_19-06-02
 ##
 # This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
 #
@@ -25,9 +25,6 @@ toolchainopts = {'pic': True}
 #source_urls = ['http://yandell.topaz.genetics.utah.edu/cgi-bin/maker_license.cgi']
 sources = [SOURCE_TGZ]
 checksums = ['34cec3c585e52e8e50ab8cb6607819b4']
-builddependencies = [
-    ('Perl', '5.30.2'),
-]
 dependencies = [
     ('BioPerl', '1.7.7'),
     ('Exonerate', '2.4.0'),
@@ -38,13 +35,19 @@ dependencies = [
 ]
 
 group = 'soft_maker'
-postinstallcmds = [" export PERL5LIB=$PERL5LIB:%(installdir)s/lib/perl5/site_perl/5.30.2/:%(installdir)s/lib/perl5/site_perl/5.30.2/x86_64-linux-thread-multi && cd %(installdir)s/src && printf '%s\n\n' 'y'|perl Build.PL && printf '%s\n' 'n' && ./Build install\t "]
-modextrapaths = {'PERL5LIB': ':%(installdir)s/lib:%(installdir)s/lib/perl5/site_perl/5.30.2/:%(installdir)s/lib/perl5/site_perl/5.30.2/x86_64-linux-thread-multi'}
+postinstallcmds = ["module load perl-no-thread/.5.30.2 && export PERL5LIB=$PERL5LIB:%(installdir)s/lib/perl5/site_perl/5.30.2/:%(installdir)s/lib/perl5/site_perl/5.30.2/x86_64-linux && cd %(installdir)s/src && printf '%s\n\n' 'y'|perl Build.PL && printf '%s\n' 'n' && ./Build install\t "]
+modextrapaths = {'PERL5LIB': ':%(installdir)s/lib:%(installdir)s/lib/perl5/site_perl/5.30.2/:%(installdir)s/lib/perl5/site_perl/5.30.2/x86_64-linux'}
 sanity_check_paths = {
     'files': ['bin/%(name)s'],
     'dirs': ['bin'],
 }
 exts_defaultclass = 'PerlModule'
+exts_default_options = {
+    'extensions_preconfigopts': 'module load perl-no-thread/.5.30.2 && ',
+    'extensions_prebuildopts': 'module load perl-no-thread/.5.30.2 && ',
+    'extensions_preinstallopts': 'module load perl-no-thread/.5.30.2 && ',
+}
+
 exts_list = [
     ('DBD::Pg', '3.14.2', {
        'source_tmpl': 'DBD-Pg-3.14.2.tar.gz',
@@ -125,28 +128,28 @@ moduleclass = 'bio'
 
 # Build statistics
 buildstats = [{
-    "build_time": 92.25,
-    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='3.5,3.7,5.0,6.0,7.0,7.5,8.0'", '--enforce-checksums', "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2020'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'maker-3.01.03-gompi-2020a.eb'],
+    "build_time": 197.43,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.36[,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2020'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/easyconfigs/m/maker/maker-3.01.03-gompi-2020a.eb'],
     "core_count": 16,
     "cpu_arch": "x86_64",
     "cpu_arch_name": "UNKNOWN",
     "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
     "cpu_speed": 2494.14,
     "cpu_vendor": "Intel",
-    "easybuild-easyblocks_version": "4.3.1-r733dc3ff343737e567a2b31dacf001c734b8636a",
-    "easybuild-framework_version": "4.3.1-r5e44ff7386b8710ec5f035eae98e9c720d38dec8",
+    "easybuild-easyblocks_version": "4.6.0-r4673cfc266558fe82bad2d19dd7b73c8b576bedb",
+    "easybuild-framework_version": "4.6.0-ra6dbb4b22832c431590f725219d89d82c9946dba",
     "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: ../configure --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020 --enable-languages=c,c++,fortran --without-cuda-driver --enable-offload-targets=nvptx-none --enable-lto --enable-checking=release --disable-multilib --enable-shared=yes --enable-static=yes --enable-threads=posix --enable-plugins --enable-gold=default --enable-ld --with-plugin-ld=ld.gold --prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0 --with-local-prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/9.3.0 --enable-bootstrap --with-isl=/tmp/ebuser/avx2/GCCcore/9.3.0/system-system/gcc-9.3.0/stage2_stuff --build=x86_64-pc-linux-gnu --host=x86_64-pc-linux-gnu; Thread model: posix; gcc version 9.3.0 (GCC) ; ",
     "glibc_version": "2.30",
     "hostname": "build-node.computecanada.ca",
-    "install_size": 42827805,
-    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.4.20'),
-    "os_name": "centos linux",
+    "install_size": 42781965,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
+    "os_name": "CentOS Linux",
     "os_type": "Linux",
     "os_version": "7.9.2009",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
-    "system_gcc_path": "/tmp/eb-2_ddgeko/tmpfuj72u8k/gcc",
+    "system_gcc_path": "/tmp/eb-q6e3w_dx/tmpag9r89k7/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/avx2/Core/python/3.7.9/bin/python",
-    "timestamp": 1612417043,
+    "timestamp": 1664478361,
     "total_memory": 60232,
 }]
