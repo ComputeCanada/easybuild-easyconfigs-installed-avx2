@@ -1,0 +1,181 @@
+From b816b986f063f2f7ba5f517669a1d36d1c40ce16 Mon Sep 17 00:00:00 2001
+From: Dave Dykstra <2129743+DrDaveD@users.noreply.github.com>
+Date: Thu, 6 Oct 2022 18:21:57 -0500
+Subject: [PATCH] add low-level uid=N and gid=N options, better help
+
+---
+ fs.h          |  2 ++
+ fuseprivate.c | 12 ++++++++++--
+ fuseprivate.h |  4 +++-
+ hl.c          |  4 ++--
+ ll_main.c     | 12 +++++++++---
+ stat.c        | 24 ++++++++++++++++--------
+ 6 files changed, 42 insertions(+), 16 deletions(-)
+
+diff --git a/fs.h b/fs.h
+index d300a3bb..dc00d54a 100644
+--- a/fs.h
++++ b/fs.h
+@@ -36,6 +36,8 @@
+ struct sqfs {
+ 	sqfs_fd_t fd;
+ 	size_t offset;
++	int uid;
++	int gid;
+ 	struct squashfs_super_block sb;
+ 	sqfs_table id_table;
+ 	sqfs_table frag_table;
+diff --git a/fuseprivate.c b/fuseprivate.c
+index a8e71191..b9a10182 100644
+--- a/fuseprivate.c
++++ b/fuseprivate.c
+@@ -59,12 +59,20 @@ int sqfs_listxattr(sqfs *fs, sqfs_inode *inode, char *buf, size_t *size) {
+ 	return 0;
+ }
+ 
+-void sqfs_usage(char *progname, bool fuse_usage) {
++void sqfs_usage(char *progname, bool fuse_usage, bool ll_usage) {
+ 	fprintf(stderr, "%s (c) 2012 Dave Vasilevsky\n\n", PACKAGE_STRING);
+ 	fprintf(stderr, "Usage: %s [options] ARCHIVE MOUNTPOINT\n",
+ 		progname ? progname : PACKAGE_NAME);
++	fprintf(stderr, "\n%s options:\n", progname);
++	fprintf(stderr, "    -o offset              offset into ARCHIVE to mount\n");
++	fprintf(stderr, "    -o timeout             idle seconds for automatic unmount\n");
++	if (ll_usage) {
++		fprintf(stderr, "    -o uid=N               set file owner\n");
++		fprintf(stderr, "    -o gid=N               set file group\n");
++	}
+ 	if (fuse_usage) {
+ #if FUSE_USE_VERSION >= 30
++		fprintf(stderr, "\nFUSE options:\n");
+ 		fuse_cmdline_help();
+ #else
+ 		struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
+@@ -92,7 +100,7 @@ int sqfs_opt_proc(void *data, const char *arg, int key,
+ 		}
+ 	} else if (key == FUSE_OPT_KEY_OPT) {
+ 		if (strncmp(arg, "-h", 2) == 0 || strncmp(arg, "--h", 3) == 0)
+-			sqfs_usage(opts->progname, true);
++			return -1;
+ 	}
+ 	return 1; /* Keep */
+ }
+diff --git a/fuseprivate.h b/fuseprivate.h
+index c978076c..29974b86 100644
+--- a/fuseprivate.h
++++ b/fuseprivate.h
+@@ -40,7 +40,7 @@
+ int sqfs_listxattr(sqfs *fs, sqfs_inode *inode, char *buf, size_t *size);
+ 
+ /* Print a usage string */
+-void sqfs_usage(char *progname, bool fuse_usage);
++void sqfs_usage(char *progname, bool fuse_usage, bool ll_usage);
+ 
+ /* Parse command-line arguments */
+ typedef struct {
+@@ -49,6 +49,8 @@ typedef struct {
+ 	int mountpoint;
+ 	size_t offset;
+ 	unsigned int idle_timeout_secs;
++	int uid;
++	int gid;
+ } sqfs_opts;
+ int sqfs_opt_proc(void *data, const char *arg, int key,
+ 	struct fuse_args *outargs);
+diff --git a/hl.c b/hl.c
+index 49673913..aa71e4e0 100644
+--- a/hl.c
++++ b/hl.c
+@@ -325,9 +325,9 @@ int main(int argc, char *argv[]) {
+ 	opts.mountpoint = 0;
+ 	opts.offset = 0;
+ 	if (fuse_opt_parse(&args, &opts, fuse_opts, sqfs_opt_proc) == -1)
+-		sqfs_usage(argv[0], true);
++		sqfs_usage(argv[0], true, false);
+ 	if (!opts.image)
+-		sqfs_usage(argv[0], true);
++		sqfs_usage(argv[0], true, false);
+ 	
+ 	hl = sqfs_hl_open(opts.image, opts.offset);
+ 	if (!hl)
+diff --git a/ll_main.c b/ll_main.c
+index aca76935..5bc57abd 100644
+--- a/ll_main.c
++++ b/ll_main.c
+@@ -55,6 +55,8 @@ int main(int argc, char *argv[]) {
+ 	struct fuse_opt fuse_opts[] = {
+ 		{"offset=%zu", offsetof(sqfs_opts, offset), 0},
+ 		{"timeout=%u", offsetof(sqfs_opts, idle_timeout_secs), 0},
++		{"uid=%d", offsetof(sqfs_opts, uid), 0},
++		{"gid=%d", offsetof(sqfs_opts, gid), 0},
+ 		FUSE_OPT_END
+ 	};
+ 	
+@@ -85,8 +87,10 @@ int main(int argc, char *argv[]) {
+ 	opts.mountpoint = 0;
+ 	opts.offset = 0;
+ 	opts.idle_timeout_secs = 0;
++	opts.uid = 0;
++	opts.gid = 0;
+ 	if (fuse_opt_parse(&args, &opts, fuse_opts, sqfs_opt_proc) == -1)
+-		sqfs_usage(argv[0], true);
++		sqfs_usage(argv[0], true, true);
+ 
+ #if FUSE_USE_VERSION >= 30
+ 	if (fuse_parse_cmdline(&args, &fuse_cmdline_opts) != 0)
+@@ -96,9 +100,9 @@ int main(int argc, char *argv[]) {
+                            &fuse_cmdline_opts.mt,
+                            &fuse_cmdline_opts.foreground) == -1)
+ #endif
+-		sqfs_usage(argv[0], true);
++		sqfs_usage(argv[0], true, true);
+ 	if (fuse_cmdline_opts.mountpoint == NULL)
+-		sqfs_usage(argv[0], true);
++		sqfs_usage(argv[0], true, true);
+ 
+ 	/* fuse_daemonize() will unconditionally clobber fds 0-2.
+ 	 *
+@@ -128,6 +132,8 @@ int main(int argc, char *argv[]) {
+ 	
+ 	/* STARTUP FUSE */
+ 	if (!err) {
++		ll->fs.uid = opts.uid;
++		ll->fs.gid = opts.gid;
+ 		sqfs_ll_chan ch;
+ 		err = -1;
+ 		if (sqfs_ll_mount(
+diff --git a/stat.c b/stat.c
+index 29923f37..b425c0c0 100644
+--- a/stat.c
++++ b/stat.c
+@@ -49,14 +49,22 @@ sqfs_err sqfs_stat(sqfs *fs, sqfs_inode *inode, struct stat *st) {
+ 	
+ 	st->st_blksize = fs->sb.block_size; /* seriously? */
+ 	
+-	err = sqfs_id_get(fs, inode->base.uid, &id);
+-	if (err)
+-		return err;
+-	st->st_uid = id;
+-	err = sqfs_id_get(fs, inode->base.guid, &id);
+-	st->st_gid = id;
+-	if (err)
+-		return err;
++	if (fs->uid > 0) {
++		st->st_uid = fs->uid;
++	} else {
++		err = sqfs_id_get(fs, inode->base.uid, &id);
++		if (err)
++			return err;
++		st->st_uid = id;
++	}
++	if (fs->gid > 0) {
++		st->st_gid = fs->gid;
++	} else {
++		err = sqfs_id_get(fs, inode->base.guid, &id);
++		st->st_gid = id;
++		if (err)
++			return err;
++	}
+ 	
+ 	return SQFS_OK;
+ }
