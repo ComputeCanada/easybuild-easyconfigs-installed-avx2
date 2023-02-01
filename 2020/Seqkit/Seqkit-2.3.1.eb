@@ -1,0 +1,69 @@
+# Built with EasyBuild version 4.7.0-r906ea5725f2e1dfcbceaa79ded1950f683ff5e1b on 2023-02-01_20-17-29
+easyblock = "BinariesTarball"
+
+name = 'Seqkit'
+version = '2.3.1'
+
+homepage = 'https://bioinf.shenwei.me/seqkit/'
+description = """FASTA and FASTQ are basic and ubiquitous formats for storing
+ nucleotide and protein sequences. Common manipulations of FASTA/Q file
+include converting, searching, filtering, deduplication, splitting, shuffling,
+ and sampling. Existing tools only implement some of these manipulations,
+and not particularly efficiently, and some are only available for certain
+operating systems. Furthermore, the complicated installation process of
+required packages and running environments can render these programs less user
+ friendly.
+
+This project describes a cross-platform ultrafast comprehensive toolkit for
+FASTA/Q processing. SeqKit provides executable binary files for all major
+operating systems, including Windows, Linux, and Mac OS X, and can be directly
+ used without any dependencies or pre-configurations. SeqKit demonstrates
+competitive performance in execution time and memory usage compared to similar
+tools. The efficiency and usability of SeqKit enable researchers to rapidly
+accomplish common FASTA/Q file manipulations.
+"""
+
+toolchain = SYSTEM
+#https://github.com/shenwei356/seqkit/releases/download/v2.3.1/seqkit_linux_amd64.tar.gz
+
+source_urls = ['https://github.com/shenwei356/seqkit/releases/download']
+sources = ['v%(version)s/seqkit_linux_amd64.tar.gz']
+checksums = ['317b476d2437312f8cd2600da322e42098dd57652054e52843061869df1bf1ad']
+
+modextrapaths = {'PATH': 'bin'}
+
+sanity_check_paths = {
+    'files': ['bin/seqkit'],
+    'dirs': ['bin']
+}
+
+moduleclass = 'bio'
+
+
+# Build statistics
+buildstats = [{
+    "build_time": 17.97,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/config-gentoo.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.36[,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/cc_hooks_gentoo.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'seqkit-2.3.1.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.7.0-raf00f300dcc2c3c67a3d39db68711879a114cb71",
+    "easybuild-framework_version": "4.7.0-r906ea5725f2e1dfcbceaa79ded1950f683ff5e1b",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /var/tmp/portage/sys-devel/gcc-9.3.0/work/gcc-9.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2020/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/x86_64-pc-linux-gnu/gcc-bin/9.3.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.3.0 p2' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-libada --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020; Thread model: posix; gcc version 9.3.0 (Gentoo 9.3.0 p2) ; ",
+    "glibc_version": "2.30",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 14642076,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
+    "os_name": "CentOS Linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-ja9gstgu/tmpcxspjfc4/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/python",
+    "timestamp": 1675282559,
+    "total_memory": 60232,
+}]
