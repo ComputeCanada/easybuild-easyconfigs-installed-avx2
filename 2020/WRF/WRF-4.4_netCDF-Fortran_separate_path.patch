@@ -1,6 +1,6 @@
-diff -rNu WRF-4.4.old/arch/Config.pl WRF-4.4/arch/Config.pl
---- WRF-4.4.old/arch/Config.pl	2022-08-16 08:03:59.509683259 +0000
-+++ WRF-4.4/arch/Config.pl	2022-08-16 08:09:44.995276050 +0000
+diff -rNu WRFV4.4.old/arch/Config.pl WRFV4.4/arch/Config.pl
+--- WRFV4.4.old/arch/Config.pl	2022-08-16 08:03:59.509683259 +0000
++++ WRFV4.4/arch/Config.pl	2022-08-16 08:09:44.995276050 +0000
 @@ -11,6 +11,7 @@
  select((select(STDOUT), $|=1)[0]);
  $sw_perl_path = perl ;
@@ -45,9 +45,9 @@ diff -rNu WRF-4.4.old/arch/Config.pl WRF-4.4/arch/Config.pl
          }
  	 }
      else                   
-diff -rNu WRF-4.4.old/arch/configure.defaults WRF-4.4/arch/configure.defaults
---- WRF-4.4.old/arch/configure.defaults	2022-08-16 08:03:59.512683284 +0000
-+++ WRF-4.4/arch/configure.defaults	2022-08-16 08:10:06.003443781 +0000
+diff -rNu WRFV4.4.old/arch/configure.defaults WRFV4.4/arch/configure.defaults
+--- WRFV4.4.old/arch/configure.defaults	2022-08-16 08:03:59.512683284 +0000
++++ WRFV4.4/arch/configure.defaults	2022-08-16 08:10:06.003443781 +0000
 @@ -1636,6 +1636,7 @@
  
  LIB_EXTERNAL    = \
@@ -56,9 +56,9 @@ diff -rNu WRF-4.4.old/arch/configure.defaults WRF-4.4/arch/configure.defaults
                       ../external/wavelet/libWavelet.a ../external/wavelet/lib_wavelet.a
  ESMF_IO_LIB     =    ../external/esmf_time_f90/libesmf_time.a
  LIB_BUNDLED     = \
-diff -rNu WRF-4.4.old/arch/conf_tokens WRF-4.4/arch/conf_tokens
---- WRF-4.4.old/arch/conf_tokens	2022-08-16 08:03:59.511683276 +0000
-+++ WRF-4.4/arch/conf_tokens	2022-08-16 08:10:15.317518146 +0000
+diff -rNu WRFV4.4.old/arch/conf_tokens WRFV4.4/arch/conf_tokens
+--- WRFV4.4.old/arch/conf_tokens	2022-08-16 08:03:59.511683276 +0000
++++ WRFV4.4/arch/conf_tokens	2022-08-16 08:10:15.317518146 +0000
 @@ -5,6 +5,7 @@
         CONFIGURE_DMPARALLEL
  CONFIGURE_RWORDSIZE
@@ -73,9 +73,9 @@ diff -rNu WRF-4.4.old/arch/conf_tokens WRF-4.4/arch/conf_tokens
  CONFIGURE_NETCDF_PATH
 +CONFIGURE_NETCDFF_PATH
  CONFIGURE_GRIB2_INC
-diff -rNu WRF-4.4.old/arch/postamble WRF-4.4/arch/postamble
---- WRF-4.4.old/arch/postamble	2022-08-16 08:03:59.516683316 +0000
-+++ WRF-4.4/arch/postamble	2022-08-16 08:30:17.807245583 +0000
+diff -rNu WRFV4.4.old/arch/postamble WRFV4.4/arch/postamble
+--- WRFV4.4.old/arch/postamble	2022-08-16 08:03:59.516683316 +0000
++++ WRFV4.4/arch/postamble	2022-08-16 08:30:17.807245583 +0000
 @@ -53,6 +53,7 @@
                        -I$(WRF_SRC_ROOT_DIR)/phys \
                        -I$(WRF_SRC_ROOT_DIR)/wrftladj \
@@ -114,9 +114,9 @@ diff -rNu WRF-4.4.old/arch/postamble WRF-4.4/arch/postamble
            FC="$(FC) $(PROMOTION) $(OMP) $(FCFLAGS)" TRADFLAG="$(TRADFLAG)" AR="$(AR)" ARFLAGS="$(ARFLAGS)" )
  
  wrfio_grib_share :
-diff -rNu WRF-4.4.old/configure WRF-4.4/configure
---- WRF-4.4.old/configure	2022-08-16 08:04:00.360690154 +0000
-+++ WRF-4.4/configure	2022-08-16 08:25:28.940938828 +0000
+diff -rNu WRFV4.4.old/configure WRFV4.4/configure
+--- WRFV4.4.old/configure	2022-08-16 08:04:00.360690154 +0000
++++ WRFV4.4/configure	2022-08-16 08:25:28.940938828 +0000
 @@ -222,9 +222,13 @@
    if [ -f "$NETCDF/lib/libnetcdff.a" -o -f "$NETCDF/lib/libnetcdff.so" -o -f "$NETCDF/lib/libnetcdff.dll.a" ] ; then
      USENETCDFF="-lnetcdff"
@@ -161,9 +161,9 @@ diff -rNu WRF-4.4.old/configure WRF-4.4/configure
    configure_aaaa=$? ; export configure_aaaa
    if [ $configure_aaaa -a -z "$WRFIO_NCD_NO_LARGE_FILE_SUPPORT" ] ; then
      echo "NetCDF users note:"
-diff -rNu WRF-4.4.old/external/io_netcdf/makefile WRF-4.4/external/io_netcdf/makefile
---- WRF-4.4.old/external/io_netcdf/makefile	2022-08-16 08:04:00.735693192 +0000
-+++ WRF-4.4/external/io_netcdf/makefile	2022-08-16 08:10:53.348821790 +0000
+diff -rNu WRFV4.4.old/external/io_netcdf/makefile WRFV4.4/external/io_netcdf/makefile
+--- WRFV4.4.old/external/io_netcdf/makefile	2022-08-16 08:04:00.735693192 +0000
++++ WRFV4.4/external/io_netcdf/makefile	2022-08-16 08:10:53.348821790 +0000
 @@ -3,9 +3,9 @@
  OBJSL   = wrf_io.o field_routines.o module_wrfsi_static.o
  OBJS    = $(OBJSL)
@@ -204,9 +204,9 @@ diff -rNu WRF-4.4.old/external/io_netcdf/makefile WRF-4.4/external/io_netcdf/mak
              $(FC) $(FFLAGS) $(LDFLAGS) -o diffwrf diffwrf.o $(OBJSL) ../../frame/wrf_debug.o ../../frame/module_wrf_error.o ../../frame/clog.o $(ESMF_IO_LIB_EXT) $(LIBFFS) ;\
            else \
              $(FC) $(FFLAGS) $(LDFLAGS) -o diffwrf diffwrf.o $(OBJSL) ../../frame/wrf_debug.o ../../frame/module_wrf_error.o ../../frame/clog.o $(ESMF_IO_LIB_EXT) $(LIBS) ;\
-diff -rNu WRF-4.4.old/external/io_pnetcdf/Makefile WRF-4.4/external/io_pnetcdf/Makefile
---- WRF-4.4.old/external/io_pnetcdf/Makefile	2022-08-16 08:04:00.758693378 +0000
-+++ WRF-4.4/external/io_pnetcdf/Makefile	2022-08-16 08:11:14.519990820 +0000
+diff -rNu WRFV4.4.old/external/io_pnetcdf/Makefile WRFV4.4/external/io_pnetcdf/Makefile
+--- WRFV4.4.old/external/io_pnetcdf/Makefile	2022-08-16 08:04:00.758693378 +0000
++++ WRFV4.4/external/io_pnetcdf/Makefile	2022-08-16 08:11:14.519990820 +0000
 @@ -9,8 +9,8 @@
  	  ext_pnc_put_var_td.code \
  	  ext_pnc_put_var_ti.code \
@@ -237,9 +237,9 @@ diff -rNu WRF-4.4.old/external/io_pnetcdf/Makefile WRF-4.4/external/io_pnetcdf/M
  			$(FC) $(FFLAGS) -c field_routines.f
  
  superclean:
-diff -rNu WRF-4.4.old/hydro/Rapid_routing/makefile.orig WRF-4.4/hydro/Rapid_routing/makefile.orig
---- WRF-4.4.old/hydro/Rapid_routing/makefile.orig	2022-08-16 08:04:00.849694116 +0000
-+++ WRF-4.4/hydro/Rapid_routing/makefile.orig	1970-01-01 00:00:00.000000000 +0000
+diff -rNu WRFV4.4.old/hydro/Rapid_routing/makefile.orig WRFV4.4/hydro/Rapid_routing/makefile.orig
+--- WRFV4.4.old/hydro/Rapid_routing/makefile.orig	2022-08-16 08:04:00.849694116 +0000
++++ WRFV4.4/hydro/Rapid_routing/makefile.orig	1970-01-01 00:00:00.000000000 +0000
 @@ -1,229 +0,0 @@
 -#*******************************************************************************
 -#makefile
@@ -470,9 +470,9 @@ diff -rNu WRF-4.4.old/hydro/Rapid_routing/makefile.orig WRF-4.4/hydro/Rapid_rout
 -clean::
 -	${RM} *.o *.mod rapid ../run/rapid ../rtk/rapid
 -
-diff -rNu WRF-4.4.old/Makefile WRF-4.4/Makefile
---- WRF-4.4.old/Makefile	2022-08-16 08:03:59.482683040 +0000
-+++ WRF-4.4/Makefile	2022-08-16 08:22:11.207359481 +0000
+diff -rNu WRFV4.4.old/Makefile WRFV4.4/Makefile
+--- WRFV4.4.old/Makefile	2022-08-16 08:03:59.482683040 +0000
++++ WRFV4.4/Makefile	2022-08-16 08:22:11.207359481 +0000
 @@ -923,7 +923,7 @@
  	@ echo '--------------------------------------'
  	( cd frame ; $(MAKE) $(J) LLIST="$(LINKLIST)" framework ; \
