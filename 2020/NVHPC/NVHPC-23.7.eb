@@ -1,0 +1,92 @@
+# Built with EasyBuild version 4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3 on 2023-09-11_19-24-11
+name = 'NVHPC'
+version = '23.7'
+
+homepage = 'https://developer.nvidia.com/hpc-sdk/'
+description = """C, C++ and Fortran compilers included with the NVIDIA HPC SDK (previously: PGI)"""
+
+toolchain = SYSTEM
+
+# By downloading, you accept the HPC SDK Software License Agreement
+# https://docs.nvidia.com/hpc-sdk/eula/index.html
+# accept_eula = True
+source_urls = ['https://developer.download.nvidia.com/hpc-sdk/%(version)s/']
+local_tarball_tmpl = '%%(namelower)s_2023_%%(version_major)s%%(version_minor)s_Linux_%s_cuda_multi.tar.gz'
+sources = [local_tarball_tmpl % '%(arch)s']
+checksums = ['fea91d95ff18bca1ce7afde50371caa02001ade8bed6ddfc5ff70862ccbebece']
+
+local_gccver = '11.3.0'
+dependencies = [
+    ('GCCcore', local_gccver),
+    ('binutils', '2.38', '', ('GCCcore', local_gccver)),
+    # This is necessary to avoid cases where just libnuma.so.1 is present in the system and -lnuma fails
+    ('numactl', '2.0.14', '', ('GCCcore', local_gccver))
+]
+
+# specify default CUDA version that should be used by NVHPC
+# should match one of the CUDA versions that are included with this NVHPC version
+# (see install_components/Linux_x86_64/21.7/cuda/)
+# for NVHPC 23.7, those are: 12.2, 11.8, 11.0;
+# this version can be tweaked from the EasyBuild command line with
+# --try-amend=default_cuda_version="11.0" (for example)
+default_cuda_version = '12.2'
+
+# NVHPC EasyBlock supports some features, which can be set via CLI or this easyconfig.
+# The following list gives examples for the easyconfig
+#
+# NVHPC needs CUDA to work. Two options are available: 1) Use NVHPC-bundled CUDA, 2) use system CUDA
+# 1) Bundled CUDA
+#    If no easybuild dependency to CUDA is present, the bundled CUDA is taken. A version needs to be specified with
+#      default_cuda_version = "11.0"
+#    in this easyconfig file; alternatively, it can be specified through the command line during installation with
+#      --try-amend=default_cuda_version="10.2"
+# 2) CUDA provided via EasyBuild
+#    Use CUDA as a dependency, for example
+#      dependencies = [('CUDA', '11.4.1')]
+#    The parameter default_cuda_version still can be set as above.
+#    If not set, it will be deduced from the CUDA module (via $EBVERSIONCUDA)
+#
+# Define a NVHPC-default Compute Capability
+#   cuda_compute_capabilities = "8.0"
+# Can also be specified on the EasyBuild command line via --cuda-compute-capabilities=8.0
+# Only single values supported, not lists of values!
+#
+# Options to add/remove things to/from environment module (defaults shown)
+#   module_byo_compilers = False  # Remove compilers from PATH (Bring-your-own compilers)
+#   module_nvhpc_own_mpi = False  # Add NVHPC's own pre-compiled OpenMPI
+#   module_add_math_libs = False  # Add NVHPC's math libraries (which should be there from CUDA anyway)
+#   module_add_profilers = False  # Add NVHPC's NVIDIA Profilers
+#   module_add_nccl = False       # Add NVHPC's NCCL library
+#   module_add_nvshmem = False    # Add NVHPC's NVSHMEM library
+#   module_add_cuda = False       # Add NVHPC's bundled CUDA
+
+# this bundle serves as a compiler-only toolchain, so it should be marked as compiler (important for HMNS)
+moduleclass = 'compiler'
+
+# Build statistics
+buildstats = [{
+    "build_time": 14.05,
+    "command_line": ["--accept-eula-for='NVHPC'", '--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", '--backup-modules', "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2020/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.36[,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2020/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2020'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", '--module-only', "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:/cvmfs/soft.computecanada.ca/easybuild/easyconfigs'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/easyconfigs/n/NVHPC/NVHPC-23.7.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.7.2-rfca97f691f57da1bf1f680040fe78fa0ab6529dd",
+    "easybuild-framework_version": "4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: ../configure --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020 --enable-languages=c,c++,fortran --without-cuda-driver --enable-offload-targets=nvptx-none --enable-lto --enable-checking=release --disable-multilib --enable-shared=yes --enable-static=yes --enable-threads=posix --enable-plugins --enable-gold --enable-ld=default --prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0 --with-local-prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0 --enable-bootstrap --with-isl=/tmp/ebuser/avx2/GCCcore/11.3.0/system-system/gcc-11.3.0/stage2_stuff --build=x86_64-pc-linux-gnu --host=x86_64-pc-linux-gnu; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 11.3.0 (GCC) ; ",
+    "glibc_version": "2.30",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 64583071679,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
+    "os_name": "CentOS Linux",
+    "os_type": "Linux",
+    "os_version": "7.9.2009",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-0evwdab4/tmpm6eztow4/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/python",
+    "timestamp": 1694460238,
+    "total_memory": 60231,
+}]
