@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3 on 2023-09-13_15-34-55
+# Built with EasyBuild version 4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3 on 2023-09-13_15-58-21
 name = 'PETSc'
 version = "3.19.2"
 
@@ -125,7 +125,7 @@ buildstats = [{
     "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: ../configure --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020 --enable-languages=c,c++,fortran --without-cuda-driver --enable-offload-targets=nvptx-none --enable-lto --enable-checking=release --disable-multilib --enable-shared=yes --enable-static=yes --enable-threads=posix --enable-plugins --enable-gold --enable-ld=default --prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0 --with-local-prefix=/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0 --enable-bootstrap --with-isl=/tmp/ebuser/avx2/GCCcore/11.3.0/system-system/gcc-11.3.0/stage2_stuff --build=x86_64-pc-linux-gnu --host=x86_64-pc-linux-gnu; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 11.3.0 (GCC) ; ",
     "glibc_version": "2.30",
     "hostname": "build-node2.computecanada.ca",
-    "install_size": 230550019,
+    "install_size": 236436698,
     "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
     "os_name": "CentOS Linux",
     "os_type": "Linux",
@@ -134,6 +134,6 @@ buildstats = [{
     "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
     "system_gcc_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/Core/gcccore/11.3.0/bin/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/easybuild/software/2020/avx2/Core/python/3.11.2/bin/python",
-    "timestamp": 1694619292,
+    "timestamp": 1694620699,
     "total_memory": 60232,
 }]
