@@ -1,4 +1,4 @@
-# Built with EasyBuild version 4.8.1 on 2023-09-22_13-31-39
+# Built with EasyBuild version 4.8.1 on 2023-09-22_13-32-46
 easyblock = "Toolchain"
 
 name = 'gcccorecuda'
@@ -9,11 +9,9 @@ description = """GNU Compiler Collection (GCC) based compiler toolchain, along w
 
 toolchain = SYSTEM
 
-local_gcc_version = '12.3.0'
-
 # compiler toolchain dependencies
 dependencies = [
-    ('GCCcore', '12.3.0'),
+    ('GCCcore', '12.3', '-gentoo'),
     ('CUDAcore', '12.2.2'),
 ]
 
@@ -21,7 +19,7 @@ moduleclass = 'toolchain'
 
 # Build statistics
 buildstats = [{
-    "build_time": 2.96,
+    "build_time": 2.91,
     "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0[,cURL,Doxygen,expat=:2.5.0[,Mesa,libGLU,PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=x86-64-v3\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/2023/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'gcccorecuda-2023a.eb'],
     "core_count": 16,
     "cpu_arch": "x86_64",
@@ -41,8 +39,8 @@ buildstats = [{
     "os_version": "7 (Core)",
     "platform_name": "x86_64-unknown-linux",
     "python_version": "3.11.4 (main, Aug 23 2023, 03:27:53) [GCC 12.3.1 20230526]",
-    "system_gcc_path": "/tmp/eb-a800udig/tmpalxqlhjg/gcc",
+    "system_gcc_path": "/tmp/eb-ddnina4i/tmpaxaxbnym/gcc",
     "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
-    "timestamp": 1695389497,
+    "timestamp": 1695389565,
     "total_memory": 60232,
 }]
