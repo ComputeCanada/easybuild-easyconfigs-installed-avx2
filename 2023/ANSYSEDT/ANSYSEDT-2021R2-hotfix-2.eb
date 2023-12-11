@@ -1,0 +1,132 @@
+# Built with EasyBuild version 4.8.2 on 2023-12-11_19-07-01
+easyblock = 'Binary'
+
+name = 'ANSYSEDT'
+version = '2021R2'
+local_hotfix = '2'
+versionsuffix = '-hotfix-%s' % local_hotfix
+
+homepage = 'http://www.ansys.com'
+description = """ANSYS simulation software enables organizations to confidently predict
+    how their products will operate in the real world. We believe that every product is
+    a promise of something greater."""
+
+toolchain = SYSTEM
+
+# [roberpj@build-node:/cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYSEDT/2021R2]
+sources = [
+  '%(version)s/ELECTRONICS_%(version)s_LINX64.tgz',                      # ELECTRONICS_2021R2_LINX64.tgz
+  '%%(version)s/ELECTRONICS_%%(version)s.%s_LINX64.zip' % local_hotfix,  # ELECTRONICS_2021R2.2_LINX64.zip
+  #'%(version)s/ELECTRONICS_LOCAL_HELP_%(version)s.zip'                  # ELECTRONICS_LOCAL_HELP_2021R2.zip
+]
+
+# [roberpj@build-node:/cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYSEDT] sha256sum *2021R2*
+checksums = [
+
+  '1497d77d81c6133a674fc96023b0ebafec632c72efd7377399f59c8640c0a57d',  # ELECTRONICS_2021R2_LINX64.tgz
+  '1ccc02aad9994fc28a00cba6efbc8e00d75e4bc89117d566c9c6063bec82628b',  # ELECTRONICS_2021R2.2_LINX64.zip
+  #'43a61286be445969df4a74196a32854a4a396cce816da73b1d78405e67c2f71e'  # ELECTRONICS_LOCAL_HELP_2021R2.zip
+]
+
+# Installation directories: [roberpj@build-node:~/.local/easybuild/software/2020/Core/ansysedt/2021R2]
+# [roberpj@build-node:/cvmfs/restricted.computecanada.ca/easybuild/software/2020/Core/ansysedt/2021R2] 
+extract_sources = True
+install_cmd = "\
+cd %(builddir)s/Electronics_212_linx64/Linux/AnsysEM/disk1;\
+issfile=SilentInstallationTemplate.iss;\
+instdir=%(installdir)s;\
+licport=1055;\
+licsrvr=license3.sharcnet.ca;\
+tmpdiry=TempDirectory;\
+sed -i.orig '/installLocation/d' $issfile;\
+sed -i '/LicenseOption.tcpPort/d' $issfile;\
+sed -i '/LicenseOption.serverName1/d' $issfile;\
+sed -i '/TempDirectory.tempPath/d' $issfile;\
+echo \"-P installLocation=\"$instdir\"\" >> $issfile;\
+echo \"-W LicenseOption.tcpPort=$licport\" >> $issfile;\
+echo \"-W LicenseOption.serverName1=\"$licsrvr\"\" >> $issfile;\
+echo \"-W TempDirectory.tempPath=\"$tmpdiry\"\" >> $issfile;\
+./setup.exe -options \"$PWD/$issfile\" -silent;\
+cd %(builddir)s/Electronics_21.2.2_linx64;\
+./install_patch.bash --force_overwrite  --install_dir $instdir;\
+"
+sanity_check_paths = {
+     'files': ['AnsysEM21.2/Linux64/ansysedt'],
+     'dirs' : ['shared_files','AnsysEM21.2'],
+}
+
+postinstallcmds = [
+  "a=/cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYSEDT/2021R2/Linux64-cust;\
+    for b in $(cd $a; find . -type f ! -name 'lib*.so*' -printf '%P\n'); do \
+      mv -v %(installdir)s/AnsysEM21.2/Linux64/$b{,-orig};\
+      cp -v $a/$b %(installdir)s/AnsysEM21.2/Linux64/$b;\
+      chmod -v 755 %(installdir)s/AnsysEM21.2/Linux64/$b; done;\
+    for b in $(cd $a; find . -name 'lib*.so*' -printf '%P\n'); do \
+      cp -Pv $a/$b %(installdir)s/AnsysEM21.2/Linux64/$b; done",
+  "find %(installdir)s -type d -exec chmod -v 755 {} \;",
+  "find %(installdir)s -type f \( -name '*.so' -o -name '*.so.*' \) -exec chmod -v 755 {} \;",
+  "mv -v %(installdir)s/AnsysEM21.2/Linux64/defer{,-avoid}",
+  "for f in $(grep -rIl '[:\"]/usr/lib\|[:\"]/lib' %(installdir)s --exclude=*-orig); do echo Modifying file $f;\
+    sed -i -e '/[:\"]\/usr\/lib/s/:*\/usr\/lib[^:\"]*//g' -e '/[:\"]\/lib/s/:*\/lib[^:\"]*//g' $f; done",
+  "patchelf --set-interpreter $EPREFIX/lib64/ld-linux-x86-64.so.2 %(installdir)s/AnsysEM21.2/Linux64/hf3d",
+  "find %(installdir)s -type f ! -size 0 -print0 | xargs -0 grep -ILZ {} | while IFS=\"\" read -r -d \"\" f; do \
+    if [[ `file -b --mime-type $f` == 'application/x-executable' ]]; then num=$(strings -f \"${f}\" | grep /usr/lib | wc -l);\
+      if [[ \"$num\" -eq \"0\" ]]; then patchelf --set-interpreter $EPREFIX/lib/ld-linux-x86-64.so.2 $f; fi;\
+    fi; done",
+]
+
+modextrapaths = {
+     'PATH': ['AnsysEM21.2/Linux64'],
+}
+
+modluafooter = """
+require("SitePackage")
+local found, path = find_and_define_license_file("__ANSYS_LICENSE_FILE", "ansys")
+if (not found) then
+	local error_message = [[
+We did not find a suitable license for ANSYS. If you have access to one, you can create the file $HOME/.licenses/ansys.lic with the license information. If you think you should have access to one as part of your institution, please write to support@computecanada.ca so that we can configure it. For more information about configuring an ANSYS license, please see https://docs.computecanada.ca/wiki/ANSYS 
+
+Nous n'avons pas trouve de licence utilisable pour ANSYS. Si vous avez acces a une licence de ANSYS, vous pouvez creer le fichier $HOME/.licenses/ansys.lic avec l'information de la licence. Si vous   pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer. Pour plus d'information sur la facon de configurer une licence pour ANSYS, veuillez consulter la page https://docs.computecanada.ca/wiki/ANSYS/fr
+	]]
+	LmodError(error_message)
+elseif (path) then
+	-- load the license file which should contain Lua commands to set the license path
+	assert(loadfile(path))()
+end
+setenv("NO_DEP_CHECK","1")
+setenv("ANS_IGNOREOS","1")
+setenv("ANS_FLEXLM_DISABLE_DEFLICPATH","1")
+if os.getenv("RSNT_INTERCONNECT") == "omnipath" then
+        setenv("TMI_CONFIG",pathJoin(root,"AnsysEM21.2/Linux64/fluent/fluent21.2.0/multiport/mpi/lnamd64/intel/etc/tmi.conf"))
+end
+"""
+
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 8713.2,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2023'", '--disable-map-toolchains', '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'march=x86-64-v3\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=x86-64-v3\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", '--trace', "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'ANSYSEDT-2021R2-hotfix-2.eb'],
+    "core_count": 16,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "cascadelake",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.8.2",
+    "easybuild-framework_version": "4.8.2",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "build-node.computecanada.ca",
+    "install_size": 26746214372,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
+    "os_name": "CentOS Linux",
+    "os_type": "Linux",
+    "os_version": "7 (Core)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/tmp/eb-hr6ayio6/tmplez60pj1/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1702320796,
+    "total_memory": 60231,
+}]
