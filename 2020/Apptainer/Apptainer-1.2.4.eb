@@ -1,0 +1,132 @@
+# Built with EasyBuild version 4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3 on 2024-04-04_17-49-56
+easyblock = 'Bundle'
+
+name = 'Apptainer'
+version = '1.2.4'
+
+homepage = 'https://apptainer.org'
+description = """Apptainer/Singularity is an application containerization solution for High-Performance Computing (HPC). The goal
+of Apptainer is to allow for "mobility of computing": an application containerized on one Linux system should
+be able to run on another system, as it is, and without the need to reconcile software dependencies and Linux
+version differences between the source and target systems."""
+
+toolchain = SYSTEM
+
+default_easyblock = 'ConfigureMake'
+
+default_component_specs = {
+    'sources': [SOURCELOWER_TAR_GZ],
+    'start_dir': '%(name)s-%(version)s',
+}
+
+builddependencies = [('Go', '1.21.3')]
+
+local_wrapper_script = """#!/usr/bin/env bash
+
+if [[ -z "$APPTAINER_TMPDIR" ]]; then
+        export APPTAINER_TMPDIR="/var/tmp"
+        if [[ -d "/localscratch" && -w "/localscratch" ]]; then
+                export APPTAINER_TMPDIR="/localscratch"
+        fi
+fi
+if [[ "$CC_CLUSTER" == "narval" || "$CC_CLUSTER" == "beluga" ]]; then
+	if [[ "$(cat /proc/sys/user/max_user_namespaces)" == "0" ]]; then
+		echo "Temporarily running privileged Apptainer 1.1" > /dev/stderr
+		echo "because user namespaces have been disabled" > /dev/stderr
+		exec /opt/software/apptainer-1.1/bin/apptainer ${1+"$@"}
+	fi
+fi
+exec %(installdir)s/bin/apptainer.bin ${1+"$@"}"""
+
+components = [
+    ('apptainer', version, {
+        'source_urls': ['https://github.com/%(name)s/%(name)s/releases/download/v%(version)s'],
+        'patches': [
+            'Apptainer-1.1.3_mksquashfs.patch',
+            'Apptainer-1.1.8_libnvidia-nvvm.patch',
+        ],
+        'checksums': [
+            'cfc7fcb5eb2d9479557ea982a17d9f1f4ca6cd96f9af70ad8c53da435caee00e',
+            '38a3da492afcfa5b80538803a3fc4433fa7ed7e93822ea5ddd4a10c87046005d',
+            'cfc4684badf7dcc34e5616c0d372c8c2616774ec65dcead70528250200f646a8',
+        ],
+        'configure_cmd': './mconfig',
+        'prebuildopts': 'cd builddir &&',
+        'preinstallopts': 'cd builddir &&',
+        'installopts': (' && mv %(installdir)s/bin/apptainer{,.bin}'
+                        ' && echo \'' + local_wrapper_script + '\' > %(installdir)s/bin/apptainer'
+                        ' && chmod 755 %(installdir)s/bin/apptainer'),
+    }),
+    ('squashfuse', '0.2.0', {
+        'source_urls': ['https://github.com/vasi/%(name)s/archive/%(version)s'],
+        'checksums': ['5f088257e877cd8f5fc1232801b4d412b44a017054953acc11bc16a58462b1b0'],
+        'preconfigopts': './autogen.sh && CFLAGS=-std=c99',
+        'configopts': '--enable-multithreading',
+        'buildopts': 'squashfuse_ll',
+        'install_cmd': 'cp squashfuse_ll %(installdir)s/libexec/apptainer/bin',
+    }),
+    ('gocryptfs', '2.4.0', {
+        'source_urls': ['https://github.com/rfjakob/gocryptfs/archive/v%(version)s'],
+	'checksums': ['a36d47f546b7deb87e291066a09d324015dbada123de355f41d035ba7a9d6b2b'],
+        'sources': ['gocryptfs-%(version)s.tar.gz'],
+        'skipsteps': ['configure'],
+        'build_cmd': './build-without-openssl.bash',
+        'install_cmd': 'cp gocryptfs %(installdir)s/libexec/apptainer/bin',
+    }),
+    ('fakeroot', '1.32.1', {
+        'source_urls': ['https://ftp.debian.org/debian/pool/main/f/%(name)s'],
+        'sources': ['%(name)s_%(version)s.orig.tar.gz'],
+        'checksums': ['c072b0f65bafc4cc5b6112f7c61185f5170ce4cb0c410d1681c1af4a183e94e6'],
+        'configopts': '--prefix=%(installdir)s/libexec/apptainer --program-suffix=-sysv --disable-static',
+        'installopts': (' && cd %(installdir)s/libexec/apptainer ' +
+                        ' && rm -rf {lib/libfakeroot.*,share}' +
+                        ' && mv lib/libfakeroot-{0,sysv}.so' +
+                        ' && patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 bin/faked-sysv'),
+        # use OS libs in faked-sysv so it generally works inside containers.
+    }),
+]
+
+postinstallcmds = [
+    'sed -i "s@^# binary path =@binary path =' +
+     ' \\$PATH:%(installdir)s/bin:$EBROOTGENTOO/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin@"' +
+     ' %(installdir)s/etc/apptainer/apptainer.conf',
+    'sed -i "s@max loop devices = 256@max loop devices = 2048@" %(installdir)s/etc/apptainer/apptainer.conf',
+]
+
+sanity_check_paths = {
+    'files': ['bin/apptainer', 'libexec/apptainer/bin/squashfuse_ll', 'libexec/apptainer/bin/fakeroot-sysv',
+              'libexec/apptainer/bin/gocryptfs'],
+    'dirs': [],
+}
+
+sanity_check_commands = [('apptainer', '--version')]
+
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 271.54,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2020/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.16.5[,flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.36[,cURL,Doxygen,expat=:2.2.5[,Mesa,libGLU,SWIG=:3.0.12],PCRE,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.4.0[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2020/cc_hooks.py'", '--ignore-osdeps', "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--job-backend='Slurm'", "--job-eb-cmd='/cvmfs/soft.computecanada.ca/easybuild/framework/eb'", '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'tp=haswell\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=core-avx2\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2020'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2020:'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2020'", "--subdir-software='software/2020'", "--subdir-user-modules='.local/easybuild/modules/2020'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2020'", "--tmp-logdir='/cvmfs/local/var/log'", "--use-ccache='/cvmfs/local/ccache'", '--use-existing-modules', 'Apptainer-1.2.4.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "UNKNOWN",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.132,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.7.2-rd2512b8289427cc2075f3e3843cb4dc7764cf13c",
+    "easybuild-framework_version": "4.7.2-r13850b24a8e46dbf6f3cd2d0a8bb915a119d52c3",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/libexec/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /var/tmp/portage/sys-devel/gcc-9.3.0/work/gcc-9.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2020/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/x86_64-pc-linux-gnu/gcc-bin/9.3.0 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2020/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include/g++-v9 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/9.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 9.3.0 p2' --disable-esp --enable-libstdcxx-time --with-build-config=bootstrap-lto --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-altivec --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libmudflap --disable-libssp --disable-libada --disable-systemtap --enable-vtable-verify --enable-lto --without-isl --enable-default-pie --enable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2020; Thread model: posix; gcc version 9.3.0 (Gentoo 9.3.0 p2) ; ",
+    "glibc_version": "2.30",
+    "hostname": "login1.int.archimedes.c3.ca",
+    "install_size": 168023806,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.4'),
+    "os_name": "Rocky Linux",
+    "os_type": "Linux",
+    "os_version": "8.9",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.7.7 (default, May  5 2020, 15:36:34) ; [GCC 9.3.0]",
+    "system_gcc_path": "/tmp/eb-4agrikj5/tmpia1hvylt/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2020/usr/bin/python",
+    "timestamp": 1712252995,
+    "total_memory": 30116,
+}]
