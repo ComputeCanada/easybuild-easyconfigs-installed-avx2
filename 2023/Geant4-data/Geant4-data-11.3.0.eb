@@ -1,0 +1,91 @@
+# Built with EasyBuild version 4.9.4 on 2025-01-14_15-27-05
+easyblock = 'Tarball'
+
+name = 'Geant4-data'
+
+version = '11.3.0'
+
+homepage = 'https://geant4.cern.ch/'
+description = """Datasets for Geant4."""
+
+toolchain = SYSTEM
+
+# Changes: G4NDL G4EMLOW PhotonEvaporation RadioactiveDecay G4PARTICLEXS G4ENSDFSTATE 
+# New data: G4CHANNELING.1.0.tar.gz, G4NUDEXLIB.1.0.tar.gz, G4URRPT.1.1.tar.gz
+
+local_datasets = [
+    ('G4NDL', '4.7.1', 'G4NDL', 'G4NEUTRONHPDATA'),     # NDL
+    ('G4EMLOW', '8.6.1', 'G4EMLOW', 'G4LEDATA'),        # Low energy electromagnetics
+    ('PhotonEvaporation', '6.1', 'G4PhotonEvaporation', 'G4LEVELGAMMADATA'),  # Photon evaporation
+    ('RadioactiveDecay', '6.1.2', 'G4RadioactiveDecay', 'G4RADIOACTIVEDATA'),   # Radioisotopes
+    ('G4SAIDDATA', '2.0', 'G4SAIDDATA', 'G4SAIDXSDATA'),          # SAID
+    ('G4PARTICLEXS', '4.1', 'G4PARTICLEXS', 'G4PARTICLEXSDATA'),  # Particle XS - replaces Neutron XS
+    ('G4PII', '1.3', 'G4PII', 'G4PIIDATA'),                       # PII
+    ('RealSurface', '2.2', 'G4RealSurface', 'G4REALSURFACEDATA'), # Optical Surfaces
+    ('G4INCL', '1.2', 'G4INCL', 'G4INCLDATA'),                    # INCL
+    ('G4ENSDFSTATE', '3.0', 'G4ENSDFSTATE', 'G4ENSDFSTATEDATA'),  # ENSDFSTATE
+    ('G4ABLA', '3.3', 'G4ABLA', 'G4ABLADATA'),                    # INCL/ABLA hadronic mode
+    ('G4TENDL', '1.4', 'G4TENDL', 'G4TENDLDATA'),                 # data files for incident particles
+    ('G4CHANNELING', '1.0', 'G4CHANNELING', 'G4CHANNELINGDATA'),  #
+    ('G4URRPT', '1.1', 'G4URRPT', 'G4URRPTDATA'),                #
+    ('G4NUDEXLIB', '1.0', 'G4NUDEXLIB', 'G4NUDEXLIBDATA'), 
+]
+
+source_urls = ['https://cern.ch/geant4-data/datasets']
+sources = ['%s.%s.tar.gz' % (x[2], x[1]) for x in local_datasets]
+checksums = [
+    {'G4NDL.4.7.1.tar.gz': 'd3acae48622118d2579de24a54d533fb2416bf0da9dd288f1724df1485a46c7c'},
+    {'G4EMLOW.8.6.1.tar.gz': '4a93588d26080ce1d336b94f76fadabe4905fb8f1cba2415795023d6cd8f4a8a'},
+    {'G4PhotonEvaporation.6.1.tar.gz': '5ffc1f99a81d50c9020186d59874af73c53ba24c1842b3b82b3188223bb246f2'},
+    {'G4RadioactiveDecay.6.1.2.tar.gz': 'a40d7e3ebc64d35555c4a49d0ff1e0945cd605d84354d053121293914caea13a'},
+    {'G4SAIDDATA.2.0.tar.gz': '1d26a8e79baa71e44d5759b9f55a67e8b7ede31751316a9e9037d80090c72e91'},
+    {'G4PARTICLEXS.4.1.tar.gz': '07ae1e048e9ac8e7f91f6696497dd55bd50ccc822d97af1a0b9e923212a6d7d1'},
+    {'G4PII.1.3.tar.gz': '6225ad902675f4381c98c6ba25fc5a06ce87549aa979634d3d03491d6616e926'},
+    {'G4RealSurface.2.2.tar.gz': '9954dee0012f5331267f783690e912e72db5bf52ea9babecd12ea22282176820'},
+    {'G4INCL.1.2.tar.gz': 'f880b16073ee0a92d7494f3276a6d52d4de1d3677a0d4c7c58700396ed0e1a7e'},
+    {'G4ENSDFSTATE.3.0.tar.gz': '4bdc3bd40b31d43485bf4f87f055705e540a6557d64ed85c689c59c9a4eba7d6'},
+    {'G4ABLA.3.3.tar.gz': '1e041b3252ee9cef886d624f753e693303aa32d7e5ef3bba87b34f36d92ea2b1'},
+    {'G4TENDL.1.4.tar.gz': '4b7274020cc8b4ed569b892ef18c2e088edcdb6b66f39d25585ccee25d9721e0'},
+    {'G4CHANNELING.1.0.tar.gz': '203e3c69984ca09acd181a1d31a9b0efafad4bc12e6c608f0b05e695120d67f2'},
+    {'G4URRPT.1.1.tar.gz': '6a3432db80bc088aee19c504b9c0124913005d6357ea14870451400ab20d9c11'},
+    {'G4NUDEXLIB.1.0.tar.gz': 'cac7d65e9c5af8edba2b2667d5822e16aaf99065c95f805e76de4cc86395f415'},
+]
+
+start_dir = '..'
+
+modextrapaths = {x[3]: x[0] + x[1] for x in local_datasets}
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': [x[0] + x[1] for x in local_datasets],
+}
+
+moduleclass = 'phys'
+
+# Build statistics
+buildstats = [{
+    "build_time": 354.35,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", '--disable-cleanup-tmpdir', "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0,8.6,9.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib,glew,GLM,Z3,freeglut'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--job-backend='Slurm'", "--job-cores='8'", "--job-eb-cmd='srun --mpi=none --ntasks=1 /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/eb'", '--disable-map-toolchains', '--minimal-toolchains', '--module-depends-on', '--module-extensions', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'march=x86-64-v3\\', \\'Intel\\': \\'march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'march=x86-64-v3\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--testoutput='/shared_tmp/logs/easybuild-build/Geant4-data-11.3.0'", "--tmp-logdir='/shared_tmp/logs'", '--trace', "--use-ccache='/shared_tmp/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs/g/Geant4-data/Geant4-data-11.3.0.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "cascadelake",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.14,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "4.9.4",
+    "easybuild-framework_version": "4.9.4",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "node3.int.archimedes.c3.ca",
+    "install_size": 3351550988,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.47'),
+    "os_name": "Rocky Linux",
+    "os_type": "Linux",
+    "os_version": "9.4 (Blue Onyx)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/tmp/eb-ep0edtk7/tmp7w8fst4b/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1736886364,
+    "total_memory": 29824,
+}]
