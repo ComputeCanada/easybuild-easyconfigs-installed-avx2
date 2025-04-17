@@ -1,0 +1,161 @@
+# Built with EasyBuild version 5.0.0 on 2025-04-17_06-35-27
+name = 'ANSYS'
+version = '2025R1'
+
+homepage = 'http://www.ansys.com'
+description = """ANSYS simulation software enables organizations to confidently predict 
+    how their products will operate in the real world. We believe that every product is 
+    a promise of something greater."""
+
+toolchain = SYSTEM
+
+# Check sha256sum of iso tar file
+sources = ['ANSYS-%(version)s.tar']  # /tmp/ANSYS/2025R1/system-system/alldisks
+checksums = ['2385b266568e5fff0e8febe7073d050d6f2d0ad6b6161f8a0e56343064412090']
+extract_sources = True
+
+# Default INSTALL in workdir /tmp/ANSYS/2025R1/system-system/alldisks with arguments:
+# -silent -install_dir %(installdir)s -licserverinfo 2325:1055:license3.sharcnet.ca -nochecks
+license_server = 'license3.sharcnet.ca -nochecks'
+license_server_port = '2325:1055'
+
+# $ cat /cvmfs/local/var/log/easybuild-ANSYS-2025R1-20240402.011509.MhyYt.log | grep "dir set to"
+#   Build dir set to /tmp/ANSYS/2025R1/system-system
+#   Software install dir set to /home/roberpj/.local/easybuild/software/2023/x86-64-v3/Core/ansys/2025R1
+#   Module install dir set to /home/roberpj/.local/easybuild/modules/2023/
+# Installation prefix /home/roberpj/.local/easybuild/software/2023/x86-64-v3/Core/ansys/2025R1
+# AWPROOTDIR = /home/roberpj/.local/easybuild/software/2023/x86-64-v3/Core/ansys/2025R1/v251
+
+postinstallcmds = [
+  # Replace setmwruntime with one that works (should create patchfile for this later)
+  "a=/cvmfs/restricted.computecanada.ca/easybuild/sources/a/ANSYS/patch2/2025R1;\
+   mv %(installdir)s/v251/commonfiles/MainWin/linx64/mw/setmwruntime{,-orig};\
+   cp $a/setmwruntime-$EBVERSIONGENTOO %(installdir)s/v251/commonfiles/MainWin/linx64/mw/setmwruntime;\
+   chmod 755 %(installdir)s/v251/commonfiles/MainWin/linx64/mw/setmwruntime;\
+   mv %(installdir)s/v251/Electronics/Linux64/mainwin560/Linux64/mw/setmwruntime{,-orig};\
+   cp $a/setmwruntime-$EBVERSIONGENTOO %(installdir)s/v251/Electronics/Linux64/mainwin560/Linux64/mw/setmwruntime;\
+   chmod 755 %(installdir)s/v251/commonfiles/MainWin/linx64/mw/setmwruntime;",
+  # Set same perms on all directories
+  "find %(installdir)s -type d -exec chmod 755 {} \;",
+  # Set same perms on all shared libraries to avoid warning in log file
+  "find %(installdir)s -type f \( -name '*.so' -o -name '*.so.*' \) -exec chmod 755 {} \;",
+  # Rename some libs as these maybe older than system equivalents and missing new symbols
+  "find %(installdir)s \( -type f -o -type l \) -name 'libstdc++.so*' -exec mv {} {}.bak \;",
+  "find %(installdir)s \( -type f -o -type l \) -name 'libgcc_s.so*' -exec mv {} {}.bak \;",
+  "find %(installdir)s \( -type f -o -type l \) -name 'libfreetype*' -exec mv {} {}.bak \;",
+  "find %(installdir)s \( -type f -o -type l \) -name 'libgfortran.so*' -exec mv {} {}.bak \;",
+  "find %(installdir)s \( -type f -o -type l \) -name 'libgfortran.so.3*bak' -print0 | while IFS= \
+   read -r -d $'\\0' file; do echo \"Removing bak from $file\"; mv \"$file\" \"${file%.bak}\"; done;",
+  # Find all non-binary files containing  [:"]/usr/lib or [:"]/lib on one line and remove them from the paths
+  "for f in $(grep -rIl '[:\"]/usr/lib\|[:\"]/lib' %(installdir)s); do echo Modifying file $f; \
+   sed -i -e '/[:\"]\/usr\/lib/s/:*\/usr\/lib[^:\"]*//g' -e '/[:\"]\/lib/s/:*\/lib[^:\"]*//g' $f; done",
+  # Run setrpaths.sh in all directories
+  "/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s",
+  # Find and patch lmutil to use lsb-loader
+  "for a in $(find %(installdir)s -type f -name lmutil); do echo Considering $a; \
+   if [ $(patchelf --print-interpreter $a) == '/lib64/ld-lsb-x86-64.so.3' ]; then \
+   patchelf --set-interpreter $EPREFIX/usr/lib64/ld-lsb-x86-64.so.3 $a; fi; done;",
+  # Find and patch lmgrd to use lsb-loader
+  "for a in $(find %(installdir)s -type f -name lmgrd); do echo Considering $a; \
+   if [ $(patchelf --print-interpreter $a) == '/lib64/ld-lsb-x86-64.so.3' ]; then \
+   patchelf --set-interpreter $EPREFIX/usr/lib64/ld-lsb-x86-64.so.3 $a; fi; done;",
+  # Avoid warning when starting workbench mechanical: sh: domainname: command not found
+  #"whichhostname=/cvmfs/soft.computecanada.ca/gentoo/2020/bin/hostname;\
+  #"whichhostname=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/hostname;\
+  "whichhostname=$(which hostname);\
+   echo \"whichhostname = $whichhostname\";\
+   cd %(installdir)s/v251/Tools/mono/Linux64/bin;\
+   ln -s $whichhostname domainname;",
+  # Replace '/bin/sh' instances
+  #"whichsh=/cvmfs/soft.computecanada.ca/gentoo/2020/bin/sh;\
+  #"whichsh=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/sh;\
+  "whichsh=$(which sh);\
+   echo \"whichsh = $whichsh\";\
+   whichshesc=\"$(echo \"$whichsh\" | sed -e 's/[\/&]/\\\&/g')\";\
+   echo \"whichshesc = $whichshesc\";\
+   find %(installdir)s -type f ! -size 0 -not -name 'fluent.dmp*' -not -name 'flprim.dmp*' -print0 | \
+   xargs -0 grep -riIlZ '/bin/sh' | while IFS= read -r -d $'\\0' file; do echo \"$file\"; \
+   sed -i \"s|\/bin\/sh|$whichshesc|g\" \"$file\"; done;",
+  # Replace '/bin/bash' instances
+  #"whichbash=/cvmfs/soft.computecanada.ca/gentoo/2020/bin/bash;\
+  #"whichbash=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/bash;\
+  "whichbash=$(which bash);\
+   echo \"my whichbash = \$whichbash\";\
+   whichbashesc=\"$(echo \"$whichbash\" | sed -e 's/[\/&]/\\\&/g')\";\
+   echo \"my whichbashesc = $whichbashesc\";\
+   find %(installdir)s -type f ! -size 0 -not -name 'fluent.dmp*' -not -name 'flprim.dmp*' -print0 | \
+   xargs -0 grep -riIlZ '/bin/bash' | while IFS= read -r -d $'\\0' file; do echo \"$file\"; \
+   sed -i \"s|\/bin\/bash|$whichbashesc|g\" \"$file\"; done;",
+  # Remove /sbin/ from both of the /sbin/lspci entries inside libApipWrapper.so
+  "find %(installdir)s -type f ! -size 0 -name 'libApipWrapper.so' -print0 | xargs -0 \
+   grep -rilZ '/sbin/lspci' | while IFS= read -r -d $'\\0' file; do echo \"$file\"; \
+   perl -0777 -pe 's/\/sbin\//substr q{}.\"\\0\"x length$&,0,length$&/e or die \"pattern not found\"' -i \"$file\"; \
+   perl -0777 -pe 's/\/sbin\//substr q{}.\"\\0\"x length$&,0,length$&/e or die \"pattern not found\"' -i \"$file\"; done;",
+  # Avoid warning when starting workbench: Unit[s] is not valid for quantity Time
+  "cd %(installdir)s/v251/tp/CUEUnits/linx64/lib;\
+   mv libCUEUnits.so libCUEUnits.so-orig;\
+   ln -s ../../../../aisol/lib/linx64/libCUEUnits.so libCUEUnits.so;",
+  # Make sharcnet license the default for coupled solvers
+  "cd %(installdir)s/shared_files/licensing;\
+   echo 'SERVER=1055@license3.sharcnet.ca' > ansyslmd.ini;\
+   echo 'ANSYSLI_SERVERS=2325@license3.sharcnet.ca' >> ansyslmd.ini;"
+  # Replace "$1" with ${1} to Avoid newer grep: warning: stray \ before -
+  "cp -a %(installdir)s/v251/ansys/bin/anssh.ini{,-orig};\
+   sed -i 's|grep \"$1\"|grep \${1}|g' \"%(installdir)s/v251/ansys/bin/anssh.ini\";",
+  # Replace '^\/' with '^/' to Avoid newer grep: warning: stray \ before "y
+  "find %(installdir)s -type f \( -name 'mpi*fl' -o -name 'mpi*en' \) -exec cp -a {}{,-orig} \;;\
+   find %(installdir)s -type f \( -name 'mpi*fl' -o -name 'mpi*en' \) -exec sed -i \"s|'^\\\\\/'|'^/'|g\" \"{}\" \;"
+]
+
+modextravars = {
+    'ANS_FLEXLM_DISABLE_DEFLICPATH': '1',
+    'LM_PROJECT': 'research',
+    'SLURM_ENABLED': '1',
+    'SCHEDULER_TIGHT_COUPLING': '1',
+}
+
+modluafooter = """
+require("SitePackage")
+local found, path = find_and_define_license_file("__ANSYS_LICENSE_FILE", "ansys")
+if (not found) then
+	local error_message = [[
+We did not find a suitable license for ANSYS. If you have access to one, you can create the file $HOME/.licenses/ansys.lic with the license information. If you think you should have access to one as part of your institution, please write to support@computecanada.ca so that we can configure it. For more information about configuring an ANSYS license, please see https://docs.computecanada.ca/wiki/ANSYS 
+
+Nous n'avons pas trouve de licence utilisable pour ANSYS. Si vous avez acces a une licence de ANSYS, vous pouvez creer le fichier $HOME/.licenses/ansys.lic avec l'information de la licence. Si vous   pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer. Pour plus d'information sur la facon de configurer une licence pour ANSYS, veuillez consulter la page https://docs.computecanada.ca/wiki/ANSYS/fr
+	]]
+	LmodError(error_message)
+elseif (path) then
+	-- load the license file which should contain Lua commands to set the license path
+	assert(loadfile(path))()
+end
+"""
+
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 84558.71,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", '--disable-cleanup-tmpdir', "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0,8.6,9.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib,glew,GLM,Z3,freeglut'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', '--force', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--installpath-software='/cvmfs/restricted.computecanada.ca/easybuild/software/2023'", "--job-cores='8'", "--job-eb-cmd='srun --mpi=none --ntasks=1 /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/eb'", '--disable-map-toolchains', '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'-march=x86-64-v3\\', \\'Intel\\': \\'-march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'-march=x86-64-v3\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", '--disable-rpath', "--sourcepath='/cvmfs/restricted.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--testoutput='/shared_tmp/logs/easybuild-build/ANSYS-2025R1'", "--tmp-logdir='/shared_tmp/logs'", "--use-ccache='/shared_tmp/local/ccache'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs/a/ANSYS/ANSYS-2025R1.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "skylake_avx512",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2095.078,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "5.0.0",
+    "easybuild-framework_version": "5.0.0",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "node1.int.archimedes.c3.ca",
+    "install_size": 164678572102,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.47'),
+    "os_name": "Rocky Linux",
+    "os_type": "Linux",
+    "os_version": "9.4 (Blue Onyx)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/tmp/eb-7ate89n3/tmpfj63el0t/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1744871618,
+    "total_memory": 29824,
+}]
