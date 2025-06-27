@@ -1,0 +1,172 @@
+# Built with EasyBuild version 5.1.0 on 2025-06-27_13-47-09
+name = 'code-server'
+version = '4.101.2'
+
+homepage = 'https://github.com/coder/code-server'
+description = "Run VS Code on any machine anywhere and access it in the browser."
+
+toolchain = {'name': 'system', 'version': 'system'}
+
+source_urls = [
+        'https://github.com/coder/%(name)s/releases/download/v%(version)s/',
+]
+sources = ['%(name)s-%(version)s-linux-%(mapped_arch)s.tar.gz']
+patches = ['code-server-env-variables.patch']
+
+postinstallcmds = [
+    'mkdir %(installdir)s/extensions/foxundermoon.shell-format-7.0.1/bin; pushd %(installdir)s/extensions/foxundermoon.shell-format-7.0.1/bin; wget https://github.com/mvdan/sh/releases/download/v3.0.1/shfmt_v3.0.1_linux_amd64; chmod +x shfmt_v3.0.1_linux_amd64; popd',
+    'chmod go+rX -R %(installdir)s/extensions',
+    '/cvmfs/soft.computecanada.ca/easybuild/bin/setrpaths.sh --path %(installdir)s --add_origin ',
+]
+exts_defaultclass = 'VSCodeExtension'
+exts_default_options = {
+  'source_tmpl': '%(name)s-%(version)s.vsix'
+}
+
+
+exts_list = [
+    ('nsight-vscode-edition', '2024.1.34572442', {
+        'source_urls': ['https://marketplace.visualstudio.com/_apis/public/gallery/publishers/NVIDIA/vsextensions'],
+        'sources': [{'filename': '%(name)s-%(version)s.vsix.gz', 'download_filename': '%(name)s/%(version)s/vspackage'}],
+    }),
+    ('franneck94.vscode-c-cpp-dev-extension-pack', '0.10.0', {
+    	'source_urls': ['https://open-vsx.org/api/franneck94/vscode-c-cpp-dev-extension-pack/%(version)s/file'],
+    }),
+    ('ms-python.python', '2025.4.0', {
+        'source_urls': ['https://open-vsx.org/api/ms-python/python/%(version)s/file'],
+    }),
+    ('ms-python.debugpy', '2025.6.0', {
+        'source_urls': ['https://open-vsx.org/api/ms-python/debugpy/linux-x64/%(version)s/file'],
+        'sources': ['%(name)s-%(version)s@linux-x64.vsix']
+    }),
+    ('ms-python.pylint', '2024.2.0', {
+        'source_urls': ['https://open-vsx.org/api/ms-python/pylint/%(version)s/file'],
+    }),
+    ('hashicorp.terraform', '2.34.5', {
+        'source_urls': ['https://open-vsx.org/api/hashicorp/terraform/linux-x64/%(version)s/file'],
+        'sources': ['%(name)s-%(version)s@linux-x64.vsix']
+    }),
+    ('ms-vscode.cmake-tools', '1.20.53', {
+        'source_urls': ['https://open-vsx.org/api/ms-vscode/cmake-tools/%(version)s/file/'],
+    }),
+    ('ms-vscode.cpptools-themes', '1.0.0', {
+        'source_urls': ['https://open-vsx.org/api/ms-vscode/cpptools-themes/%(version)s/file'],
+    }),
+    ('ms-vscode.makefile-tools', '0.12.17', {
+        'source_urls': ['https://open-vsx.org/api/ms-vscode/makefile-tools/%(version)s/file'],
+     }),
+    ('ms-vscode.hexeditor', '1.11.1', {
+    	'source_urls': ['https://open-vsx.org/api/ms-vscode/hexeditor/%(version)s/file'],
+    }),
+    ('ms-vscode.live-server', '0.4.15', {
+    	'source_urls': ['https://open-vsx.org/api/ms-vscode/live-server/%(version)s/file'],
+    }),
+    ('puppet.puppet-vscode', '1.5.5', {
+        'source_urls': ['https://open-vsx.org/api/puppet/puppet-vscode/%(version)s/file'],
+    }), 
+    ('DavidAnson.vscode-markdownlint', '0.60.0', {
+        'source_urls': ['https://open-vsx.org/api/DavidAnson/vscode-markdownlint/%(version)s/file'],
+    }),
+    ('foxundermoon.shell-format', '7.0.1', {
+        'source_urls': ['https://open-vsx.org/api/foxundermoon/shell-format/%(version)s/file'],
+    }),
+    ('mechatroner.rainbow-csv', '3.3.0', {
+        'source_urls': ['https://open-vsx.org/api/mechatroner/rainbow-csv/%(version)s/file'],
+    }),
+    ('oderwat.indent-rainbow', '8.3.1', {
+        'source_urls': ['https://open-vsx.org/api/oderwat/indent-rainbow/%(version)s/file']
+    }),
+    ('eamodio.gitlens', '2025.6.2505', {
+        'source_urls': ['https://open-vsx.org/api/eamodio/gitlens/%(version)s/file']
+    }),
+    ('ms-toolsai.jupyter', '2025.5.0', {
+        'source_urls': ['https://open-vsx.org/api/ms-toolsai/jupyter/%(version)s/file']
+    }),
+    ('ms-toolsai.vscode-jupyter-cell-tags', '0.1.9', {
+    	'source_urls': ['https://open-vsx.org/api/ms-toolsai/vscode-jupyter-cell-tags/%(version)s/file']
+    }),
+    ('ms-toolsai.jupyter-keymap', '1.1.2', {
+    	'source_urls': ['https://open-vsx.org/api/ms-toolsai/jupyter-keymap/%(version)s/file']
+    }),
+    ('GitHub.vscode-pull-request-github', '0.112.0', {
+        'source_urls': ['https://open-vsx.org/api/GitHub/vscode-pull-request-github/%(version)s/file']
+    }),
+    ('GitHub.vscode-github-actions', '0.27.2', {
+    	'source_urls': ['https://open-vsx.org/api/GitHub/vscode-github-actions/%(version)s/file']
+    }),
+    ('jeff-hykin.better-cpp-syntax', '1.27.1', {
+    	'source_urls': ['https://open-vsx.org/api/jeff-hykin/better-cpp-syntax/%(version)s/file']
+    }),
+# requires installing additional stuff    
+#    ('golang.Go', '0.46.1', {
+#        'source_urls': ['https://open-vsx.org/api/golang/Go/%(version)s/file'],
+#    }),
+    ('julialang.language-julia', '1.146.2', {
+        'source_urls': ['https://open-vsx.org/api/julialang/language-julia/%(version)s/file'],
+    }),
+    ('anwar.resourcemonitor', '1.0.10', {
+    	'source_urls': ['https://open-vsx.org/api/anwar/resourcemonitor/%(version)s/file'],
+    }),
+    ('streetsidesoftware.code-spell-checker', '4.2.0', {
+    	'source_urls': ['https://open-vsx.org/api/streetsidesoftware/code-spell-checker/%(version)s/file']
+    }),
+    ('onnovalkering.vscode-singularity', '0.7.0', {
+    	'source_urls': ['https://open-vsx.org/api/onnovalkering/vscode-singularity/%(version)s/file']
+    }),
+    ('redhat.ansible', '25.4.0', {
+        'source_urls': ['https://open-vsx.org/api/redhat/ansible/%(version)s/file'],
+    }),
+    ('redhat.vscode-xml', '0.29.2025051008', {
+        'source_urls': ['https://open-vsx.org/api/redhat/vscode-xml/linux-x64/%(version)s/file'],
+        'sources': ['%(name)s-%(version)s@linux-x64.vsix']
+    }),
+    ('redhat.vscode-yaml', '1.18.0', {
+        'source_urls': ['https://open-vsx.org/api/redhat/vscode-yaml/%(version)s/file'],
+    }),
+    ('rust-lang.rust-analyzer', '0.4.2512', {
+        'source_urls': ['https://open-vsx.org/api/rust-lang/rust-analyzer/linux-x64/%(version)s/file'],
+        'sources': ['%(name)s-%(version)s@linux-x64.vsix']
+    }),
+    ('MS-CEINTL.vscode-language-pack-fr', '1.101.0', {
+        'source_urls': ['https://open-vsx.org/api/MS-CEINTL/vscode-language-pack-fr/%(version)s/file'],
+    }),
+    ('hediet.vscode-drawio', '1.6.6', {
+    	'source_urls': ['https://open-vsx.org/api/hediet/vscode-drawio/%(version)s/file'],
+    }),
+    ('IBM.output-colorizer', '0.1.2', {
+    	'source_urls': ['https://open-vsx.org/api/IBM/output-colorizer/%(version)s/file'],
+    }),
+]
+
+modextravars = {
+    'CODESERVER_EXTENSIONS_DIR': "%(installdir)s/extensions"
+}
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 781.21,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='6.0,7.0,7.5,8.0,8.6,9.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib,glew,GLM,Z3,freeglut,minizip'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--job-cores='8'", "--job-eb-cmd='srun --mpi=none --ntasks=1 /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/eb'", '--disable-map-toolchains', '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'-march=x86-64-v3\\', \\'Intel\\': \\'-march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'-march=x86-64-v3\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", '--disable-rpath', "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--sourcepath-data='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--tmp-logdir='/shared_tmp/logs'", "--use-ccache='/shared_tmp/local/ccache'", '--use-existing-modules', 'code-server-4.101.2.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "cascadelake",
+    "cpu_model": "Intel Xeon Processor (Skylake, IBRS)",
+    "cpu_speed": 2494.138,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "5.1.0",
+    "easybuild-framework_version": "5.1.0",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "login1.int.archimedes.c3.ca",
+    "install_size": 1076687077,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.47'),
+    "os_name": "AlmaLinux",
+    "os_type": "Linux",
+    "os_version": "9.4 (Seafoam Ocelot)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/tmp/eb-uxepk8ee/tmppntj_s8i/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1751031998,
+    "total_memory": 29824,
+}]
