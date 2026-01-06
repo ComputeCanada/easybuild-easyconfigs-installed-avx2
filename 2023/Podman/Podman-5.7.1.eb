@@ -1,0 +1,137 @@
+# Built with EasyBuild version 5.1.2 on 2026-01-06_19-55-56
+easyblock = 'Bundle'
+
+name = 'Podman'
+version = '5.7.1'
+
+homepage = 'https://podman.io'
+description = """Podman is a daemonless container engine for developing, managing,
+and running OCI Containers on your Linux System."""
+
+toolchain = SYSTEM
+
+source_urls = [
+    'https://github.com/NVIDIA/libnvidia-container/archive/refs/tags/',
+    'https://github.com/containers/conmon/archive/refs/tags/',
+    'https://github.com/containers/podman/archive/refs/tags/',
+]
+
+builddependencies = [('Go', '1.21.3')]
+
+default_easyblock = 'ConfigureMake'
+
+default_component_specs = {
+    'skipsteps': ['configure'],
+    'start_dir': '%(name)s-%(version)s',
+}
+
+components = [
+    ('libnvidia-container', '1.18.1', {
+        'sources': ['v%(version)s.tar.gz'],
+	'checksums': ['d27ea59d3501cabb369b9f63be9c177ceb5324da17520a4e850e6842fb0d77ec'],
+	'buildopts': 'REVISION=release prefix=%(installdir)s WITH_TIRPC=yes WITH_LIBELF=yes LIB_VERSION=1.18.1',
+	'installopts': 'REVISION=release prefix=%(installdir)s WITH_TIRPC=yes WITH_LIBELF=yes LIB_VERSION=1.18.1',
+    }),
+    ('nvidia-container-toolkit', '1.18.1', {
+        'sources': [{'source_urls': ['https://github.com/NVIDIA/nvidia-container-toolkit/archive/refs/tags/'],
+	             'download_filename': 'v%(version)s.tar.gz', 'filename': SOURCE_TAR_GZ}],
+	'checksums': ['379869fd72d9e6ce1a22d3e80844a202d28fe719d14af7616ca5de38d245a071'],
+	'buildopts': 'REVISION=release binaries',
+	'install_cmd': 'cp -p nvidia-* %(installdir)s/bin',
+    }),
+    ('conmon', '2.1.13', {
+        'sources': ['v%(version)s.tar.gz'],
+        'checksums': ['350992cb2fe4a69c0caddcade67be20462b21b4078dae00750e8da1774926d60'],
+	'install_cmd': 'make podman PREFIX=%(installdir)s',
+    }),
+    ('podman', version, {
+        'sources': ['v%(version)s.tar.gz'],
+        'checksums': ['c04c12f90d1bf410ccc4d27a30cff188d6a9361bddb5fceb19659ae08257cc6f',
+	              'd020f22179f5c802c40b698f6e0421354f99e31f305f0c369b6e88d2e5c09001'],
+	'patches': ['podman-%(version)s-cdispecdirs.patch'],
+        # silence warnings we can't avoid, prefix etc and usr/share for config files
+	'prebuildopts': ('sed -i "s!/usr/libexec/podman!%(installdir)s/libexec/podman!g" '
+                         + 'vendor/go.podman.io/common/pkg/config/default.go '
+                         + 'vendor/go.podman.io/common/pkg/config/config_linux.go && '
+                         + 'sed -i "s!logrus.Warnf\(.*force_mask\)!logrus.Debugf\\1!" '
+                         + 'vendor/go.podman.io/storage/drivers/overlay/overlay.go && '
+                         + 'sed -i "s!logrus.Warnf\(.*rootless\)!logrus.Debugf\\1!" '
+                         + 'pkg/rootless/rootless_linux.go && '
+                         + 'sed -i "s!logrus.ErrorLevel!logrus.DebugLevel!" '
+                         + 'pkg/rootless/rootless_linux.go && '
+                         + 'sed -i "s!/usr/share!%(installdir)s/share!" '
+                         + 'vendor/go.podman.io/storage/types/options_linux.go '
+                         + 'vendor/go.podman.io/common/pkg/config/config_linux.go && '
+                         + 'sed -i "s!/etc/!%(installdir)s/etc/!" '
+                         + 'vendor/go.podman.io/common/pkg/config/config_linux.go && '
+                         + 'sed -i "s!/etc/containers!%(installdir)s/etc/containers!" '
+                         + 'vendor/go.podman.io/storage/types/options_linux.go '
+                         + 'vendor/go.podman.io/image/v5/signature/policy_paths_common.go '
+                         + 'pkg/trust/registries.go '
+                         + 'vendor/go.podman.io/image/v5/pkg/sysregistriesv2/paths_common.go && '),
+        'buildopts': 'BUILDTAGS="selinux seccomp exclude_graphdriver_btrfs" SELINUXOPT="" PREFIX=%(installdir)s ETCDIR=%(installdir)s/etc',
+	'installopts': 'PREFIX=%(installdir)s',
+    }),
+]
+
+local_storage_conf = '''
+%s
+driver = "overlay"
+
+%s
+ignore_chown_errors = "true"
+force_mask = "700"
+''' % ('[storage]', '[storage.options.overlay]')
+
+local_containers_conf = '''
+%s
+ipcns = "host"
+netns = "host"
+''' % ('[containers]')
+
+postinstallcmds = [
+    'mkdir -p %(installdir)s/etc/containers',
+    'cat > %(installdir)s/etc/containers/storage.conf <<EOF' + local_storage_conf + 'EOF',
+    'cat > %(installdir)s/etc/containers/containers.conf <<EOF' + local_containers_conf + 'EOF',
+    'curl -o %(installdir)s/etc/containers/policy.json https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json',
+    'curl -o %(installdir)s/etc/containers/registries.conf https://raw.githubusercontent.com/containers/image/main/registries.conf',
+    'ln -s $EBROOTGENTOO/bin/false %(installdir)s/libexec/podman/netavark',
+]
+
+modextravars = {'PODMAN_IGNORE_CGROUPSV1_WARNING': '1'}
+
+sanity_check_paths = {
+    'files': ['bin/podman', 'bin/podman-remote'],
+    'dirs': ['lib/tmpfiles.d', 'libexec/podman',
+             'share/man/man1', 'share/man/man5'],
+}
+
+moduleclass = 'tools'
+
+# Build statistics
+buildstats = [{
+    "build_time": 1431.03,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='7.0,8.0,9.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp=:0.8.0[,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib,glew,GLM,Z3,freeglut,minizip,imlib2,libheif,libde265,x265'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/compiler/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--job-cores='8'", "--job-eb-cmd='srun --mpi=none --ntasks=1 /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/eb'", '--disable-map-toolchains', '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'-march=x86-64-v3\\', \\'Intel\\': \\'-march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'-march=x86-64-v3\\', \\'LLVM\\': \\'-march=x86-64-v3 -mtune=generic\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", '--disable-rpath', "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--sourcepath-data='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--testoutput='/shared_tmp/logs/easybuild-build/Podman-5.7.1'", "--tmp-logdir='/shared_tmp/logs'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs/p/Podman/Podman-5.7.1.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "icelake",
+    "cpu_model": "Intel Xeon Processor (SapphireRapids)",
+    "cpu_speed": 2300.0,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "5.1.2",
+    "easybuild-framework_version": "5.1.2",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "nodepoolcpusmall2.int.archimedes.c3.ca",
+    "install_size": 260454789,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.60'),
+    "os_name": "AlmaLinux",
+    "os_type": "Linux",
+    "os_version": "9.7 (Moss Jungle Cat)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1767729326,
+    "total_memory": 15729,
+}]
