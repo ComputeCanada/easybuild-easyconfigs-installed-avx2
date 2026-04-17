@@ -1,0 +1,117 @@
+# Built with EasyBuild version 5.3.0 on 2026-04-17_16-59-17
+easyblock = 'JuliaBundle'
+name = 'IJulia'
+version = '1.34.4'
+_julia_ver = '1.12.5'
+versionsuffix = "-Julia-%s" % _julia_ver
+
+homepage = 'https://github.com/JuliaLang/IJulia.jl'
+description = "Julia kernel for Jupyter"
+
+toolchain = SYSTEM
+
+dependencies = [
+    ('Julia', _julia_ver, '-linux-%s' % ARCH, SYSTEM),
+]
+
+exts_list = [
+    ('Preferences', '1.5.2', {
+        'source_urls': ['https://github.com/JuliaPackaging/Preferences.jl/archive/'],
+        'checksums': ['5aa3d646f3c5eea62f441109ba466e2636fe0fc7b4481d6747ed02a36da6e6f8'],
+    }),
+    ('PrecompileTools', '1.3.3', {
+        'source_urls': ['https://github.com/JuliaLang/PrecompileTools.jl/archive/'],
+        'checksums': ['78c3437ef1481cfd7ab2dfba3df45ad6a9c1e38e1667a900f8af06eb765ddf54'],
+    }),
+    ('Parsers', '2.8.1', {
+        'source_urls': ['https://github.com/JuliaData/Parsers.jl/archive/'],
+        'checksums': ['6ea035be48ef5daaecdff62ac8f29c6110aaf20f3349058a4f96e2503f55b693'],
+    }),
+    ('StructUtils', '2.7.2', {
+        'source_urls': ['https://github.com/JuliaServices/StructUtils.jl/archive/'],
+        'checksums': ['f7525017d7b302c0aef527fb301d99ea77e29776b27efd460bd271772180178b'],
+    }),
+    ('JSON', '1.5.0', {
+        'source_urls': ['https://github.com/JuliaIO/JSON.jl/archive/'],
+        'checksums': ['eb940b94d4f557e07aa24112032a086fa24f255f1364ffe07535daa5f19db560'],
+    }),
+    ('JLLWrappers', '1.7.1', {
+        'source_urls': ['https://github.com/JuliaPackaging/JLLWrappers.jl/archive/'],
+        'checksums': ['d8e5be0af75d4fe28b449299c5684a8a4e577bd621332051f2f7574edcdee28d'],
+    }),
+    ('MbedTLS_jll', '2.28.1010+0', {
+        'source_urls': ['https://github.com/JuliaBinaryWrappers/MbedTLS_jll.jl/archive/'],
+        'sources': [{'filename': 'MbedTLS-v%(version)s.tar.gz'}],
+        'checksums': ['39972b87afe0d7f191a9746bbf8102bbd45d2e904edd0d914d553c532e0c9049'],
+    }),
+    ('MbedTLS', '1.1.9', {
+        'source_urls': ['https://github.com/JuliaLang/MbedTLS.jl/archive/'],
+        'checksums': ['d421bb36f9eb7f8840bd7108c2c33a9a5532454ac9465861e2f7797f89c1f56b'],
+    }),
+    ('VersionParsing', '1.3.0', {
+        'source_urls': ['https://github.com/JuliaInterop/VersionParsing.jl/archive/'],
+        'checksums': ['f90fe419e1a40ef0eccfaaed1d1b7792d9115a059a82d0c23e3c04c944d0f8ca'],
+    }),
+    ('Conda', '1.10.3', {
+        'source_urls': ['https://github.com/JuliaPy/Conda.jl/archive/'],
+        'checksums': ['8f61889c13b68ae733efd2ff2853c2a608c1f413becf56385ddacb86a1110bce'],
+    }),
+    ('SoftGlobalScope', '1.1.0', {
+        'source_urls': ['https://github.com/stevengj/SoftGlobalScope.jl/archive/'],
+        'checksums': ['8d4264386c859403938498cd9ddd5e94e10181deba4a3e71d391b16750e3848b'],
+    }),
+    ('libsodium_jll', '1.0.22+0', {
+        'source_urls': ['https://github.com/JuliaBinaryWrappers/libsodium_jll.jl/archive/'],
+        'sources': [{'filename': 'libsodium-v%(version)s.tar.gz'}],
+        'checksums': ['f410226975bca365e75bd8faf2ce3f9c6441d4f33f07167d06fa4b9300e3dcb5'],
+    }),
+    ('ZeroMQ_jll', '4.3.6+0', {
+        'source_urls': ['https://github.com/JuliaBinaryWrappers/ZeroMQ_jll.jl/archive/'],
+        'sources': [{'filename': 'ZeroMQ-v%(version)s.tar.gz'}],
+        'checksums': ['a73d9aec597d4c142b772c2fb5e13d211a61551cc6620b6caf5185b6d342f72a'],
+    }),
+    ('ZMQ', '1.5.1', {
+        'source_urls': ['https://github.com/JuliaInterop/ZMQ.jl/archive/'],
+        'checksums': ['3fda575a341b367981127670ee8e4a2a03bdb75e0e6bcc461b17a67b2f47350c'],
+    }),
+    (name, version, {
+        'preinstallopts': "mkdir -p %(installdir)s/jupyter && export JUPYTER_DATA_DIR=%(installdir)s/jupyter && ",
+        'source_urls': ['https://github.com/JuliaLang/IJulia.jl/archive/'],
+        'checksums': ['63d7ba2236de92708ca048ccc99da2005dbd870d926bd4beb121f21efc6664f3'],
+    }),
+]
+
+modextrapaths = {
+    'JUPYTER_PATH': 'jupyter',
+}
+
+moduleclass = 'lib'
+
+hidden = True
+# Build statistics
+buildstats = [{
+    "build_time": 278.16,
+    "command_line": ['--add-system-to-minimal-toolchains', "--allow-loaded-modules='gentoo'", "--buildpath='/tmp/ebuser/avx2'", "--bwrap-installpath='/cvmfs/soft.computecanada.ca/easybuild/bwrap'", "--configfiles='/cvmfs/soft.computecanada.ca/easybuild/config.cfg,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/config.cfg'", "--containerpath='/cvmfs/soft.computecanada.ca/easybuild/containers'", "--cuda-compute-capabilities='8.0,9.0'", '--enforce-checksums', "--env-for-shebang='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/env -S'", "--filter-deps='Bison,CMake=:3.26.5],flex,ncurses,libreadline,gzip,bzip2,zlib,binutils,M4,Autoconf,Automake,libtool,Autotools,Szip,libxml2,SQLite=:3.42.0],cURL,Doxygen,expat=:2.5.0],Mesa,libGLU,PCRE,PCRE2,libjpeg-turbo,LibTIFF,libpng,XZ,gettext,X11,pkg-config,pkgconf,libdrm,gperf,FLTK,fontconfig,freetype,GMP,GL2PS,GraphicsMagick,MPFR,libmatheval,Tcl,Tk,libX11,libXft,libXpm,libXext,libXt,make,makedepend,cairo,libiconv,FFmpeg,GLib,FLANN,hwloc=:2.9.1[,numactl,DBus,texinfo,libsndfile,Pango,Lua,FreeImage,zstd,util-linux,file,GTK+,libunwind,LAME,NASM,x264,x265,FriBidi,ASSIMP,libarchive,ImageMagick,Ghostscript,Tkinter,libtirpc,Zip,SDL2,GST-plugins-base,libevent,tcsh,time,libedit,libpciaccess,UnZip,Check,OpenSSL,giflib,libwebp,git,libgit2,patchelf,snappy,re2c,double-conversion,HarfBuzz,graphite2,NSS,libffi,json-c,Xerces-C++,OpenEXR,OpenJPEG,Brotli,Highway,Tktable,yaml-cpp=:0.8.0[,fmt,Blosc,libgd,gawk,GLPK,makeinfo,matplotlib,glew,GLM,Z3,freeglut,minizip,imlib2,libheif,libde265,x265,XSD,libnsl'", "--filter-env-vars='LD_LIBRARY_PATH,LD_PRELOAD'", '--disable-fixed-installdir-naming-scheme', "--hide-deps='icc,ifort,GCCcore'", "--hide-toolchains='GCCcore,iompi,iomkl,gompic'", "--hooks='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/2023/cc_hooks.py'", '--ignore-osdeps', "--include-easyblocks='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyblocks/2023/easybuild/easyblocks/*/*.py'", "--include-module-naming-schemes='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/SoftCCHierarchicalMNS.py'", "--include-toolchains='/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/*.py,/cvmfs/soft.computecanada.ca/easybuild/easybuild-computecanada-config/toolchains/compiler/*.py'", "--installpath='/cvmfs/soft.computecanada.ca/easybuild'", "--job-cores='8'", "--job-eb-cmd='srun --mpi=none --ntasks=1 /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/eb'", '--disable-map-toolchains', '--minimal-toolchains', "--module-naming-scheme='SoftCCHierarchicalMNS'", "--optarch='{\\'NVHPC\\': \\'-march=x86-64-v3\\', \\'Intel\\': \\'-march=core-avx2 -axCore-AVX512\\', \\'GCC\\': \\'-march=x86-64-v3\\', \\'LLVM\\': \\'-march=x86-64-v3 -mtune=generic\\'}'", "--packagepath='/cvmfs/soft.computecanada.ca/easybuild/packages'", "--parallel='8'", "--prefix='/cvmfs/soft.computecanada.ca/easybuild'", '--recursive-module-unload', "--repository='GitRepository'", "--repositorypath='/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo.git,2023'", "--robot-paths='/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs:/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo/2023:'", '--disable-rpath', "--sourcepath='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--sourcepath-data='/cvmfs/soft.computecanada.ca/easybuild/sources'", "--subdir-modules='modules/2023'", "--subdir-software='software/2023'", "--subdir-user-modules='.local/easybuild/modules/2023'", "--suffix-modules-path=''", "--sysroot='/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3'", "--tmp-logdir='/shared_tmp/logs'", '--use-existing-modules', '/cvmfs/soft.computecanada.ca/easybuild/site-packages/custom-easyconfigs/easybuild/easyconfigs/i/IJulia/IJulia-1.34.4-Julia-1.12.5.eb'],
+    "core_count": 8,
+    "cpu_arch": "x86_64",
+    "cpu_arch_name": "icelake",
+    "cpu_model": "Intel Xeon Processor (SapphireRapids)",
+    "cpu_speed": 2300.0,
+    "cpu_vendor": "Intel",
+    "easybuild-easyblocks_version": "5.3.0",
+    "easybuild-framework_version": "5.3.0",
+    "gcc_version": "Using built-in specs.; COLLECT_GCC=gcc; COLLECT_LTO_WRAPPER=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/libexec/gcc/x86_64-pc-linux-gnu/12/lto-wrapper; OFFLOAD_TARGET_NAMES=nvptx-none; Target: x86_64-pc-linux-gnu; Configured with: /cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/var/tmp/portage/sys-devel/gcc-12.3.1_p20230526/work/gcc-12-20230526/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr --bindir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/x86_64-pc-linux-gnu/gcc-bin/12 --includedir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include --datadir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12 --mandir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/man --infodir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/share/gcc-data/x86_64-pc-linux-gnu/12/info --with-gxx-include-dir=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12 --disable-silent-rules --disable-dependency-tracking --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/12/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --disable-libunwind-exceptions --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 12.3.1_p20230526 p2' --with-gcc-major-version-only --enable-libstdcxx-time --enable-lto --disable-libstdcxx-pch --enable-shared --enable-threads=posix --with-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --with-build-sysroot=/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3 --enable-__cxa_atexit --enable-clocale=gnu --disable-multilib --with-multilib-list=m64 --disable-fixed-point --enable-targets=all --enable-libgomp --disable-libssp --disable-libada --disable-cet --disable-systemtap --disable-valgrind-annotations --disable-vtable-verify --disable-libvtv --with-zstd --with-isl --disable-isl-version-check --disable-default-pie --disable-default-ssp --without-cuda-driver --enable-offload-targets=nvptx-none --with-build-config=bootstrap-lto; Thread model: posix; Supported LTO compression algorithms: zlib zstd; gcc version 12.3.1 20230526 (Gentoo 12.3.1_p20230526 p2) ; ",
+    "glibc_version": "2.37",
+    "hostname": "login1.int.archimedes.c3.ca",
+    "install_size": 64909676,
+    "modules_tool": ('Lmod', '/cvmfs/soft.computecanada.ca/custom/software/lmod/lmod/libexec/lmod', '8.7.60'),
+    "os_name": "AlmaLinux",
+    "os_type": "Linux",
+    "os_version": "9.7 (Moss Jungle Cat)",
+    "platform_name": "x86_64-unknown-linux",
+    "python_version": "3.11.4 (main, Nov  4 2023, 03:43:13) [GCC 12.3.1 20230526]",
+    "system_gcc_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/gcc",
+    "system_python_path": "/cvmfs/soft.computecanada.ca/gentoo/2023/x86-64-v3/usr/bin/python",
+    "timestamp": 1776445147,
+    "total_memory": 30073,
+}]
