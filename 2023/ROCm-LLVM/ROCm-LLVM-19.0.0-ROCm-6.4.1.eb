@@ -13,7 +13,7 @@ It is an AMD Fork of The LLVM Compiler Infrastructure, and aims to contain all o
 It also includes several AMD-specific additions in the llvm-project/amd directory."""
 docurls = ['https://rocmdocs.amd.com']
 
-toolchain = {'name': 'GCCcore', 'version': '14.3.0'}
+toolchain = {'name': 'GCCcore', 'version': '14.3-gentoo'}
 
 builddependencies = [
     ('CMake', '3.31.3'),
